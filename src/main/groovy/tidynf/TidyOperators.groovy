@@ -109,6 +109,24 @@ class TidyOperators {
             .map {it.data.left + it.data.right }
     }
 
+    static DataflowChannel arrange_by(DataflowChannel channel, String by){
+        channel.map { it ->
+            Helpers.requireLinkedHashMap(it)
+            Helpers.requireKeys(it as LinkedHashMap, [by])
+            def set = ([by]  +
+                (it.findAll { k, v -> it[k] instanceof List ? it[k].size() == it[by].size() : false }.keySet() as List))
+                .unique()
+            def sorted = set
+                .collect { k -> it[k] }
+                .transpose()
+                .sort { a, b -> a[0] <=> b[0] }
+                .transpose()
+                .withIndex()
+                .collectEntries { item, i -> [(set[i]) : item]}
+            it.collectEntries { k, v -> [(k): sorted.containsKey(k) ? sorted[k] : it[k]] }
+        }
+    }
+
     static class Helpers {
 
         static DataflowChannel pre_join(DataflowChannel left, DataflowChannel right, String... by){
