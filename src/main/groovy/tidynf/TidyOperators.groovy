@@ -5,6 +5,11 @@ import groovyx.gpars.dataflow.DataflowQueue
 import static nextflow.Nextflow.groupKey
 
 class TidyOperators {
+    /*
+    TODO:
+        * bind_cols
+        * bind_rows (+ bind_rows_async)
+     */
 
     static DataflowChannel select(DataflowChannel channel, String... names){
         channel.map(TidyMappers.select(names))
