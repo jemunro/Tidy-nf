@@ -22,11 +22,11 @@ class TidyOperators {
         channel.map(TidyMappers.rename(new_name, old_name))
     }
 
-    static DataflowChannel unnnest(DataflowChannel channel){
+    static DataflowChannel unnest(DataflowChannel channel){
         channel.flatMap(TidyMappers.unnest())
     }
 
-    static DataflowChannel unnnest2(DataflowChannel channel){
+    static DataflowChannel unnest2(DataflowChannel channel){
         channel.flatMap(TidyMappers.unnest2())
     }
 
