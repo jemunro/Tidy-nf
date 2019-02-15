@@ -32,7 +32,7 @@ class TidyHelpers {
         }
     }
 
-    static Float file_size(List object, String units = 'GB') {
+    static Float file_size(Object object, String units = 'GB') {
         def unit_defs = [B:1, KB:1e3, MB:1e6, GB:1e9]
         if (object instanceof Path){
             def length = new File(object.toString()).length()
