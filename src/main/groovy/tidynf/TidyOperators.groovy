@@ -80,7 +80,7 @@ class TidyOperators {
         }
     }
 
-    static DataflowChannel outer_join(DataflowChannel left, DataflowChannel right, String... by) {
+    static DataflowChannel full_join(DataflowChannel left, DataflowChannel right, String... by) {
         def empty_left = null
         def empty_right = null
         Helpers.pre_join(left, right, by)
