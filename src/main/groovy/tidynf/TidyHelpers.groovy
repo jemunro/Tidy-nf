@@ -1,5 +1,7 @@
 package tidynf
 
+import org.codehaus.groovy.runtime.NullObject
+
 import java.nio.file.Path
 
 class TidyHelpers {
@@ -12,47 +14,45 @@ class TidyHelpers {
         new File(string).toPath().toAbsolutePath()
     }
 
-    static Object file_ext(Object object, String ext){
-         if (object instanceof Path){
-             new File(object.toString() + ext).toPath().toAbsolutePath()
-         } else if (object instanceof List) {
-             object.collect { new File(it.toString() + ext).toPath().toAbsolutePath()}
-         } else {
-             throw new IllegalArgumentException()
-         }
+    static NullObject file_ext(NullObject nullObject, String ext){
+        null
     }
 
-    static Object file_replace(Object object, String pattern, String replacement) {
-        if (object instanceof Path){
-            new File(object.toString().replaceAll(pattern, replacement)).toPath().toAbsolutePath()
-        } else if (object instanceof List) {
-            object.collect { new File(it.toString().replaceAll(pattern, replacement)).toPath().toAbsolutePath() }
-        } else {
-            throw new IllegalArgumentException()
-        }
+    static List file_ext(List paths, String ext){
+        paths.collect { file_ext(it as Path, ext) }
     }
 
-    static Float file_size(Object object, String units = 'GB') {
+    static Path file_ext(Path path, String ext){
+        new File(path.toString() + ext).toPath().toAbsolutePath()
+    }
+
+    static NullObject file_replace(NullObject nullObject, String pattern, String replacement){
+        null
+    }
+
+    static List file_replace(List paths,  String pattern, String replacement){
+        paths.collect { file_replace(it as Path, pattern, replacement)}
+    }
+
+    static Path file_replace(Path path,  String pattern, String replacement){
+        new File(path.toString().replaceAll(pattern, replacement)).toPath().toAbsolutePath()
+    }
+
+    static Float file_size(NullObject nullObject, String units = 'GB'){
+        0 as float
+    }
+
+    static Float file_size(List paths, String units = 'GB') {
+        paths.collect { file_size(it as Path, units) }.sum() as Float
+    }
+
+    static Float file_size(Path path, String units = 'GB'){
         def unit_defs = [B:1, KB:1e3, MB:1e6, GB:1e9]
-        if (object instanceof Path){
-            def length = new File(object.toString()).length()
-            if (unit_defs.containsKey(units)){
-                return length / unit_defs[units]
-            } else {
-                return length as Float
-            }
-        } else if (object instanceof List) {
-            object.collect { it ->
-                def length = new File(it.toString()).length()
-
-                if (unit_defs.containsKey(units)){
-                    return length / unit_defs[units]
-                } else {
-                    return length as Float
-                }
-            }.sum() as Float
+        def length = new File(path.toString()).length()
+        if (unit_defs.containsKey(units)){
+            return length / unit_defs[units]
         } else {
-            throw new IllegalArgumentException()
+            return length as Float
         }
     }
 }
