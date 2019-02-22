@@ -72,3 +72,6 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * group_by
     * groups TidyChannel by select variables
     * see `dplyr::group_by()`
+* bind_rows
+    * flatten TidyChannel, similar to toList()
+    * see `dplyr::bind_rows()`

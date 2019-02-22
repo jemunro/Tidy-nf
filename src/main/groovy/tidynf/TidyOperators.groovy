@@ -5,11 +5,6 @@ import groovyx.gpars.dataflow.DataflowQueue
 import static nextflow.Nextflow.groupKey
 
 class TidyOperators {
-    /*
-    TODO:
-        * bind_cols
-        * bind_rows (+ bind_rows_async)
-     */
 
     static DataflowChannel select(DataflowChannel channel, String... names){
         channel.map(TidyMappers.select(names))
@@ -124,6 +119,24 @@ class TidyOperators {
                 .withIndex()
                 .collectEntries { item, i -> [(set[i]) : item]}
             it.collectEntries { k, v -> [(k): sorted.containsKey(k) ? sorted[k] : it[k]] }
+        }
+    }
+
+    static DataflowChannel bind_rows(DataflowChannel channel){
+        channel.toList().map { it ->
+            if (!(it instanceof List)) {
+                throw new IllegalArgumentException("tidynf: Expected List, got ${it.getClass()}")
+            }
+            if (!(it.every { it instanceof LinkedHashMap})) {
+                throw new IllegalArgumentException("tidynf: Expected LinkedHashMap, got " +
+                    "${it.find{ !(it instanceof LinkedHashMap) }.getClass() }")
+            }
+            def keyset = it[0].keySet()
+            if (it.any { it.keySet() != keyset}) {
+                throw new IllegalArgumentException("tidynf: Keyset mismatch, expected - $keyset," +
+                    " got - ${ it.find {it.keySet() != keyset} }")
+            }
+            (keyset as List).collectEntries { k ->[(k): it.collect { it[k] }] }
         }
     }
 
