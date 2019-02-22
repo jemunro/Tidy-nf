@@ -3,6 +3,7 @@ package channelextra
 import groovy.json.JsonOutput
 import groovyx.gpars.dataflow.DataflowChannel
 import groovyx.gpars.dataflow.DataflowQueue
+import static nextflow.Channel.create
 
 import java.nio.file.Path
 
@@ -113,10 +114,21 @@ class ChannelExtraOperators {
         if (! parent.exists()) { parent.mkdirs() }
         file.write('', 'utf-8')
         channel.subscribe {
+            if (it instanceof LinkedHashMap) {
+                it = it.collect { it.value }
+            }
             file.append( it.collect {
                 it instanceof Path ? it.toRealPath().toAbsolutePath().toString() : it }
             .join(delim) + '\n', 'utf-8')
         }
+    }
+
+    static DataflowChannel subscribeCopyToTsv(DataflowChannel channel, file) {
+        def channel_a = create()
+        def channel_b = create()
+        (channel_a, channel_b) = channel.into(2)
+        subscribeToDelim(channel_a, file, '\t')
+        channel_b
     }
 
     static sortTuplesBy (DataflowChannel channel, Integer by, rev = false){

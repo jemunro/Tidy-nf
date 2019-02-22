@@ -30,15 +30,21 @@ class ChannelExtra {
     }
 
     static enable(){
-        enable(null)
-    }
-    
-    static enable(Class operatorClass){
-        def dataflowQueueMetaClass =  new ChannelExtraDelegatingMetaClass(DataflowQueue.metaClass, operatorClass)
+        def dataflowQueueMetaClass =  new ChannelExtraDelegatingMetaClass(DataflowQueue.metaClass)
         dataflowQueueMetaClass.initialize()
         DataflowQueue.metaClass = dataflowQueueMetaClass
 
-        def dataflowVariableMetaClass =  new ChannelExtraDelegatingMetaClass(DataflowVariable.metaClass, operatorClass)
+        def dataflowVariableMetaClass =  new ChannelExtraDelegatingMetaClass(DataflowVariable.metaClass)
+        dataflowVariableMetaClass.initialize()
+        DataflowVariable.metaClass = dataflowVariableMetaClass
+    }
+
+    static enable(Class... operators){
+        def dataflowQueueMetaClass =  new ChannelExtraDelegatingMetaClass(DataflowQueue.metaClass, operators)
+        dataflowQueueMetaClass.initialize()
+        DataflowQueue.metaClass = dataflowQueueMetaClass
+
+        def dataflowVariableMetaClass =  new ChannelExtraDelegatingMetaClass(DataflowVariable.metaClass, operators)
         dataflowVariableMetaClass.initialize()
         DataflowVariable.metaClass = dataflowVariableMetaClass
     }
