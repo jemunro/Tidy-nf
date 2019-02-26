@@ -12,7 +12,7 @@ left = Channel.from([
     ['c', 4, '/file/path/4.bam'],
     ['c', 5, '/file/path/5.bam'],
     ['c', 6, '/file/path/6.bam']])
-    .tidy('id', 'value', 'file')
+    .set_names('id', 'value', 'file')
     .mutate { file = as_file(file) ; bai = file_ext(file, '.bai')}
     .group_by('id')
     .arrange( by:['value'] )
@@ -22,7 +22,7 @@ right = Channel.from([
     ['a', 'foo'],
     ['b', 'bar'],
     ['c', 'baz']])
-    .tidy('id', 'var')
+    .set_names('id', 'var')
 
 left.full_join(right, 'id')
     .subscribe { println it }
