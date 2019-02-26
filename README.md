@@ -15,7 +15,7 @@ left = Channel.from([
     ['c', 4, '/file/path/4.bam'],
     ['c', 5, '/file/path/5.bam'],
     ['c', 6, '/file/path/6.bam']])
-    .set_names('id', 'value', 'file')
+    .as_tidy('id', 'value', 'file')
     .mutate { file = as_file(file) ; bai = file_ext(file, '.bai')}
     .group_by('id')
     .arrange( by:['value'] )
@@ -25,7 +25,7 @@ right = Channel.from([
     ['a', 'foo'],
     ['b', 'bar'],
     ['c', 'baz']])
-    .set_names('id', 'var')
+    .as_tidy('id', 'var')
 
 left.full_join(right, 'id')
     .subscribe { println it }
@@ -47,9 +47,9 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * select
     * select subset of variables and reorder them
     * see `dplyr::select()`
-* set_names
+* as_tidy
     * set names for variables. Converts List to LinkedHashMap. Output is a 'TidyChannel'.
-    * see `magrittr::set_names()`
+    * see `magrittr::as_tidy()`
 * rename
     * rename a single variable
     * see `dplyr::rename()`
