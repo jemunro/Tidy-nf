@@ -78,7 +78,7 @@ class TidyOperators {
             } else {
                 it
             }
-        }
+        }.flatMap { it }
     }
 
     static DataflowChannel mutate(DataflowChannel channel, Closure closure){
@@ -151,11 +151,10 @@ class TidyOperators {
                 checkEqualSizes(method, by.collect { k -> it[k]} )
                 set = it
                     .findAll { k, v -> it[k] instanceof List && ! by.contains(k) }
-                    .findAll { it.value.size() == it[by[0]].size() }
+                    .findAll { item -> item.value.size() == it[by[0]].size() }
                     .with { it.keySet() as List }
                     .with { by + it }
             }
-
             def sorted = set
                 .collect { k -> it[k] }
                 .transpose()
