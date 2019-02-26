@@ -1,7 +1,7 @@
 package tidynf
 
 
-class TidyValidator {
+class TidyChecker {
 
     static LinkedHashMap requireAsLinkedHashMap(String method, Object object){
         if (!(object instanceof LinkedHashMap)) {

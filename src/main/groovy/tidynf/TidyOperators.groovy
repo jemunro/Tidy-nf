@@ -3,7 +3,7 @@ package tidynf
 import groovyx.gpars.dataflow.DataflowChannel
 
 import static nextflow.Nextflow.groupKey
-import static tidynf.TidyValidator.*
+import static TidyChecker.*
 import static tidynf.TidyDataFlow.splitKeysAndData
 import static tidynf.TidyDataFlow.splitKeysAndDataJoin
 
