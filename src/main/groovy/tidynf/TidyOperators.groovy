@@ -118,7 +118,7 @@ class TidyOperators {
             it.data = requireAsLinkedHashMap(method, it.data)
             checkKeysMatch(method, it.data.keySet() as List, it.keys as List)
             checkKeysAreSubset(method, by, it.keys)
-            [ by.collect { k -> it.data[k] }, it.data ]
+            [ ( by.size() > 1 ? by.collect { k -> it.data[k] } : it.data[by[0]] ), it.data ]
         }.groupTuple().map {
             it[1][0].keySet().collectEntries { k ->
                 [(k): (by.contains(k) ?
