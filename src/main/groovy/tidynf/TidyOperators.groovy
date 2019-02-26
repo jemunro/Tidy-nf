@@ -174,24 +174,6 @@ class TidyOperators {
         }
     }
 
-    static DataflowChannel bind_rows(DataflowChannel channel){
-        channel.toList().map { it ->
-            if (!(it instanceof List)) {
-                throw new IllegalArgumentException("tidynf: Expected List, got ${it.getClass()}")
-            }
-            if (!(it.every { it instanceof LinkedHashMap})) {
-                throw new IllegalArgumentException("tidynf: Expected LinkedHashMap, got " +
-                    "${it.find{ !(it instanceof LinkedHashMap) }.getClass() }")
-            }
-            def keyset = it[0].keySet()
-            if (it.any { it.keySet() != keyset}) {
-                throw new IllegalArgumentException("tidynf: Keyset mismatch, expected - $keyset," +
-                    " got - ${ it.find {it.keySet() != keyset} }")
-            }
-            (keyset as List).collectEntries { k ->[(k): it.collect { it[k] }] }
-        }
-    }
-
     private static DataflowChannel pre_join(DataflowChannel left, DataflowChannel right, List by) {
         def method = 'arrange_by'
         def split = splitKeysAndDataJoin(left, right)

@@ -18,6 +18,7 @@ left = Channel.from([
     .set_names('id', 'value', 'file')
     .mutate { file = as_file(file) ; bai = file_ext(file, '.bai')}
     .group_by('id')
+    .arrange( by:['value'] )
     .mutate { n = value.size() }
 
 right = Channel.from([
@@ -28,6 +29,7 @@ right = Channel.from([
 
 left.full_join(right, 'id')
     .subscribe { println it }
+
 ```
 
 ```console
@@ -72,6 +74,6 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * group_by
     * groups TidyChannel by select variables
     * see `dplyr::group_by()`
-* bind_rows
-    * flatten TidyChannel, similar to toList()
-    * see `dplyr::bind_rows()`
+* arrange
+    * sort 'rows' by grouped variables
+    * see `dplyr::arrange`
