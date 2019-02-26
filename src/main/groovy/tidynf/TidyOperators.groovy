@@ -32,15 +32,15 @@ class TidyOperators {
         }
     }
 
-    static DataflowChannel as_tidy(DataflowChannel channel, String... names){
-        as_tidy(channel, names as List)
+    static DataflowChannel tidy(DataflowChannel channel, String... names){
+        tidy(channel, names as List)
     }
 
-    static DataflowChannel as_tidy(DataflowChannel channel, List names){
-        checkUnique('as_tidy', names)
+    static DataflowChannel tidy(DataflowChannel channel, List names){
+        checkUnique('tidy', names)
         channel.map {
-            it = requireAsList('as_tidy', it)
-            checkSize('as_tidy', names.size(), it.size())
+            it = requireAsList('tidy', it)
+            checkSize('tidy', names.size(), it.size())
             [names, it].transpose().collectEntries { k, v -> [(k): v] }
         }
     }
