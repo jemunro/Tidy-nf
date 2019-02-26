@@ -130,7 +130,7 @@ class TidyOperators {
     }
 
     static DataflowChannel arrange(Map params, DataflowChannel channel){
-        def method = 'arrange_by'
+        def method = 'arrange'
         def required = ['by']
         def types = [by: List, by_: String, at:List, at_:String, reverse: Boolean]
         checkRequiredParams(method, required, params)
@@ -175,7 +175,7 @@ class TidyOperators {
     }
 
     private static DataflowChannel pre_join(DataflowChannel left, DataflowChannel right, List by) {
-        def method = 'arrange_by'
+        def method = 'pre_join'
         def split = splitKeysAndDataJoin(left, right)
 
         split.left.map {
