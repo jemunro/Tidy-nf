@@ -17,9 +17,15 @@ class ChannelExtraDelegatingMetaClass extends NextflowDelegatingMetaClass {
 
     @Override
     Object invokeMethod(Object object, String method, Object[] arguments) {
-        def match = operators.find { it.metaClass.respondsTo(it, method, object, *arguments) }
+        def args = arguments as List
+        if (arguments.size() > 0 && arguments[0] instanceof LinkedHashMap) {
+            args.add(1, object)
+        } else {
+            args.add(0, object)
+        }
+        def match = operators.find { it.metaClass.respondsTo(it, method, *args) }
         if (match) {
-            match."$method"(object, *arguments)
+            match."$method"(*args)
         } else {
             super.invokeMethod(object, method, arguments)
         }

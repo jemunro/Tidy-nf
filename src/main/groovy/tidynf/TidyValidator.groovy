@@ -34,6 +34,19 @@ class TidyValidator {
         }
     }
 
+    static void checkEqualSizes(String method, List lists){
+        if (lists.any { !(it instanceof List) }) {
+            throw new IllegalArgumentException(
+                tidyErrorMsg(method, "Expected List, got ${lists.find{ !(it instanceof List) }.getClass()}")
+            )
+        }
+        if (lists.any { it.size() != lists[0].size() }) {
+            throw new IllegalArgumentException(
+                tidyErrorMsg(method, "Lists not equally sized")
+            )
+        }
+    }
+
     static void checkUnique(String method, List list){
         if (list.unique().size() != list.size()) {
             throw new IllegalArgumentException(
@@ -59,6 +72,14 @@ class TidyValidator {
         }
     }
 
+    static void checkNoOverlap(String method, List set_a, List set_b){
+        if (set_a.any { set_b.contains(it) }) {
+            throw new IllegalArgumentException(
+                tidyErrorMsg(method, "Error - overlap in key sets")
+            )
+        }
+    }
+
     static void checkContains(String method, Object key, List keys){
         if (!(keys.contains(key))){
             throw new IllegalArgumentException(
@@ -75,8 +96,31 @@ class TidyValidator {
         }
     }
 
+    static void checkRequiredParams(String method, List required, Map params){
+        if ( required.any { ! params.containsKey(it) }){
+            throw new IllegalArgumentException(
+                tidyErrorMsg(method, "required parameters ${required.findAll{! params.containsKey( it)}} not present")
+            )
+        }
+    }
+
+    static void checkParamTypes(String method, Map types, Map params) {
+        params.forEach { k, v ->
+            if (!types.containsKey(k)) {
+                throw new IllegalArgumentException(
+                    tidyErrorMsg(method, "got unexpected argument \"$k=$v\"")
+                )
+            }
+            if (!types[k].isInstance(params[k])) {
+                throw new IllegalArgumentException(
+                    tidyErrorMsg(method, "for argument \"$k\" expected: ${types[k]}, got: ${params[k].getClass()}")
+                )
+            }
+        }
+    }
+
     static String tidyErrorMsg(String method, String error){
-        "Tidy-nf($method): $error"
+        "Tidy-nf ($method): $error"
     }
 
     static tidyError(String method, String error) {
