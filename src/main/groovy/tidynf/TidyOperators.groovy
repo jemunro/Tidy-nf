@@ -74,7 +74,7 @@ class TidyOperators {
 
     static DataflowChannel unnest(DataflowChannel channel){
         def method = 'unnest'
-        channel.map_tidy method, {
+        channel.map_tidy(method, {
             def at = it.findAll { k, v -> v instanceof List }.collect { it.key }
             if (at.size() > 0){
                 def n = it[at[0]].size()
@@ -89,7 +89,7 @@ class TidyOperators {
             } else {
                 it
             }
-        }.flatMap { it }
+        }).flatMap { it }
     }
 
     static DataflowChannel mutate(DataflowChannel channel, Closure closure){
@@ -293,7 +293,7 @@ class TidyOperators {
     }
 
     private static DataflowChannel generic_cross(Map params, DataflowChannel left, DataflowChannel right, List by, source_left=true) {
-        def method = source_left ? 'cross_left' : 'cross_right'
+        def method = source_left ? 'left_cross' : 'right_cross'
         def required = []
         def types = [unique: Boolean]
         checkRequiredParams(method, required, params)
@@ -312,8 +312,8 @@ class TidyOperators {
                 .findAll { item, i -> item == by.collect { k -> payload.target_data[k] } }
                 .collect { item, i -> payload.source_data[i] }
                 .collect { source_left ? it + payload.target_data : payload.target_data + it }
-                .with { it ?: [null] }
-        }.with { unique ? it.unique() : it }
+                .with { it ?: [null] } }
+            .with { unique ? it.unique() : it }
             .filter { ! it.is(null) }
     }
 }
