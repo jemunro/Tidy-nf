@@ -65,9 +65,13 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * left_join
     * as full join, excluding missing entries from right channel
     * see `dplyr::left_join()`
+* left_cross
+    * as left join, but emits all unique rows
 * right_join
     * as full join, excluding missing entries from left channel
     * see `dplyr::left_join()`
+* right_cross
+    * as right_join, but emits all unique rows
 * inner_join
     * as full join, exluding missing entries from left and right channels
     * see `dplyr::inner_join()`
@@ -77,3 +81,8 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * arrange
     * sort 'rows' by grouped variables
     * see `dplyr::arrange`
+
+
+* **Note:** unlike dplyr join operations, these only emit the first occurse of the 'by' tuple from the left and right 
+channel. This means they will emit as soon as a match is found. The cross ops on the other hand will collect the source
+data into a list and emit with each target data that matches.

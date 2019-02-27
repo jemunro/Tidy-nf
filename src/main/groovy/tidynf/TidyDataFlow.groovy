@@ -19,6 +19,26 @@ class TidyDataFlow {
         )
     }
 
+    static DataflowReadChannel splitKeysAndDataCross(DataflowReadChannel source, DataflowReadChannel target) {
+
+        def target_keys = create()
+        def target_data = create()
+
+        target.split(target_keys as DataflowWriteChannel, target_data as DataflowWriteChannel)
+
+        target_data
+            .merge(
+                target_keys
+                    .first()
+                    .map { it instanceof LinkedHashMap ? it.keySet() as List : null },
+                { td, tk ->  [target_data: td, target_keys: tk] } )
+            .merge(
+                source
+                    .toList()
+                    .map { it -> [source_data:it, source_keys: it[0] instanceof LinkedHashMap ? it[0].keySet() as List : null] },
+                { t, s -> t + s })
+    }
+
     static LinkedHashMap splitKeysAndDataJoin(DataflowReadChannel left, DataflowReadChannel right) {
 
         def left_keys = create()

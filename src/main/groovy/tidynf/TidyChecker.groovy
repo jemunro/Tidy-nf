@@ -12,6 +12,14 @@ class TidyChecker {
         object
     }
 
+    static void checkLinkedHashMap(String method, Object object){
+        if (!(object instanceof LinkedHashMap)) {
+            throw new IllegalArgumentException(
+                tidyErrorMsg(method, "Expected LinkedHashMap, got ${object.getClass()}")
+            )
+        }
+    }
+
     static List requireAsList(String method, Object object){
         if (object instanceof List){
             return object

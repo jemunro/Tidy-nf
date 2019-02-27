@@ -5,18 +5,27 @@ import groovyx.gpars.dataflow.DataflowChannel
 import static nextflow.Nextflow.groupKey
 import static TidyChecker.*
 import static tidynf.TidyDataFlow.splitKeysAndData
+import static tidynf.TidyDataFlow.splitKeysAndDataCross
 import static tidynf.TidyDataFlow.splitKeysAndDataJoin
 
 class TidyOperators {
 
-    static DataflowChannel mapTidy(DataflowChannel channel){
-        mapTidy(channel, { it } )
+    static DataflowChannel map_tidy(DataflowChannel channel, String method){
+        map_tidy(channel, method, { it } )
     }
 
-    static DataflowChannel mapTidy(DataflowChannel channel, Closure closure){
+    static DataflowChannel map_tidy(DataflowChannel channel, Closure closure){
+        map_tidy(channel, 'map_tidy', closure)
+    }
+
+    static DataflowChannel map_tidy(DataflowChannel channel){
+        map_tidy(channel, 'map_tidy', { it } )
+    }
+
+    static DataflowChannel map_tidy(DataflowChannel channel, String method, Closure closure){
         splitKeysAndData(channel).map {
-            it.data = requireAsLinkedHashMap('mapTidy', it.data)
-            checkKeysMatch('mapTidy', it.data.keySet() as List, it.keys as List)
+            it.data = requireAsLinkedHashMap(method, it.data)
+            checkKeysMatch(method, it.data.keySet() as List, it.keys as List)
             closure(it.data)
         }
     }
@@ -26,7 +35,7 @@ class TidyOperators {
     }
 
     static DataflowChannel select(DataflowChannel channel, List names){
-        channel.mapTidy {
+        channel.map_tidy {
             checkKeysAreSubset('select', names, it.keySet() as List)
             names.collectEntries { k -> [(k): it[k]] }
         }
@@ -46,15 +55,16 @@ class TidyOperators {
     }
 
     static DataflowChannel unname(DataflowChannel channel){
-        channel.mapTidy {
+        channel.map_tidy {
             it.collect { it.value }
         }
     }
 
     static DataflowChannel rename(DataflowChannel channel, String new_name, String old_name){
-        channel.mapTidy {
-            checkContains('rename', old_name, it.keySet() as List)
-            checkContainsNot('rename', new_name, it.keySet() as List)
+        def method = 'rename'
+        channel.map_tidy method, {
+            checkContains(method, old_name, it.keySet() as List)
+            checkContainsNot(method, new_name, it.keySet() as List)
             if (it.containsKey(new_name)){
                 throw new IllegalArgumentException("tidynf: new_name '${new_name}' already in Map")
             }
@@ -63,12 +73,13 @@ class TidyOperators {
     }
 
     static DataflowChannel unnest(DataflowChannel channel){
-        channel.mapTidy {
+        def method = 'unnest'
+        channel.map_tidy method, {
             def at = it.findAll { k, v -> v instanceof List }.collect { it.key }
             if (at.size() > 0){
                 def n = it[at[0]].size()
                 if (!(at.every {key -> it[key].size() == n })) {
-                    tidyError('unnest', "All targets must be atomic or equally sized for unnest")
+                    tidyError(method, "All targets must be atomic or equally sized for unnest")
                 }
                 (0..<n).collect { i ->
                     it.collectEntries { k, v ->
@@ -82,9 +93,10 @@ class TidyOperators {
     }
 
     static DataflowChannel mutate(DataflowChannel channel, Closure closure){
+        def method = 'mutate'
         def parent_data = closure.binding.getVariables() as LinkedHashMap
         def dehydrated = closure.dehydrate()
-        channel.mapTidy {
+        channel.map_tidy method, {
             def binding = new Binding()
             def data = parent_data + it
             def rehydrated = dehydrated.rehydrate(data, binding, binding)
@@ -129,17 +141,25 @@ class TidyOperators {
         }
     }
 
-    static DataflowChannel arrange(Map params, DataflowChannel channel){
+    static DataflowChannel arrange(Map params, DataflowChannel channel, String... by) {
+        arrange(params, channel, by as List)
+    }
+
+    static DataflowChannel arrange(DataflowChannel channel, String... by) {
+        arrange([:], channel, by as List)
+    }
+
+    static DataflowChannel arrange(Map params, DataflowChannel channel, List by){
         def method = 'arrange'
-        def required = ['by']
-        def types = [by: List, by_: String, at:List, at_:String, reverse: Boolean]
+        def types = [not:List, not_:String, at:List, at_:String, reverse: Boolean]
+        def required = []
         checkRequiredParams(method, required, params)
         checkParamTypes(method, types, params)
-        def by = params?.by
         def reverse = params?.reverse ?: false
         def at = params?.at ?: []
+        def not = params?.not ?: []
 
-        channel.mapTidy {
+        channel.map_tidy method, {
             checkKeysAreSubset(method, by, it.keySet() as List)
             def set = null
             if (at) {
@@ -150,7 +170,7 @@ class TidyOperators {
             } else {
                 checkEqualSizes(method, by.collect { k -> it[k]} )
                 set = it
-                    .findAll { k, v -> it[k] instanceof List && ! by.contains(k) }
+                    .findAll { k, v -> it[k] instanceof List && ! by.contains(k) && ! not.contains(k) }
                     .findAll { item -> item.value.size() == it[by[0]].size() }
                     .with { it.keySet() as List }
                     .with { by + it }
@@ -254,5 +274,46 @@ class TidyOperators {
         pre_join(left, right, by)
             .filter { it.contains_right && it.contains_left }
             .map { it.by + it.data.left + it.data.right }
+    }
+
+    private static DataflowChannel left_cross(DataflowChannel left, DataflowChannel right, String... by) {
+        generic_cross([:], left, right, by as List, true)
+    }
+
+    private static DataflowChannel left_cross(Map params, DataflowChannel left, DataflowChannel right, String... by) {
+        generic_cross(params, left, right, by as List, true)
+    }
+
+    private static DataflowChannel right_cross(DataflowChannel left, DataflowChannel right, String... by) {
+        generic_cross([:], left, right, by as List, false)
+    }
+
+    private static DataflowChannel right_cross(Map params, DataflowChannel left, DataflowChannel right, String... by) {
+        generic_cross(params, left, right, by as List, false)
+    }
+
+    private static DataflowChannel generic_cross(Map params, DataflowChannel left, DataflowChannel right, List by, source_left=true) {
+        def method = source_left ? 'cross_left' : 'cross_right'
+        def required = []
+        def types = [unique: Boolean]
+        checkRequiredParams(method, required, params)
+        checkParamTypes(method, types, params)
+        def unique = !(params.unique == false)
+
+        def pre = source_left ? splitKeysAndDataCross(left.map_tidy(), right) : splitKeysAndDataCross(right.map_tidy(), left)
+        pre.flatMap {
+            def payload = requireAsLinkedHashMap(method, it)
+            checkLinkedHashMap(method, payload.target_data)
+            checkKeysAreSubset(method, by, it.target_keys)
+            checkKeysAreSubset(method, by, it.source_keys)
+
+            payload.source_data.withIndex()
+                .collect { item, i -> [ by.collect { k -> item[k] }, i ] }
+                .findAll { item, i -> item == by.collect { k -> payload.target_data[k] } }
+                .collect { item, i -> payload.source_data[i] }
+                .collect { source_left ? it + payload.target_data : payload.target_data + it }
+                .with { it ?: [null] }
+        }.with { unique ? it.unique() : it }
+            .filter { ! it.is(null) }
     }
 }
