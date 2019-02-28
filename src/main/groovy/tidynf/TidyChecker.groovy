@@ -6,7 +6,7 @@ class TidyChecker {
     static LinkedHashMap requireAsLinkedHashMap(String method, Object object){
         if (!(object instanceof LinkedHashMap)) {
             throw new IllegalArgumentException(
-                tidyErrorMsg(method, "Expected LinkedHashMap, got ${object.getClass()}")
+                tidyErrorMsg(method, "Expected LinkedHashMap, got class: ${object.getClass()}, value: $object")
             )
         }
         object
@@ -15,7 +15,7 @@ class TidyChecker {
     static void checkLinkedHashMap(String method, Object object){
         if (!(object instanceof LinkedHashMap)) {
             throw new IllegalArgumentException(
-                tidyErrorMsg(method, "Expected LinkedHashMap, got ${object.getClass()}")
+                tidyErrorMsg(method, "Expected LinkedHashMap, got class: ${object.getClass()}, value: $object")
             )
         }
     }
