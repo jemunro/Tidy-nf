@@ -47,16 +47,16 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * select subset of variables and reorder them
     * see `dplyr::select()`
 * tidy
-    * set names for variables. Converts List to LinkedHashMap. Output is a 'TidyChannel'.
+    * set names for variables. Converts List to LinkedHashMap.
     * see `magrittr::set_names()`
 * rename
     * rename a single variable
     * see `dplyr::rename()`
 * unname
     * Remove names. Converts LinkedHashMap to List
-    * see `base::uname()`
+    * see `base::unname()`
 * unnest
-    * unnests inner lists, provide keys to unnest specific variables
+    * un-nests inner lists, provide keys to unnest specific variables
     * see `tidyr::unnest()`
 * full_join
     * joins two 'TidyChannel' by selected variables, missing elements replaced by null

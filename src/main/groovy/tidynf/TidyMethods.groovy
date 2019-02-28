@@ -8,7 +8,7 @@ import java.nio.file.Path
 
 class TidyMethods {
 
-    static enableTidy() {
+    static tidynf() {
         ChannelExtra.enable(ChannelExtraOperators, TidyOperators)
     }
 
