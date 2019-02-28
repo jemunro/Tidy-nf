@@ -3,9 +3,7 @@
 ## usage example
 ```groovy
 import static tidynf.TidyMethods.*
-
-enableTidy()
-
+tidynf()
 
 left = Channel.from([
     ['a', 1, '/file/path/1.bam'],
