@@ -3,6 +3,8 @@ package channelextra
 import groovy.json.JsonOutput
 import groovyx.gpars.dataflow.DataflowChannel
 import groovyx.gpars.dataflow.DataflowQueue
+import groovyx.gpars.dataflow.DataflowWriteChannel
+
 import static nextflow.Channel.create
 
 import java.nio.file.Path
@@ -11,7 +13,21 @@ class ChannelExtraOperators {
     /* -------------------- Operators to add to Channels  -------------------- */
     //fix this to check Lists all contain strings
 
-    static toTransList (DataflowChannel channel, sort = true) {
+    static DataflowChannel[] withFirst (DataflowChannel source){
+        def q1 = create()
+        def q2 = create()
+        (q1, q2) = source.into(2)
+        [ q1.first(), q2 ] as DataflowChannel[]
+    }
+
+    static DataflowChannel mergeWithFirst (DataflowChannel source){
+        def first
+        def each
+        (first, each) = withFirst(source)
+        each.merge(first, { e, f -> [f, e] })
+    }
+
+    static DataflowChannel toTransList (DataflowChannel channel, sort = true) {
         if (sort){
             channel.toSortedList().map { it.transpose() }
         } else {
@@ -19,7 +35,7 @@ class ChannelExtraOperators {
         }
     }
 
-    static plusFileSize (DataflowChannel channel, String units='GB') {
+    static DataflowChannel plusFileSize (DataflowChannel channel, String units='GB') {
         units = units.toUpperCase()
         def div = (units == 'GB' ? 1e9 : (units == 'MB' ? 1e6 : (units == 'KB' ? 1e3 : 1)))
         channel.map {
@@ -28,7 +44,7 @@ class ChannelExtraOperators {
         }
     }
 
-    static fileSizeSort (DataflowChannel channel){
+    static DataflowChannel fileSizeSort (DataflowChannel channel){
         from(
             channel.toList().get()
                 .collect { it instanceof List ?
@@ -38,15 +54,15 @@ class ChannelExtraOperators {
                 .collect { it.dropRight(1) } )
     }
 
-    static toJson(DataflowQueue channel, Path path) {
+    static DataflowChannel toJson(DataflowQueue channel, Path path) {
         toJson(channel, path.toFile())
     }
 
-    static toJson(DataflowQueue channel, String path) {
+    static DataflowChannel toJson(DataflowQueue channel, String path) {
         toJson(channel, (new File(path)))
     }
 
-    static toJson(DataflowQueue channel, File json) {
+    static DataflowChannel toJson(DataflowQueue channel, File json) {
         def parent = json.toPath().toAbsolutePath().parent
         if (! parent.exists()) { parent.mkdirs() }
         def list = channel.toList().get().collectNested { it ->
@@ -56,23 +72,23 @@ class ChannelExtraOperators {
         return from(json.toPath()).first()
     }
 
-    static toTsv(DataflowQueue channel, String filename) {
+    static DataflowChannel toTsv(DataflowQueue channel, String filename) {
         toDelim(channel, (new File(filename)), '\t', [])
     }
 
-    static toCsv(DataflowQueue channel, String filename) {
+    static DataflowChannel toCsv(DataflowQueue channel, String filename) {
         toDelim(channel, (new File(filename)), ',', [])
     }
 
-    static toTsv(DataflowQueue channel, String filename, List colNames) {
+    static DataflowChannel toTsv(DataflowQueue channel, String filename, List colNames) {
         toDelim(channel, (new File(filename)), '\t', colNames)
     }
 
-    static toCsv(DataflowQueue channel, String filename, List colNames) {
+    static DataflowChannel toCsv(DataflowQueue channel, String filename, List colNames) {
         toDelim(channel, (new File(filename)), ',', colNames)
     }
 
-    static toDelim(DataflowQueue channel, File file, String delim, List colNames, archive = true) {
+    static DataflowChannel toDelim(DataflowQueue channel, File file, String delim, List colNames, archive = true) {
         def parent = file.toPath().toAbsolutePath().toFile().parentFile
         if (! parent.exists()) { parent.mkdirs() }
         if (archive) {
@@ -93,23 +109,23 @@ class ChannelExtraOperators {
         }
     }
 
-    static subscribeToTsv(DataflowChannel channel, file) {
+    static void subscribeToTsv(DataflowChannel channel, file) {
         subscribeToDelim(channel, file, '\t' )
     }
 
-    static subscribeToCsv(DataflowChannel channel, file) {
+    static void subscribeToCsv(DataflowChannel channel, file) {
         subscribeToDelim(channel, file, ',')
     }
 
-    static subscribeToDelim(DataflowChannel channel, String file, String delim){
+    static void subscribeToDelim(DataflowChannel channel, String file, String delim){
         subscribeToDelim(channel, (new File(file)), delim )
     }
 
-    static subscribeToDelim(DataflowChannel channel, Path path, String delim){
+    static void subscribeToDelim(DataflowChannel channel, Path path, String delim){
         subscribeToDelim(channel, path.toFile(), delim )
     }
 
-    static subscribeToDelim(DataflowChannel channel, File file, String delim='\t'){
+    static void subscribeToDelim(DataflowChannel channel, File file, String delim='\t'){
         def parent = file.toPath().toAbsolutePath().toFile().parentFile
         if (! parent.exists()) { parent.mkdirs() }
         file.write('', 'utf-8')
@@ -131,7 +147,7 @@ class ChannelExtraOperators {
         channel_b
     }
 
-    static sortTuplesBy (DataflowChannel channel, Integer by, rev = false){
+    static DataflowChannel sortTuplesBy (DataflowChannel channel, Integer by, rev = false){
         channel.map { it ->
             def at = it.findIndexValues { it instanceof List ? it.size() > 1 : false }.collect { it as Integer }
             by = at.indexOf(by)

@@ -1,9 +1,8 @@
 #!/usr/bin/env nextflow
-import channelextra.ChannelExtra
-import tidynf.TidyOperators
-import static tidynf.TidyHelpers.*
 
-ChannelExtra.enable(TidyOperators)
+import static tidynf.TidyMethods.*
+
+enableTidy()
 
 left = Channel.from([
     ['a', 1, '/file/path/1.bam'],

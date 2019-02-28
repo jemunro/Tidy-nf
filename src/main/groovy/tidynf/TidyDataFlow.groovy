@@ -1,60 +1,98 @@
 package tidynf
 
-import groovyx.gpars.dataflow.DataflowReadChannel
-import groovyx.gpars.dataflow.DataflowWriteChannel
 
+import groovyx.gpars.dataflow.DataflowChannel
+import static channelextra.ChannelExtraOperators.*
+import static tidynf.TidyChecker.*
 import static nextflow.Channel.create
 
 class TidyDataFlow {
-    static DataflowReadChannel splitKeysAndData(DataflowReadChannel channel) {
 
-        def keysChannel = create()
-        def dataChannel = create()
-
-        channel.split(keysChannel as DataflowWriteChannel, dataChannel as DataflowWriteChannel)
-
-        dataChannel.merge(
-            keysChannel.first().map { it instanceof LinkedHashMap ? it.keySet() as List : null },
-            { d, k -> [keys: k, data: d] }
-        )
+    static List getKeys(Object object) {
+        object instanceof LinkedHashMap ? object.keySet() as List : null
     }
 
-    static DataflowReadChannel splitKeysAndDataCross(DataflowReadChannel source, DataflowReadChannel target) {
-
-        def target_keys = create()
-        def target_data = create()
-
-        target.split(target_keys as DataflowWriteChannel, target_data as DataflowWriteChannel)
-
-        target_data
-            .merge(
-                target_keys
-                    .first()
-                    .map { it instanceof LinkedHashMap ? it.keySet() as List : null },
-                { td, tk ->  [target_data: td, target_keys: tk] } )
-            .merge(
-                source
-                    .toList()
-                    .map { it -> [source_data:it, source_keys: it[0] instanceof LinkedHashMap ? it[0].keySet() as List : null] },
-                { t, s -> t + s })
+    static List getKeyTuple(Object object, List by) {
+        object instanceof LinkedHashMap ?
+            object.findAll { by.contains(it.key) }.collect { it.value } :
+            []
     }
 
-    static LinkedHashMap splitKeysAndDataJoin(DataflowReadChannel left, DataflowReadChannel right) {
+    static DataflowChannel withKeys(DataflowChannel channel) {
+        mergeWithFirst(channel).map { first, x -> [ keys: getKeys(first), data: x ] }
+    }
 
-        def left_keys = create()
-        def left_data = create()
-        def right_keys = create()
-        def right_data = create()
+    static LinkedHashMap withKeysLeftRight(DataflowChannel left, DataflowChannel right) {
 
-        left.split(left_keys as DataflowWriteChannel, left_data as DataflowWriteChannel)
-        right.split(right_keys as DataflowWriteChannel, right_data as DataflowWriteChannel)
+        def left_first
+        def left_queue
+        def right_first
+        def right_queue
 
-        def both_keys = left_keys.first().map { it instanceof LinkedHashMap ? it.keySet() as List : null }
-            .merge(right_keys.first().map { it instanceof LinkedHashMap ? it.keySet() as List : null },
-                { l, r -> [left_keys:l, right_keys:r] })
+        (left_first, left_queue) = withFirst(left)
+        (right_first, right_queue) = withFirst(right)
+
+        def keys = left_first.map { getKeys(it) }
+            .merge(right_first.map{ getKeys(it) },
+            { l, r -> [ left_keys:l, right_keys:r ] } )
         [
-            left: left_data.merge(both_keys, { d, k -> [data:d, left_keys: k.left_keys, right_keys: k.right_keys ] }),
-            right: right_data.merge(both_keys, { d, k -> [data:d, left_keys: k.left_keys, right_keys: k.right_keys ] })
+            left: left_queue.merge(keys, { d, k -> [ data:d ] + k }),
+            right: right_queue.merge(keys, { d, k -> [ data:d ] + k }),
         ]
+
+    }
+
+    static DataflowChannel[] withUniqueKeyTuples(DataflowChannel source, List by) {
+
+        def a
+        def b
+        (a, b) = source.into(2)
+
+        [ a.map { getKeyTuple(it, by) }.unique() , b ]
+    }
+
+    static DataflowChannel[] leftRightExclusive(DataflowChannel left, DataflowChannel right) {
+
+        def left_exclusive = create()
+        def right_exclusive = create()
+        left.map { [it, true] }.join( right.map { [it, true] }, by:0, remainder:true)
+            .filter { (!it[1]) || (!it[2]) }
+            .choice (left_exclusive, right_exclusive) { it[1] ? 0 : 1 }
+
+        [ left_exclusive.map { it[0] }, right_exclusive.map { it[0] } ]
+    }
+
+    static DataflowChannel leftRightCombineBy(DataflowChannel left, DataflowChannel right, List by){
+        leftRightCombineBy('leftRightCombineBy', left, right, by)
+    }
+
+    static DataflowChannel leftRightCombineBy(String method, DataflowChannel left, DataflowChannel right, List by) {
+
+        def left_unique
+        def left_queue
+        def right_unique
+        def right_queue
+        def left_exc
+        def right_exc
+        (left_unique, left_queue) = withUniqueKeyTuples(left, by)
+        (right_unique, right_queue) = withUniqueKeyTuples(right, by)
+
+        (left_exc, right_exc) = leftRightExclusive(left_unique, right_unique)
+        def split = withKeysLeftRight(left_queue, right_queue)
+
+        split.left.map {
+            it.data = requireAsLinkedHashMap(method, it.data)
+            checkKeysMatch(method, it.data.keySet() as List, it.left_keys)
+            checkKeysAreSubset(method, by, it.left_keys)
+            [ by.collect { k -> it.data[k] }, it.findAll { ! by.contains(it.key) } ] }
+        .mix(right_exc.map { [ it, null ] })
+            .combine(
+            split.right.map {
+                it.data = requireAsLinkedHashMap(method, it.data)
+                checkKeysMatch(method, it.data.keySet() as List, it.right_keys)
+                checkKeysAreSubset(method, by, it.right_keys)
+                [ by.collect { k -> it.data[k] }, it.findAll { ! by.contains(it.key) } ] }
+            .mix(left_exc.map { [ it, null ] }),
+            by: 0)
     }
 }

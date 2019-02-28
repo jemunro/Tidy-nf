@@ -2,11 +2,10 @@
 
 ## usage example
 ```groovy
-import channelextra.ChannelExtra
-import tidynf.TidyOperators
-import static tidynf.TidyHelpers.*
+import static tidynf.TidyMethods.*
 
-ChannelExtra.enable(TidyOperators)
+enableTidy()
+
 
 left = Channel.from([
     ['a', 1, '/file/path/1.bam'],
@@ -57,32 +56,23 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * Remove names. Converts LinkedHashMap to List
     * see `base::uname()`
 * unnest
-    * unnests inner lists
+    * unnests inner lists, provide keys to unnest specific variables
     * see `tidyr::unnest()`
 * full_join
     * joins two 'TidyChannel' by selected variables, missing elements replaced by null
     * see `dplyr::full_join() `
 * left_join
-    * as full join, excluding missing entries from right channel
+    * exclude missing entries from left, replace missing entries from right channel with null
     * see `dplyr::left_join()`
-* left_cross
-    * as left join, but emits all unique rows
 * right_join
-    * as full join, excluding missing entries from left channel
-    * see `dplyr::left_join()`
-* right_cross
-    * as right_join, but emits all unique rows
+    * exclude missing entries from right, replace missing entries from left channel with null
+    * see `dplyr::right_join()`
 * inner_join
-    * as full join, exluding missing entries from left and right channels
+    * excluding missing entries from left and right channels
     * see `dplyr::inner_join()`
 * group_by
     * groups TidyChannel by select variables
     * see `dplyr::group_by()`
 * arrange
-    * sort 'rows' by grouped variables
-    * see `dplyr::arrange`
-
-
-* **Note:** unlike dplyr join operations, these only emit the first occurse of the 'by' tuple from the left and right 
-channel. This means they will emit as soon as a match is found. The cross ops on the other hand will collect the source
-data into a list and emit with each target data that matches.
+    * sort grouped variables
+    * see `dplyr::arrange()`

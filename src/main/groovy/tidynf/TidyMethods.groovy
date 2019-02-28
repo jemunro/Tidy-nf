@@ -1,10 +1,16 @@
 package tidynf
 
+import channelextra.ChannelExtra
+import channelextra.ChannelExtraOperators
 import org.codehaus.groovy.runtime.NullObject
-
 import java.nio.file.Path
 
-class TidyHelpers {
+
+class TidyMethods {
+
+    static enableTidy() {
+        ChannelExtra.enable(ChannelExtraOperators, TidyOperators)
+    }
 
     static List as_file(List strings) {
         strings.collect { as_file(it.toString()) }
