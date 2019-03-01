@@ -4,6 +4,7 @@ import groovy.json.JsonOutput
 import groovyx.gpars.dataflow.DataflowChannel
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowWriteChannel
+import groovyx.gpars.dataflow.DataflowVariable
 
 import static nextflow.Channel.create
 
@@ -17,7 +18,8 @@ class ChannelExtraOperators {
         def q1 = create()
         def q2 = create()
         (q1, q2) = source.into(2)
-        [ q1.first(), q2 ] as DataflowChannel[]
+        q2 = source instanceof DataflowVariable ? q2.first() : q2
+        [ q1.first(),  q2 ]
     }
 
     static DataflowChannel mergeWithFirst (DataflowChannel source){
