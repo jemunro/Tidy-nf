@@ -76,7 +76,5 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * see `dplyr::arrange()`
 * **to_rows()**
     * collect TidyChannel into  TidyVariable, List of LinkedHashMap
-    * see `dplyr::arrange()`
 * **to_columns()**
     * collect TidyChannel into  TidyVariable, LinkedHashMap of Lists
-    * see `dplyr::arrange()`
