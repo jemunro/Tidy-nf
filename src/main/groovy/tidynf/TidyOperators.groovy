@@ -29,6 +29,15 @@ class TidyOperators {
         }
     }
 
+    static DataflowChannel pull(DataflowChannel channel, String name){
+
+        def method = 'pull'
+        channel.map_tidy(method) {
+            checkKeysAreSubset(method, [name], it.keySet() as List)
+            it[name]
+        }
+    }
+
     static DataflowChannel select(DataflowChannel channel, String... names){
         select(channel, names as List)
     }
@@ -90,6 +99,7 @@ class TidyOperators {
                 at = it.findAll { k, v -> v instanceof List }.collect { it.key }
             } else {
                 checkKeysAreSubset(method, at, it.keySet() as List)
+                at = at.findAll { k -> it[k] instanceof List }
             }
             if (! at) {
                 [ it ]

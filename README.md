@@ -44,6 +44,9 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * **select()**
     * select subset of variables and reorder them
     * see `dplyr::select()`
+* **pull()**
+    * extract a given variable
+    * see `dplyr::pull()`
 * **tidy()**
     * set names for variables. Converts List to LinkedHashMap.
     * see `magrittr::set_names()`
