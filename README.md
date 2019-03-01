@@ -38,39 +38,45 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 ```
 
 ## TidyOperators
-* mutate
+* **mutate()**
     * add new variables or modify existing variables
     * see `dplyr::mutate()`
-* select
+* **select()**
     * select subset of variables and reorder them
     * see `dplyr::select()`
-* tidy
+* **tidy()**
     * set names for variables. Converts List to LinkedHashMap.
     * see `magrittr::set_names()`
-* rename
+* **rename()**
     * rename a single variable
     * see `dplyr::rename()`
-* unname
+* **unname()**
     * Remove names. Converts LinkedHashMap to List
     * see `base::unname()`
-* unnest
+* **unnest()**
     * un-nests inner lists, provide keys to unnest specific variables
     * see `tidyr::unnest()`
-* full_join
+* **full_join()**
     * joins two 'TidyChannel' by selected variables, missing elements replaced by null
     * see `dplyr::full_join() `
-* left_join
+* **left_join()**
     * exclude missing entries from left, replace missing entries from right channel with null
     * see `dplyr::left_join()`
-* right_join
+* **right_join()**
     * exclude missing entries from right, replace missing entries from left channel with null
     * see `dplyr::right_join()`
-* inner_join
+* **inner_join()**
     * excluding missing entries from left and right channels
     * see `dplyr::inner_join()`
-* group_by
+* **group_by()**
     * groups TidyChannel by select variables
     * see `dplyr::group_by()`
-* arrange
+* **arrange()**
     * sort grouped variables
+    * see `dplyr::arrange()`
+* **to_rows()**
+    * collect TidyChannel into  TidyVariable, List of LinkedHashMap
+    * see `dplyr::arrange()`
+* **to_columns()**
+    * collect TidyChannel into  TidyVariable, LinkedHashMap of Lists
     * see `dplyr::arrange()`

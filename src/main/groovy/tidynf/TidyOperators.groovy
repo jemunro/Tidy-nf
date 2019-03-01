@@ -105,6 +105,19 @@ class TidyOperators {
         }.flatMap { it }
     }
 
+    static DataflowChannel to_columns(DataflowChannel channel){
+
+        def method = 'to_columns'
+        channel.map_tidy(method).toList()
+            .map { (it[0].keySet() as List).collectEntries{ k -> [ (k): it.collect { it[k] } ] } }
+    }
+
+    static DataflowChannel to_rows(DataflowChannel channel){
+
+        def method = 'to_rows'
+        channel.map_tidy(method).toList()
+    }
+
     static DataflowChannel mutate(DataflowChannel channel, Closure closure){
 
         def method = 'mutate'
