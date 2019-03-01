@@ -25,12 +25,10 @@ class TidyChecker {
             return object
         }
         else if (object instanceof LinkedHashMap) {
-             return object.collect { it.value }
+            return object.collect { it.value }
         }
         else {
-            throw new IllegalArgumentException(
-                tidyErrorMsg(method, "Expected List, got ${object.getClass()}")
-            )
+            return [ object ]
         }
     }
 
