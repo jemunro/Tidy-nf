@@ -92,7 +92,7 @@ class TidyOperators {
                 checkKeysAreSubset(method, at, it.keySet() as List)
             }
             if (! at) {
-                it
+                [ it ]
             } else {
                 checkEqualSizes(method, at.collect { k -> it[k] })
                 def n = it[at[0]].size()
