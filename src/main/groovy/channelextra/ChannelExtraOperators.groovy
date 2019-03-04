@@ -6,7 +6,6 @@ import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowWriteChannel
 import groovyx.gpars.dataflow.DataflowVariable
 
-import static nextflow.Channel.create
 
 import java.nio.file.Path
 
@@ -15,8 +14,8 @@ class ChannelExtraOperators {
     //fix this to check Lists all contain strings
 
     static DataflowChannel[] withFirst (DataflowChannel source){
-        def q1 = create()
-        def q2 = create()
+        def q1
+        def q2
         (q1, q2) = source.into(2)
         q2 = source instanceof DataflowVariable ? q2.first() : q2
         [ q1.first(),  q2 ]
@@ -26,7 +25,7 @@ class ChannelExtraOperators {
         def first
         def each
         (first, each) = withFirst(source)
-        each.merge(first, { e, f -> [f, e] })
+        each.merge(first) { e, f -> [f, e] }
     }
 
     static DataflowChannel toTransList (DataflowChannel channel, sort = true) {
@@ -142,8 +141,8 @@ class ChannelExtraOperators {
     }
 
     static DataflowChannel subscribeCopyToTsv(DataflowChannel channel, file) {
-        def channel_a = create()
-        def channel_b = create()
+        def channel_a
+        def channel_b
         (channel_a, channel_b) = channel.into(2)
         subscribeToDelim(channel_a, file, '\t')
         channel_b
