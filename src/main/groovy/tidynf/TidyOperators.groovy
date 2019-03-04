@@ -157,6 +157,9 @@ class TidyOperators {
     }
 
     static DataflowChannel group_by(Map params, DataflowChannel channel, List by) {
+        /*
+            Todo: dynamic group_size using groupKey framework
+         */
 
         def method = 'group_by'
         def required = []
@@ -233,51 +236,13 @@ class TidyOperators {
         }
     }
 
-    private static DataflowChannel pre_join(DataflowChannel left, DataflowChannel right, List by) {
-
-        def method = 'pre_join'
-
-        leftRightCombineBy(method, left, right, by).map {
-            def payload = [:]
-            payload.contains_left = ! it[1].is(null)
-            payload.contains_right = ! it[2].is(null)
-
-            def left_keys = payload.contains_left ? it[1].left_keys : it[2].left_keys
-            def right_keys = payload.contains_right ? it[2].right_keys : it[1].right_keys
-            def overlaps = left_keys.findAll { k -> right_keys.contains(k) && !by.contains(k) }
-
-            left_keys = left_keys
-                .findAll { ! by.contains(it) }
-                .collect { overlaps.contains(it) ? it + '_left' : it }
-            right_keys = right_keys
-                .findAll { ! by.contains(it) }
-                .collect { overlaps.contains(it) ? it + '_right' : it }
-
-            payload.by = [by, it[0]].transpose().collectEntries { k, v -> [ (k):v ] }
-
-            payload.left_data = payload.contains_left ? (
-                [ left_keys, it[1].data.values() as List ]
-                    .transpose()
-                    .collectEntries{ k, v -> [ (k):v ] } ) :
-                ( left_keys.collectEntries { k -> [ (k) : null] } )
-
-            payload.right_data = payload.contains_right ? (
-                [ right_keys, it[2].data.values() as List ]
-                    .transpose()
-                    .collectEntries{ k, v -> [ (k):v ] } ) :
-                ( right_keys.collectEntries { k -> [ (k) : null] } )
-
-            payload
-        }
-    }
 
     static DataflowChannel left_join(DataflowChannel left, DataflowChannel right, String... by) {
         left_join(left, right, by as List)
     }
 
     static DataflowChannel left_join(DataflowChannel left, DataflowChannel right, List by) {
-
-        pre_join(left, right, by)
+        preJoin(left, right, by)
             .filter { it.contains_left }
             .map { it.by + it.left_data + it.right_data  }
     }
@@ -287,8 +252,7 @@ class TidyOperators {
     }
 
     static DataflowChannel right_join(DataflowChannel left, DataflowChannel right, List by) {
-
-        pre_join(left, right, by)
+        preJoin(left, right, by)
             .filter { it.contains_right }
             .map { it.by + it.left_data + it.right_data  }
     }
@@ -298,8 +262,7 @@ class TidyOperators {
     }
 
     static DataflowChannel full_join(DataflowChannel left, DataflowChannel right, List by) {
-
-        pre_join(left, right, by)
+        preJoin(left, right, by)
             .map { it.by + it.left_data + it.right_data }
     }
 
@@ -308,8 +271,7 @@ class TidyOperators {
     }
 
     static DataflowChannel inner_join(DataflowChannel left, DataflowChannel right, List by) {
-
-        pre_join(left, right, by)
+        preJoin(left, right, by)
             .filter {  it.contains_right && it.contains_left }
             .map { it.by + it.left_data + it.right_data }
     }
