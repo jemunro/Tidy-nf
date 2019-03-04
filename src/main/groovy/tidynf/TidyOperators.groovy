@@ -1,6 +1,8 @@
 package tidynf
 
 import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowVariable
+import groovyx.gpars.dataflow.DataflowQueue
 
 import static nextflow.Nextflow.groupKey
 import static TidyChecker.*
@@ -115,17 +117,17 @@ class TidyOperators {
         }.flatMap { it }
     }
 
-    static DataflowChannel to_columns(DataflowChannel channel){
+    static DataflowVariable to_columns(DataflowQueue queue){
 
         def method = 'to_columns'
-        channel.map_tidy(method).toList()
+        queue.map_tidy(method).toList()
             .map { (it[0].keySet() as List).collectEntries{ k -> [ (k): it.collect { it[k] } ] } }
     }
 
-    static DataflowChannel to_rows(DataflowChannel channel){
+    static DataflowVariable to_rows(DataflowQueue queue){
 
         def method = 'to_rows'
-        channel.map_tidy(method).toList()
+        queue.map_tidy(method).toList()
     }
 
     static DataflowChannel mutate(DataflowChannel channel, Closure closure){

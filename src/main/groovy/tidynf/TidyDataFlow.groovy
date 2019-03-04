@@ -2,6 +2,9 @@ package tidynf
 
 
 import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowQueue
+import groovyx.gpars.dataflow.DataflowVariable
+
 import static channelextra.ChannelExtraOperators.*
 import static tidynf.TidyChecker.*
 
@@ -19,12 +22,16 @@ class TidyDataFlow {
 
     static LinkedHashMap getKeyData(Object object, List by) {
         object instanceof LinkedHashMap ?
-            by.collectEntries { k -> [ (k): object[k] ] }as LinkedHashMap:
+            by.collectEntries { k -> [ (k): object[k] ] } as LinkedHashMap:
             [:] as LinkedHashMap
     }
 
-    static DataflowChannel withKeys(DataflowChannel channel) {
-        mergeWithFirst(channel).map { first, x -> [ keys: getKeys(first), data: x ] }
+    static DataflowVariable withKeys(DataflowVariable var) {
+        var.map { [ keys: getKeys(it), data: it ] }
+    }
+
+    static DataflowQueue withKeys(DataflowQueue queue) {
+        mergeWithFirst(queue).map { f, d -> [ keys: getKeys(f), data: d ] }
     }
 
     static DataflowChannel[] withKeysLeftRight(DataflowChannel left, DataflowChannel right) {

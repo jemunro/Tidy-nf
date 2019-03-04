@@ -13,19 +13,27 @@ class ChannelExtraOperators {
     /* -------------------- Operators to add to Channels  -------------------- */
     //fix this to check Lists all contain strings
 
-    static DataflowChannel[] withFirst (DataflowChannel source){
+    static DataflowChannel[] withFirst (DataflowQueue source){
         def q1
         def q2
         (q1, q2) = source.into(2)
-        q2 = source instanceof DataflowVariable ? q2.first() : q2
-        [ q1.first(),  q2 ]
+        def first = q1.first()
+        return [ first,  q2 ]
     }
 
-    static DataflowChannel mergeWithFirst (DataflowChannel source){
+    static DataflowVariable[] withFirst (DataflowVariable source) {
+        return [ source, source ]
+    }
+
+    static DataflowQueue mergeWithFirst (DataflowQueue source){
         def first
         def each
         (first, each) = withFirst(source)
         each.merge(first) { e, f -> [f, e] }
+    }
+
+    static DataflowVariable mergeWithFirst (DataflowVariable source){
+        source.map { [ it, it ] }
     }
 
     static DataflowChannel toTransList (DataflowChannel channel, sort = true) {
