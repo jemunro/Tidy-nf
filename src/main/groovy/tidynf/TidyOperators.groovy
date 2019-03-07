@@ -62,7 +62,7 @@ class TidyOperators {
         checkUnique('set_names', names)
         channel.map {
             it = requireAsList('set_names', it)
-            checkSize('set_names', names.size(), it.size())
+            checkSetNames('set_names', it , names)
             [names, it].transpose().collectEntries { k, v -> [(k): v] }
         }
     }

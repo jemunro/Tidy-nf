@@ -32,10 +32,17 @@ class TidyChecker {
         }
     }
 
-    static void checkSize(String method, Integer it_size, Integer target_size){
-        if (it_size != target_size) {
+    static void checkSetNames(String method, Object object, List names) {
+        if (object.getMetaClass().respondsTo(object, 'size')) {
+            if (object.size() != names.size()) {
+                throw new IllegalArgumentException(
+                    tidyErrorMsg(method, "Expected size ${names.size()}, got ${object.size()}. " +
+                        "Offending value: $object, names: $names")
+                )
+            }
+        } else {
             throw new IllegalArgumentException(
-                tidyErrorMsg(method, "Expected size $target_size, got $it_size")
+                tidyErrorMsg(method, "Unexpected error: couldn't check size for class: ${object.getClass()}, value: $object")
             )
         }
     }
