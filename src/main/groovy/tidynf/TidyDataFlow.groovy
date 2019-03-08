@@ -6,8 +6,6 @@ import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 
 import static channelextra.ChannelExtraOperators.*
-import static tidynf.TidyChecker.*
-import static nextflow.Nextflow.groupKey
 
 class TidyDataFlow {
 
