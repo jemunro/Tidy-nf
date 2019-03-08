@@ -9,7 +9,7 @@ import java.nio.file.Path
 class TidyMethods {
 
     static tidynf() {
-        ChannelExtra.enable(ChannelExtraOperators, TidyOperators)
+        ChannelExtra.enable(ChannelExtraOperators, TidyOps)
     }
 
     static List as_file(List strings) {
