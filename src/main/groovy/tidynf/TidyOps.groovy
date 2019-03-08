@@ -32,6 +32,8 @@ class TidyOps {
         new ArrangeOp('arrange', params, channel, by).apply()
     }
 
+
+
     static DataflowQueue group_by(DataflowQueue queue, String... by) {
         group_by([:], queue, by as List)
     }
@@ -44,17 +46,25 @@ class TidyOps {
         new GroupByOp('group_by', params, queue, by).apply()
     }
 
+
+
     static DataflowChannel mutate(DataflowChannel channel, Closure closure){
         new MutateOp('mutate', channel, closure).apply()
     }
+
+
 
     static DataflowChannel pull(DataflowChannel channel, String name){
         new PullOp('pull', channel, name).apply()
     }
 
+
+
     static DataflowChannel rename(DataflowChannel channel, String new_name, String old_name){
         new RenameOp('rename', channel, new_name, old_name).apply()
     }
+
+
 
     static DataflowChannel select(DataflowChannel channel, String... names){
         select(channel, names as List)
@@ -64,6 +74,8 @@ class TidyOps {
         new SelectOp('select', channel, names).apply()
     }
 
+
+
     static DataflowChannel set_names(DataflowChannel channel, String... names){
         set_names(channel, names as List)
     }
@@ -72,17 +84,25 @@ class TidyOps {
         new SetNamesOp('set_names', channel, names).apply()
     }
 
+
+
     static DataflowVariable to_columns(DataflowQueue queue){
         new ToColumnsOp('to_columns', queue).apply()
     }
+
+
 
     static DataflowVariable to_rows(DataflowQueue queue){
         new ToRowsOp('to_rows', queue).apply()
     }
 
+
+
     static DataflowChannel unname(DataflowChannel channel){
         new UnnameOp('unname', channel).apply()
     }
+
+
 
     static DataflowChannel unnest(DataflowChannel channel, String... at) {
         unnest(channel, at as List).apply()
@@ -93,6 +113,7 @@ class TidyOps {
     }
 
 
+
     static DataflowQueue left_join(DataflowQueue left, DataflowQueue right, String... by) {
         left_join(left, right, by as List)
     }
@@ -100,6 +121,8 @@ class TidyOps {
     static DataflowQueue left_join(DataflowQueue left, DataflowQueue right, List by) {
         new JoinOp('left_join', left, right, by).apply()
     }
+
+
 
     static DataflowQueue right_join(DataflowQueue left, DataflowQueue right, String... by) {
         right_join(left, right, by as List)
@@ -109,6 +132,8 @@ class TidyOps {
         new JoinOp('right_join', left, right, by).apply()
     }
 
+
+
     static DataflowQueue full_join(DataflowQueue left, DataflowQueue right, String... by) {
         full_join(left, right, by as List)
     }
@@ -116,6 +141,8 @@ class TidyOps {
     static DataflowQueue full_join(DataflowQueue left, DataflowQueue right, List by) {
         new JoinOp('full_join', left, right, by).apply()
     }
+
+
 
     static DataflowQueue inner_join(DataflowQueue left, DataflowQueue right, String... by) {
         inner_join(left, right, by as List)
