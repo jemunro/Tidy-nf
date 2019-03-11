@@ -5,6 +5,7 @@ import groovyx.gpars.dataflow.DataflowChannel
 import static tidynf.TidyChecks.checkHasKeys
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.TidyDataFlow.withKeys
 
 class RenameOp {
     private String method_name

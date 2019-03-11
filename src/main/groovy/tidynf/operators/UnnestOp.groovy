@@ -6,6 +6,7 @@ import static tidynf.TidyChecks.checkEqualSizes
 import static tidynf.TidyChecks.checkHasKeys
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.TidyDataFlow.withKeys
 
 class UnnestOp {
 

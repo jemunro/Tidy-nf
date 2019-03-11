@@ -116,7 +116,7 @@ class TidyOps {
 
 
     static DataflowChannel unnest(DataflowChannel channel, String... at) {
-        unnest(channel, at as List).apply()
+        unnest(channel, at as List)
     }
 
     static DataflowChannel unnest(DataflowChannel channel, List at) {
