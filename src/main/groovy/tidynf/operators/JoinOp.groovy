@@ -29,19 +29,19 @@ class JoinOp {
     DataflowQueue apply() {
         switch(method_name) {
 
-            case "left":
+            case "left_join":
                 combineByTuple()
                     .filter { it.contains_left }
                     .map { it.by + it.left_data + it.right_data }
                 break
 
-            case "right":
+            case "right_join":
                 combineByTuple()
                     .filter { it.contains_right }
                     .map { it.by + it.left_data + it.right_data }
                 break
 
-            case "inner":
+            case "inner_join":
                 combineByTuple()
                     .filter { it.contains_right && it.contains_left }
                     .map { it.by + it.left_data + it.right_data }
