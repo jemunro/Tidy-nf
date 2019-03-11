@@ -3,7 +3,15 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecker.*
+import static tidynf.TidyChecks.checkAllAreType
+import static tidynf.TidyChecks.checkEqualSizes
+import static tidynf.TidyChecks.checkHasKeys
+import static tidynf.TidyChecks.checkIsType
+import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.TidyChecks.checkNonEmpty
+import static tidynf.TidyChecks.checkParamTypes
+import static tidynf.TidyChecks.checkRequiredParams
+import static tidynf.TidyDataFlow.withKeys
 
 
 class ArrangeOp {
@@ -62,7 +70,7 @@ class ArrangeOp {
                 .withIndex()
                 .collectEntries { item, i -> [(set[i]) : item] }
 
-            data.collectEntries { k, v -> [(k): sorted.containsKey(k) ? sorted[k] : it[k]] }
+            data.collectEntries { k, v -> [(k): sorted.containsKey(k) ? sorted[k] : v ] }
         }
     }
 

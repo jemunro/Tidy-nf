@@ -13,6 +13,7 @@ import tidynf.operators.RenameOp
 import tidynf.operators.SelectOp
 import tidynf.operators.SetNamesOp
 import tidynf.operators.ToColumnsOp
+import tidynf.operators.ToGroupSizeOp
 import tidynf.operators.ToRowsOp
 import tidynf.operators.UnnameOp
 import tidynf.operators.UnnestOp
@@ -94,6 +95,16 @@ class TidyOps {
 
     static DataflowVariable to_rows(DataflowQueue queue){
         new ToRowsOp('to_rows', queue).apply()
+    }
+
+
+
+    static DataflowVariable to_group_size(DataflowQueue queue, String... by) {
+        to_group_size(queue, by as List)
+    }
+
+    static DataflowVariable to_group_size(DataflowQueue queue, List by) {
+        new ToGroupSizeOp('to_group_size', queue, by).apply()
     }
 
 

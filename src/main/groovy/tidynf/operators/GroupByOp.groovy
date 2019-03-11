@@ -1,25 +1,29 @@
 package tidynf.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 
-import static tidynf.TidyChecker.checkEqualSizes
-import static tidynf.TidyChecker.checkIsSubset
-import static tidynf.TidyChecker.checkIsSubset
-import static tidynf.TidyChecker.checkIsSubset
-import static tidynf.TidyChecker.tidyError
-import static tidynf.TidyChecker.tidyError
+import static tidynf.TidyChecks.checkEqualSizes
+import static tidynf.TidyChecks.checkHasKey
+import static tidynf.TidyChecks.checkHasKeys
+import static tidynf.TidyChecks.checkIsType
+import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.TidyChecks.checkParamTypes
+import static tidynf.TidyChecks.checkRequiredParams
 import static tidynf.exception.TidyError.error
+import static tidynf.TidyDataFlow.withKeys
+import static nextflow.Nextflow.groupKey
 
 class GroupByOp {
 
     private String method_name
     private DataflowQueue source
     private DataflowVariable group_size
+    private String group_size_key
     private List by
 
-    GroupByOp(String method_name, Map params, DataflowQueue queue, List by){
+    GroupByOp(String method_name, Map params, DataflowQueue source, List by){
 
         this.method_name = method_name
         this.source = source
@@ -29,69 +33,83 @@ class GroupByOp {
         def types = [group_size: DataflowVariable, group_size_key: String]
         checkRequiredParams(method_name, required, params)
         checkParamTypes(method_name, types, params)
-        this.group_size = params.group_size
+        this.group_size = params?.group_size
+        this.group_size_key = params?.group_size_key?: 'size'
 
     }
 
     DataflowQueue apply() {
 
-        def required = []
-        def types = [group_size: DataflowVariable, group_size_key: String]
-        checkRequiredParams(method_name, required, params)
-        checkParamTypes(method_name, types, params)
-
-
-        withKeys(source).map {
-            it.data = requireAsLinkedHashMap(method_name, it.data)
-            checkKeysMatch(method_name, it.data.keySet() as List, it.keys as List)
-            checkKeysAreSubset(method_name, by, it.keys)
-            [ ( by.size() > 1 ? by.collect { k -> it.data[k] } : it.data[by[0]] ), it.data ]
-        }.groupTuple().map {
-            it[1][0].keySet().collectEntries { k ->
-                [(k): (by.contains(k) ?
-                    (group_key ? groupKey(it[1][0][k], it[1].size()) : it[1][0][k] ) :
-                    ( it[1].collect { it[k] } )
-                )]
+        prepareGroupBy()
+            .groupTuple(by:0)
+            .map {
+                (it[1][0].keySet() as List)
+                    .collectEntries { k ->
+                        [ (k) : (by.contains(k) ? it[1][0][k] : it[1].collect { m -> m[k] } )] }
             }
-        }
     }
 
-    static DataflowChannel preGroupBy(Map params, DataflowQueue source, List by, String method = 'prepareForJoin') {
+    DataflowQueue prepareGroupBy() {
+        /*
+        / Return DataflowQueue of size 2 tuples - first entry is grouping tuple, second entry is linkedHashMap Data
+        */
 
-        def group_size = params?.group_size ?: false
-        def group_size_key = params?.group_size_key ?: 'size'
-        if (group_size) {
-            if (by.contains(group_size_key)) {
-                tidyError(method, "by must no contain group size key")
-            }
+        withKeys(source).map {
 
-            def group_size_tuples = group_size.map_tidy(method) {
-                def by_gsk = by + group_size_key
-                checkIsSubset(method, by_gsk, it.keySet() as List)
-                checkEqualSizes(by_gsk.collect { k -> it[k] }, method)
-                def n = it[group_size_key].size()
-                (0..<n).collectEntries { i ->
-                    [ (by.collect { k -> it[k][i] }) : it[group_size_key][i] ]
+            runChecks(it)
+
+            [ by.collect { k -> it.data[k] }, it.data ]
+
+        }.with {
+            if (group_size) {
+
+                runGroupSizeChecks(group_size)
+
+                def group_size_tuples = group_size.map {
+
+                    def n = it[group_size_key].size()
+
+                    (0..<n).collectEntries { i ->
+                        [ (by.collect { k -> it[k][i] }) : it[group_size_key][i] ]
+                    }
                 }
-            }
 
-            source
-                .map_tidy(method) { checkIsSubset(method, by, it.keySet() as List) }
-                .merge(group_size_tuples) { d, gs -> [data: d, group_size: gs ] }
-                .map {
-                def group_tuple = by.collect { k -> it.data[k] }
-                if (! it.gs.containsKey(group_tuple)) {
-                    tidyError(method, "tuple not found in group_size: $group_tuple")
+                it.merge(group_size_tuples) { d, m  ->
+
+                    if (! m?.containsKey(d[0])) {
+                        error("Grouping tuple: ${d[0]} not found in group_size_tuples ${m}.", method_name)
+                    }
+
+                    [ groupKey(d[0], m[d[0]]), d[1] ]
                 }
-                [ groupKey(group_tuple, it.gs[group_tuple]), it.data]
+            } else {
+                it
             }
+        }
 
-        } else {
-            source
-                .map_tidy(method) {
-                checkIsSubset(method, by, it.keySet() as List)
-                [ by.collect { k -> it.data[k] }, it.data ]
-            }
+    }
+
+
+    void runChecks(LinkedHashMap map) {
+
+        checkIsType(map.keys, List, method_name)
+        checkIsType(map.data, LinkedHashMap, method_name)
+        checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
+        checkHasKeys(map.data, by, method_name)
+    }
+
+
+    void runGroupSizeChecks(DataflowVariable var){
+
+        if (by.contains(group_size_key)) {
+            error("group_size_key ($group_size_key) must not be in by ($by)", method_name)
+        }
+
+        var.map {
+            checkIsType(it, LinkedHashMap, method_name)
+            checkHasKeys(it as LinkedHashMap, by, method_name)
+            checkHasKey(it as LinkedHashMap, group_size_key, method_name)
+            checkEqualSizes((by + group_size_key).collect { k -> it[k] }, method_name)
         }
     }
 

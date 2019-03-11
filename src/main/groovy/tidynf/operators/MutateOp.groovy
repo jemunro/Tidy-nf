@@ -2,7 +2,7 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecker.*
+import static tidynf.TidyChecks.*
 import static tidynf.TidyDataFlow.withKeys
 
 class MutateOp {

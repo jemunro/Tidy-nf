@@ -2,12 +2,9 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecker.checkHasKey
-import static tidynf.TidyChecker.checkHasKeys
-import static tidynf.TidyChecker.checkIsType
-import static tidynf.TidyChecker.checkIsType
-import static tidynf.TidyChecker.checkKeysMatch
-import static tidynf.exception.TidyError.error
+import static tidynf.TidyChecks.checkHasKeys
+import static tidynf.TidyChecks.checkIsType
+import static tidynf.TidyChecks.checkKeysMatch
 
 class RenameOp {
     private String method_name

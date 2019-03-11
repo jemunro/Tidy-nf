@@ -2,8 +2,8 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecker.checkUnique
-import static tidynf.TidyChecker.requireAsList
+import static tidynf.TidyChecks.checkUnique
+import static tidynf.TidyChecks.requireAsList
 
 class SetNamesOp {
 

@@ -2,9 +2,9 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 
-import static tidynf.TidyChecker.checkIsSubset
-import static tidynf.TidyChecker.checkKeysMatch
-import static tidynf.TidyChecker.requireAsLinkedHashMap
+import static tidynf.TidyChecks.checkIsSubset
+import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.TidyChecks.requireAsLinkedHashMap
 import static tidynf.TidyDataFlow.leftRightExclusive
 import static tidynf.TidyDataFlow.withKeysLeftRight
 import static tidynf.TidyDataFlow.withUniqueKeyData

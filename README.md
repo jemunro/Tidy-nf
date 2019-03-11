@@ -72,10 +72,13 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * excluding missing entries from left and right channels
     * see `dplyr::inner_join()`
 * **group_by()**
-    * groups TidyChannel by select variables
+    * groups TidyChannel by selected variables
     * see `dplyr::group_by()`
+* **to_group_size()**
+    * returns a TidyVariable with size of groups
+    * useful for specifying group_size parameter to group_by
 * **arrange()**
-    * sort grouped variables
+    * sort within columns by row contents
     * see `dplyr::arrange()`
 * **to_rows()**
     * collect TidyChannel into  TidyVariable, List of LinkedHashMap
