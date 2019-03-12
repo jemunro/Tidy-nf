@@ -29,18 +29,18 @@ class UnnestOp {
             runChecks(it)
 
             def data = it.data as LinkedHashMap
-
-            if (! at){
-                at = data.findAll { k, v -> v instanceof List }.collect { it.key }
+            def _at= at
+            if (! _at){
+                _at = data.findAll { k, v -> v instanceof List }.collect { it.key }
             }
-            if (! at) {
+            if (! _at) {
                 [ it.data ]
             } else {
                 checkEqualSizes(at.collect { k -> data[k] }, method_name)
-                def n = data[at[0]].size()
+                def n = data[_at[0]].size()
                 (0..<n).collect { i ->
                     data.collectEntries { k, v ->
-                        [(k): at.contains(k) ? data[k][i] : data[k]]
+                        [(k): _at.contains(k) ? data[k][i] : data[k]]
                     }
                 }
             }
@@ -48,7 +48,7 @@ class UnnestOp {
     }
 
     void runChecks(LinkedHashMap map) {
-
+        println map
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
         checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
