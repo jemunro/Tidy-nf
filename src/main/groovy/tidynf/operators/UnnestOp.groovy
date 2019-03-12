@@ -36,7 +36,7 @@ class UnnestOp {
             if (! _at) {
                 [ it.data ]
             } else {
-                checkEqualSizes(at.collect { k -> data[k] }, method_name)
+                checkEqualSizes(_at.collect { k -> data[k] }, method_name)
                 def n = data[_at[0]].size()
                 (0..<n).collect { i ->
                     data.collectEntries { k, v ->
@@ -48,7 +48,6 @@ class UnnestOp {
     }
 
     void runChecks(LinkedHashMap map) {
-        println map
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
         checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
