@@ -12,6 +12,7 @@ import static tidynf.TidyChecks.checkNonEmpty
 import static tidynf.TidyChecks.checkParamTypes
 import static tidynf.TidyChecks.checkRequiredParams
 import static tidynf.TidyDataFlow.withKeys
+import static tidynf.TidyHelpers.keySetList
 
 
 class ArrangeOp {
@@ -50,7 +51,7 @@ class ArrangeOp {
                 (data
                     .findAll { k, v -> data[k] instanceof List && ! by.contains(k) }
                     .findAll { it.value.size() == data[by[0]].size() }
-                    .with { it.keySet() as List }
+                    .with { keySetList(it) }
                     .with { by + it }
                 )
 
@@ -79,7 +80,7 @@ class ArrangeOp {
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
         checkHasKeys(map.data, by, method_name)
-        checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
+        checkKeysMatch(map.keys, keySetList(map.data), method_name)
         checkAllAreType(by.collect { map.data[it] }, List, method_name)
     }
 

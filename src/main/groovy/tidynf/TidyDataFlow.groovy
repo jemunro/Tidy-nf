@@ -6,11 +6,12 @@ import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 
 import static channelextra.ChannelExtraOperators.*
+import static tidynf.TidyHelpers.keySetList
 
 class TidyDataFlow {
 
     static List getKeys(Object object) {
-        object instanceof LinkedHashMap ? object.keySet() as List : null
+        object instanceof LinkedHashMap ? keySetList(object) : null
     }
 
     static List getKeyTuple(Object object, List by) {

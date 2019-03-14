@@ -6,11 +6,13 @@ import groovyx.gpars.dataflow.DataflowVariable
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
 import static tidynf.TidyDataFlow.withKeys
+import static tidynf.TidyHelpers.keySetList
 
 class ToColumnsOp {
 
     private String method_name
     private DataflowQueue source
+    private ArrayList keys
 
     ToColumnsOp(String method_name, DataflowQueue source) {
 
@@ -24,12 +26,15 @@ class ToColumnsOp {
 
             runChecks(it)
 
+            if (! this.keys){
+                this.keys = it.keys
+            }
+
             it.data
 
         }.toList().map {
 
-            (it[0].keySet() as List)
-                .collectEntries{ k -> [ (k): it.collect { it[k] } ] }
+            keys.collectEntries{ k -> [ (k): it.collect { it[k] } ] }
         }
     }
 
@@ -37,6 +42,6 @@ class ToColumnsOp {
 
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
+        checkKeysMatch(map.keys, keySetList(map.data), method_name)
     }
 }

@@ -8,6 +8,7 @@ import static tidynf.TidyChecks.requireAsLinkedHashMap
 import static tidynf.TidyDataFlow.leftRightExclusive
 import static tidynf.TidyDataFlow.withKeysLeftRight
 import static tidynf.TidyDataFlow.withUniqueKeyData
+import static tidynf.TidyHelpers.keySetList
 
 class JoinOp {
 
@@ -108,10 +109,10 @@ class JoinOp {
         source.map {
             it.data = requireAsLinkedHashMap(method_name, it.data)
             if (is_left){
-                checkKeysMatch(it.left_keys, it.data.keySet() as List, method_name)
+                checkKeysMatch(it.left_keys, keySetList(it.data), method_name)
                 checkIsSubset(method_name, by, it.left_keys)
             } else {
-                checkKeysMatch(it.right_keys, it.data.keySet() as List, method_name)
+                checkKeysMatch(it.right_keys, keySetList(it.data), method_name)
                 checkIsSubset(method_name, by, it.right_keys)
             }
             def by_data = by.collectEntries { k -> [(k): it.data[k] ] }

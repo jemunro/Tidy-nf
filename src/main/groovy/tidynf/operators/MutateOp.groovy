@@ -4,6 +4,7 @@ import groovyx.gpars.dataflow.DataflowChannel
 
 import static tidynf.TidyChecks.*
 import static tidynf.TidyDataFlow.withKeys
+import static tidynf.TidyHelpers.keySetList
 
 class MutateOp {
 
@@ -40,6 +41,6 @@ class MutateOp {
     void runChecks(LinkedHashMap map) {
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
+        checkKeysMatch(map.keys, keySetList(map.data), method_name)
     }
 }
