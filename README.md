@@ -13,9 +13,9 @@ left = Channel.from([
     ['c', 5, '/file/path/5.bam'],
     ['c', 6, '/file/path/6.bam']])
     .set_names('id', 'value', 'file')
-    .mutate { file = as_file(file) ; bai = file_ext(file, '.bai')}
+    .mutate { file = as_file(file) ; bai = file_ext(file, '.bai') }
     .group_by('id')
-    .arrange( by:['value'] )
+    .arrange('value')
     .mutate { n = value.size() }
 
 right = Channel.from([
