@@ -14,6 +14,7 @@ import static tidynf.TidyChecks.checkRequiredParams
 import static tidynf.exception.TidyError.error
 import static tidynf.TidyDataFlow.withKeys
 import static nextflow.Nextflow.groupKey
+import static tidynf.TidyHelpers.keySetList
 
 class GroupByOp {
 
@@ -43,7 +44,7 @@ class GroupByOp {
         prepareGroupBy()
             .groupTuple(by:0)
             .map {
-                (it[1][0].keySet() as List)
+                keySetList(it[1][0])
                     .collectEntries { k ->
                         [ (k) : (by.contains(k) ? it[1][0][k] : it[1].collect { m -> m[k] } )] }
             }
@@ -94,7 +95,7 @@ class GroupByOp {
 
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
+        checkKeysMatch(map.keys, keySetList(map.data), method_name)
         checkHasKeys(map.data, by, method_name)
     }
 

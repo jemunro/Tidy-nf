@@ -8,6 +8,7 @@ import static tidynf.TidyChecks.checkHasKeys
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
 import static tidynf.TidyDataFlow.withKeys
+import static tidynf.TidyHelpers.keySetList
 
 class ToGroupSizeOp {
 
@@ -37,7 +38,7 @@ class ToGroupSizeOp {
                     .with { m -> m + [size: it[1].size() ] } }
             .toList()
             .map {
-                (it[0].keySet() as List)
+                keySetList(it[0])
                     .collectEntries{ k -> [ (k): it.collect { it[k] } ] } }
     }
 
@@ -46,7 +47,7 @@ class ToGroupSizeOp {
 
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
+        checkKeysMatch(map.keys, keySetList(map.data), method_name)
         checkHasKeys(map.data, by, method_name)
     }
 

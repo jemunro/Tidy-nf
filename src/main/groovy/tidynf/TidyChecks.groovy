@@ -1,5 +1,6 @@
 package tidynf
 
+import static tidynf.TidyHelpers.keySetList
 import static tidynf.exception.TidyError.error
 
 
@@ -32,18 +33,18 @@ class TidyChecks {
     }
 
     static boolean hasKeys(LinkedHashMap map, List keys){
-        isSubset(keys, map.keySet() as List)
+        isSubset(keys, keySetList(map))
     }
 
     static void checkHasKeys(LinkedHashMap map, List keys, String method_name){
         if (! hasKeys(map, keys)) {
-            error( "Keyset: ${map.keySet() as List} does not contain keys: $keys", method_name)
+            error( "Keyset: ${keySetList(map)} does not contain keys: $keys", method_name)
         }
     }
 
     static void checkHasKey(LinkedHashMap map, String key, String method_name){
         if (! map.containsKey(key)) {
-            error("Keyset: ${map.keySet() as List} does not contain key: $key", method_name)
+            error("Keyset: ${keySetList(map)} does not contain key: $key", method_name)
         }
     }
 

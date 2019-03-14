@@ -6,6 +6,7 @@ import static tidynf.TidyChecks.checkHasKeys
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
 import static tidynf.TidyDataFlow.withKeys
+import static tidynf.TidyHelpers.keySetList
 
 class RenameOp {
     private String method_name
@@ -34,7 +35,7 @@ class RenameOp {
     void runChecks(LinkedHashMap map) {
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, map.data.keySet() as List, method_name)
+        checkKeysMatch(map.keys, keySetList(map.data), method_name)
         checkHasKeys(map.data, [new_key, old_key], method_name)
     }
 }
