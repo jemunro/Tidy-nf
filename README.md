@@ -47,7 +47,7 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * **pull()**
     * extract a given variable
     * see `dplyr::pull()`
-* **tidy()**
+* **set_names()**
     * set names for variables. Converts List to LinkedHashMap.
     * see `magrittr::set_names()`
 * **rename()**
