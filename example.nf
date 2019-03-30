@@ -13,7 +13,7 @@ left = Channel.from([
     .set_names('id', 'value', 'file')
     .mutate { file = as_file(file) ; bai = file_ext(file, '.bai')}
     .group_by('id')
-    .arrange( by:['value'] )
+    .arrange('value')
     .mutate { n = value.size() }
 
 right = Channel.from([
