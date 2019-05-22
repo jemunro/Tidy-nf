@@ -78,4 +78,23 @@ class TidyMethods {
             .collect { it.split(delim) as List }
             .collect { [col_names, it].transpose().collectEntries { k, v -> [(k): v] } }
     }
+
+    static void write_tsv(List data, String filename) {
+        write_delim(data, filename, '\t')
+    }
+
+
+    static void write_csv(List data, String filename) {
+        write_delim(data, filename, ',')
+    }
+
+
+    static void write_delim(List data, String filename, String delim) {
+        data
+            .collect { it instanceof List ? it : it instanceof Map ? it.values() as List : [it] }
+            .collect { it.collect { it.toString() } }
+            .collect { it.join(delim) }
+            .join('\n')
+            .with { (new File(filename)).write(it + '\n', 'utf-8') }
+    }
 }
