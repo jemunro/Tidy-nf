@@ -6,6 +6,7 @@ import org.codehaus.groovy.runtime.NullObject
 import java.nio.file.Path
 
 
+
 class TidyMethods {
 
     static tidynf() {
@@ -60,5 +61,21 @@ class TidyMethods {
         } else {
             return length as Float
         }
+    }
+
+    static List read_csv(String file, List col_names) {
+        read_delim(file, ',', col_names)
+    }
+
+    static List read_tsv(String file, List col_names) {
+        read_delim(file, '\t', col_names)
+    }
+
+    static List read_delim(String filename, String delim = '\t', List col_names) {
+        (new File(filename))
+            .getText('utf-8')
+            .with { it.split('\n') as List }
+            .collect { it.split(delim) as List }
+            .collect { [col_names, it].transpose().collectEntries { k, v -> [(k): v] } }
     }
 }
