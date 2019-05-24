@@ -2,7 +2,7 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkHasKeys
+import static tidynf.TidyChecks.checkHasKey
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
 import static tidynf.TidyDataFlow.withKeys
@@ -36,6 +36,6 @@ class RenameOp {
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
         checkKeysMatch(map.keys, keySetList(map.data), method_name)
-        checkHasKeys(map.data, [new_key, old_key], method_name)
+        checkHasKey(map.data, old_key, method_name)
     }
 }
