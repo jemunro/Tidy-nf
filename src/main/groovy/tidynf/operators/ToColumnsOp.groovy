@@ -26,7 +26,7 @@ class ToColumnsOp {
 
             runChecks(it)
 
-            if (! this.keys){
+            if (! this.keys) {
                 this.keys = it.keys
             }
 
@@ -34,7 +34,7 @@ class ToColumnsOp {
 
         }.toList().map {
 
-            keys.collectEntries{ k -> [ (k): it.collect { it[k] } ] }
+            keys?.collectEntries{ k -> [ (k): it.collect { it[k] } ] }
         }
     }
 
