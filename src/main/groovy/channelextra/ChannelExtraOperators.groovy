@@ -97,12 +97,9 @@ class ChannelExtraOperators {
         toDelim(channel, (new File(filename)), ',', colNames)
     }
 
-    static DataflowChannel toDelim(DataflowQueue channel, File file, String delim, List colNames, archive = true) {
+    static DataflowChannel toDelim(DataflowQueue channel, File file, String delim, List colNames) {
         def parent = file.toPath().toAbsolutePath().toFile().parentFile
         if (! parent.exists()) { parent.mkdirs() }
-        if (archive) {
-            file = archiveFile(file)
-        }
         if (colNames) {
             file.write(colNames.join(delim) + '\n', 'utf-8')
         } else {
