@@ -28,7 +28,7 @@ class MutateOp {
 
             runChecks(it)
 
-            def data = it.data as Binding
+            def data = new Binding(it.data as LinkedHashMap)
             def rehydrated = dehydrated.rehydrate(with, data, null)
             try {
                 rehydrated.call()
@@ -43,6 +43,6 @@ class MutateOp {
     void runChecks(LinkedHashMap map) {
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, keySetList(map.data), method_name)
+        //checkKeysMatch(map.keys, keySetList(map.data), method_name)
     }
 }

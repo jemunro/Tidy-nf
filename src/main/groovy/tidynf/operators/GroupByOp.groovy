@@ -34,7 +34,7 @@ class GroupByOp {
         def types = [group_size: DataflowVariable, group_size_key: String]
         checkRequiredParams(method_name, required, params)
         checkParamTypes(method_name, types, params)
-        this.group_size = params?.group_size
+        this.group_size = params?.group_size as DataflowVariable
         this.group_size_key = params?.group_size_key?: 'size'
 
     }

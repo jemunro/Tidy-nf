@@ -10,8 +10,6 @@ import groovyx.gpars.dataflow.DataflowVariable
 import java.nio.file.Path
 
 class ChannelExtraOperators {
-    /* -------------------- Operators to add to Channels  -------------------- */
-    //fix this to check Lists all contain strings
 
     static DataflowChannel[] withFirst (DataflowQueue source){
         def q1
@@ -136,21 +134,10 @@ class ChannelExtraOperators {
         if (! parent.exists()) { parent.mkdirs() }
         file.write('', 'utf-8')
         channel.subscribe {
-            if (it instanceof LinkedHashMap) {
-                it = it.collect { it.value }
-            }
-            file.append( it.collect {
-                it instanceof Path ? it.toRealPath().toAbsolutePath().toString() : it }
-            .join(delim) + '\n', 'utf-8')
+            def values = ( it instanceof LinkedHashMap ? it.values() : it )
+                .collect { it instanceof Path ? it.toRealPath().toAbsolutePath().toString() : it }
+            file.append(values.join(delim) + '\n', 'utf-8')
         }
-    }
-
-    static DataflowChannel subscribeCopyToTsv(DataflowChannel channel, file) {
-        def channel_a
-        def channel_b
-        (channel_a, channel_b) = channel.into(2)
-        subscribeToDelim(channel_a, file, '\t')
-        channel_b
     }
 
     static DataflowChannel sortTuplesBy (DataflowChannel channel, Integer by, rev = false){
