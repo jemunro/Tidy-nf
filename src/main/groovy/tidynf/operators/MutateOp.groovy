@@ -33,7 +33,8 @@ class MutateOp {
             try {
                 rehydrated.call()
             } catch(MissingPropertyException e) {
-                error("Unknown variable \"${e.getProperty()}\"", 'mutate')
+                error("Unknown variable \"${e.getProperty()}\", data: \"${it.data.toString()}\", with: \"${with.getVariables().toString()}\"",
+                    'mutate')
             }
 
             data.getVariables() as LinkedHashMap
