@@ -48,11 +48,14 @@ class TidyOps {
     }
 
 
-
     static DataflowChannel mutate(DataflowChannel channel, Closure closure){
-        new MutateOp('mutate', channel, closure).apply()
+        mutate([:], channel, closure)
     }
 
+
+    static DataflowChannel mutate(Map with, DataflowChannel channel, Closure closure){
+        new MutateOp('mutate', channel, closure, with).apply()
+    }
 
 
     static DataflowChannel pull(DataflowChannel channel, String name){

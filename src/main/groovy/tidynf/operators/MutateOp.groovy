@@ -5,19 +5,20 @@ import groovyx.gpars.dataflow.DataflowChannel
 import static tidynf.TidyChecks.*
 import static tidynf.TidyDataFlow.withKeys
 import static tidynf.TidyHelpers.keySetList
+import static tidynf.exception.TidyError.error
 
 class MutateOp {
 
     private String method_name
     private DataflowChannel source
-    private LinkedHashMap parent_data
+    private Binding with
     private Closure dehydrated
 
-    MutateOp(String method_name, DataflowChannel source, Closure closure){
+    MutateOp(String method_name, DataflowChannel source, Closure closure, Map with){
 
         this.method_name = method_name
         this.source = source
-        this.parent_data = closure.binding.getVariables() as LinkedHashMap
+        this.with = with as Binding
         this.dehydrated = closure.dehydrate()
 
     }
@@ -27,14 +28,15 @@ class MutateOp {
 
             runChecks(it)
 
-            def data = it.data as LinkedHashMap
+            def data = it.data as Binding
+            def rehydrated = dehydrated.rehydrate(with, data, null)
+            try {
+                rehydrated.call()
+            } catch(MissingPropertyException e) {
+                error("Unknown variable \"${e.getProperty()}\"", 'mutate')
+            }
 
-            def binding = new Binding()
-            def all_data = parent_data + data
-            def rehydrated = dehydrated.rehydrate(all_data, binding, binding)
-            rehydrated.call()
-
-            data + (binding.getVariables() as LinkedHashMap)
+            data.getVariables() as LinkedHashMap
         }
     }
 
