@@ -1,23 +1,17 @@
 package tidynf
 
-import static tidynf.TidyHelpers.keySetList
 import static tidynf.exception.TidyError.tidyError
 
 
 class TidyChecks {
 
-    static LinkedHashMap requireAsLinkedHashMap(String method, Object object){
-        if (!(object instanceof LinkedHashMap)) {
-            tidyError("Expected LinkedHashMap, got class: ${object.getClass()}, value: $object\"", method)
-        }
-        object as LinkedHashMap
-    }
 
     static void checkIsType(Object object, Class type, String method_name){
         if (!(type.isInstance(object))) {
             tidyError("Expected class: $type, got class: ${object.getClass()}, offending value: $object.", method_name)
         }
     }
+
 
     static void checkAllAreType(List list, Class type, String method_name){
         if ( ! list.every { type.isInstance(it) } ) {
@@ -26,35 +20,12 @@ class TidyChecks {
         }
     }
 
-    static void checkIsLinkedHashMap(String method_name, Object object){
-        if (!(object instanceof LinkedHashMap)) {
-            tidyError("Expected LinkedHashMap, got class: ${object.getClass()}, value: $object", method_name)
-        }
-    }
-
-    static boolean hasKeys(LinkedHashMap map, List keys){
-        isSubset(keys, keySetList(map))
-    }
-
-    static void checkHasKeys(LinkedHashMap map, List keys, String method_name){
-        if (! hasKeys(map, keys)) {
-            tidyError( "Keyset: ${keySetList(map)} does not contain keys: $keys", method_name)
-        }
-    }
-
-    static void checkHasKey(LinkedHashMap map, String key, String method_name){
-        if (! map.containsKey(key)) {
-            tidyError("Keyset: ${keySetList(map)} does not contain key: $key", method_name)
-        }
-    }
 
     static void checkNonEmpty(Collection coll, String method_name){
         if (coll.size() < 1) {
             tidyError("empty List", method_name)
         }
     }
-
-
 
     static List coerceToList(Object object, String method_name){
         if (object instanceof List){
@@ -68,16 +39,6 @@ class TidyChecks {
         }
     }
 
-    static void checkSetNames(List names, Object object, String method_name) {
-        if (object.getMetaClass().respondsTo(object, 'size')) {
-            if (object.size() != names.size()) {
-                tidyError("Expected size ${names.size()}, got ${object.size()}. " +
-                    "Offending value: $object, names: $names", method_name)
-            }
-        } else {
-            tidyError("Unexpected tidyError: couldn't check size for class: ${object.getClass()}, value: $object", method_name)
-        }
-    }
 
     static void checkEqualSizes(List lists, String method_name){
         if (lists.any { !(it instanceof Collection) }) {
@@ -107,15 +68,6 @@ class TidyChecks {
         }
     }
 
-    static boolean  isSubset(List list_a, List list_b){
-        return  ( list_a.every { list_b.contains(it) } )
-    }
-
-    static void checkIsSubset(String method_name, List sub, List sup){
-        if (! isSubset(sub, sup)) {
-            tidyError("keys not present - ${sub.findAll({ ! sup.contains(it) })}", method_name)
-        }
-    }
 
     static void checkNoOverlap(Collection set_a, Collection set_b, String method_name){
         if (set_a.any { set_b.contains(it) }) {
@@ -123,17 +75,20 @@ class TidyChecks {
         }
     }
 
+
     static void checkContains(Collection coll, Object item, String method_name){
         if (!(coll.contains(item))) {
             tidyError("${item.toString()} not in ${coll.toString()}", method_name)
         }
     }
 
+
     static void checkContainsNot(Collection coll, Object item, String method_name) {
         if ((coll.contains(item))) {
             tidyError("${item.toString()} in ${coll.toString()}", method_name)
         }
     }
+
 
     static void checkContainsAll(Collection superSet, Collection subSet, String method_name){
         if (!(superSet.containsAll(subSet))) {
@@ -142,12 +97,12 @@ class TidyChecks {
     }
 
 
-
     static void checkRequiredParams(String method_name, List required, Map params){
         if ( required.any { ! params?.containsKey(it) }){
             tidyError("required parameters ${required.findAll {! params?.containsKey(it)}} not present", method_name)
         }
     }
+
 
     static void checkParamTypes(String method_name, Map types, Map params) {
         params?.forEach { k, v ->

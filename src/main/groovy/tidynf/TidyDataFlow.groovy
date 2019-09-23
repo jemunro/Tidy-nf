@@ -2,11 +2,6 @@ package tidynf
 
 
 import groovyx.gpars.dataflow.DataflowChannel
-import groovyx.gpars.dataflow.DataflowQueue
-import groovyx.gpars.dataflow.DataflowVariable
-
-import static channelextra.ChannelExtraOperators.*
-import static tidynf.TidyHelpers.keySetList
 
 class TidyDataFlow {
 
