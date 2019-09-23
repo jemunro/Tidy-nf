@@ -139,5 +139,4 @@ class JoinOp {
         checkIsType(coll[2], LinkedHashMap, method_name)
     }
 
-
 }
