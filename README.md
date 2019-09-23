@@ -1,4 +1,6 @@
 # Tidy-nf
+Channel operators for Nextflow based on dataframe manipulation in the
+tidyverse packages for R.
 
 ## usage example
 ```groovy
@@ -66,7 +68,7 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * differences:
             - only a single variable may be renames
             - not given as a formula
-    * e.g. `channel.set_names('old_name', 'new_name')`
+    * e.g. `channel.rename('old_name', 'new_name')`
 * **unname()**
     * Remove names. Converts LinkedHashMap to List
     * see `base::unname()`
@@ -82,17 +84,19 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * see `dplyr::left_join()`, `dplyr::right_join()`, `dplyr::full_join()`, `dplyr::inner_join()`
     * e.g. `left.full_join(right, 'x')`
 * **group_by()**
-    * groups TidyChannel by selected variables
+    * group by selected variables
     * see `dplyr::group_by()`
     * differences:
-        - grouping is more explicit, non-grouping variables are collected into lists
-    * e.g. `channel.group_by('x', 'y')
+        - grouping is more explicit, with non-grouping variables collected into lists
+    * e.g. `channel.group_by('x', 'y')`
 * **arrange()**
-    * sort within columns by row contents
+    * sort rows by row contents
     * see `dplyr::arrange()`
     * differences:
         - only works on collected list variables, i.e. those produced by `group_by`
 * **collect_rows()**
     * collect Channel into Variable, List of LinkedHashMap
+    * e.g. channel.collect_rows()
 * **collect_cols()**
     * collect Channel into Variable, LinkedHashMap of List
+    * e.g. channel.collect_cols()
