@@ -7,7 +7,7 @@ class TidyError {
         "Tidy-nf ($method): $error"
     }
 
-    static error(String error, String method) {
+    static tidyError(String error, String method) {
         throw new TidyException(tidyErrorMsg(error, method))
     }
 }

@@ -2,39 +2,50 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkHasKeys
+import static tidynf.TidyChecks.checkContainsAll
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyDataFlow.withKeys
-import static tidynf.TidyHelpers.keySetList
+import static tidynf.TidyChecks.checkNonEmpty
 
 class SelectOp {
 
-    private String method_name
+    private String method_name = 'select'
     private DataflowChannel source
     private List keys
+    private LinkedHashSet keySet
 
-    SelectOp(String method_name, DataflowChannel source, List keys){
+    SelectOp(DataflowChannel source, List keys){
 
-        this.method_name = method_name
         this.source = source
         this.keys = keys
     }
 
     DataflowChannel apply() {
 
-        withKeys(source).map {
+        source.map {
 
-            runChecks(it)
+            checkIsType(it, LinkedHashMap, method_name)
+            def data = it as LinkedHashMap
 
-            keys.collectEntries { k -> [(k): it.data[k]] }
+            synchronized (this) {
+                if (! keySet) {
+                    keySet = data.keySet()
+                    firstChecks()
+                }
+            }
+
+            mapChecks(data)
+
+            data.subMap(keys)
         }
     }
 
-    void runChecks(LinkedHashMap map) {
-        checkIsType(map.keys, List, method_name)
-        checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, keySetList(map.data), method_name)
-        checkHasKeys(map.data, keys, method_name)
+    void firstChecks() {
+        checkNonEmpty(keys, method_name)
+        checkContainsAll(keySet, keys, method_name)
+    }
+
+    void mapChecks(LinkedHashMap data) {
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
     }
 }

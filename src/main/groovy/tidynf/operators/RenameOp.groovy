@@ -2,21 +2,20 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkHasKey
+import static tidynf.TidyChecks.checkContains
+import static tidynf.TidyChecks.checkContainsNot
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyDataFlow.withKeys
-import static tidynf.TidyHelpers.keySetList
 
 class RenameOp {
-    private String method_name
+    private String method_name = 'rename'
     private DataflowChannel source
     private String new_key
     private String old_key
+    private LinkedHashSet keySet
 
-    RenameOp(String method_name, DataflowChannel source, String new_key, String old_key) {
+    RenameOp(DataflowChannel source, String new_key, String old_key) {
 
-        this.method_name = method_name
         this.source = source
         this.new_key = new_key
         this.old_key = old_key
@@ -24,18 +23,30 @@ class RenameOp {
 
     DataflowChannel apply() {
 
-        withKeys(source).map {
+        source.map {
 
-            runChecks(it)
+            checkIsType(it, LinkedHashMap, method_name)
+            def data = it as LinkedHashMap
 
-            it.data.collectEntries { k, v -> [(old_key == k ? new_key: k): v] }
+            synchronized (this) {
+                if (! keySet) {
+                    keySet = data.keySet()
+                    firstChecks()
+                }
+            }
+
+            mapChecks(data)
+
+            data.collectEntries { k, v -> [(old_key == k ? new_key: k): v] }
         }
     }
 
-    void runChecks(LinkedHashMap map) {
-        checkIsType(map.keys, List, method_name)
-        checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, keySetList(map.data), method_name)
-        checkHasKey(map.data, old_key, method_name)
+    void firstChecks() {
+        checkContains(keySet, old_key, method_name)
+        checkContainsNot(keySet, new_key, method_name)
+    }
+
+    void mapChecks(LinkedHashMap data) {
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
     }
 }

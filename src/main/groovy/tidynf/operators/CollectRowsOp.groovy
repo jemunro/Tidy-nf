@@ -1,25 +1,25 @@
 package tidynf.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowQueue
+import groovyx.gpars.dataflow.DataflowVariable
 
-import static tidynf.TidyChecks.checkContains
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
 
-class PullOp {
+class CollectRowsOp {
 
-    private String method_name = 'pull'
-    private DataflowChannel source
-    private String key
+    private String method_name = 'collect_rows'
+    private DataflowQueue source
     private LinkedHashSet keySet
+    private boolean sort
 
-    PullOp(DataflowChannel source, String key) {
+    CollectRowsOp(DataflowQueue source, Boolean sort) {
 
         this.source = source
-        this.key = key
+        this.sort = sort
     }
 
-    DataflowChannel apply() {
+    DataflowVariable apply() {
 
         source.map {
 
@@ -29,18 +29,16 @@ class PullOp {
             synchronized (this) {
                 if (! keySet) {
                     keySet = data.keySet()
-                    firstChecks()
                 }
             }
 
             mapChecks(data)
 
-            data[key]
-        }
-    }
+            data
 
-    void firstChecks() {
-        checkContains(keySet, key, method_name)
+        }.with {
+            sort ? it.toSortedList() : it.toList()
+        }
     }
 
     void mapChecks(LinkedHashMap data) {
