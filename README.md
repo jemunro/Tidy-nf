@@ -41,46 +41,58 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * **mutate()**
     * add new variables or modify existing variables
     * see `dplyr::mutate()`
+    * differences:
+        - variables from global environment cannot be used unless included explicitly
+        - mutate performed with groovy closure instead of R function
+    * e.g. `channel.mutate (var: var) { x = x + var }`
 * **select()**
     * select subset of variables and reorder them
     * see `dplyr::select()`
+    * differences:
+        - variables to be selected must be given as strings
+        - no negative selection with `-`
+    * e.g. `channel.select('x', 'y', 'z')`
 * **pull()**
     * extract a given variable
     * see `dplyr::pull()`
+    * e.g. `channel.pull('x')`
 * **set_names()**
     * set names for variables. Converts List to LinkedHashMap.
     * see `magrittr::set_names()`
+    * e.g. `channel.set_names('x', 'y', 'z')`
 * **rename()**
-    * rename a single variable
+    * rename a variable
     * see `dplyr::rename()`
+    * differences:
+            - only a single variable may be renames
+            - not given as a formula
+    * e.g. `channel.set_names('old_name', 'new_name')`
 * **unname()**
     * Remove names. Converts LinkedHashMap to List
     * see `base::unname()`
 * **unnest()**
-    * un-nests inner lists, provide keys to unnest specific variables
+    * un-nests inner lists, such as those produce by `group_by`,
+     provide keys to unnest specific variables
     * see `tidyr::unnest()`
-* **full_join()**
+    * e.g. `channel.unnest()` or `channel.unnest('x', 'y')`
+* **left_join()**, **right_join()**, **full_join()**, **inner_join()**
     * joins two 'TidyChannel' by selected variables, missing elements replaced by null
-    * see `dplyr::full_join() `
-* **left_join()**
-    * exclude missing entries from left, replace missing entries from right channel with null
-    * see `dplyr::left_join()`
-* **right_join()**
-    * exclude missing entries from right, replace missing entries from left channel with null
-    * see `dplyr::right_join()`
-* **inner_join()**
-    * excluding missing entries from left and right channels
-    * see `dplyr::inner_join()`
+    * differences:
+        - overlapping variable names only permitted for names in `by`
+    * see `dplyr::left_join()`, `dplyr::right_join()`, `dplyr::full_join()`, `dplyr::inner_join()`
+    * e.g. `left.full_join(right, 'x')`
 * **group_by()**
     * groups TidyChannel by selected variables
     * see `dplyr::group_by()`
-* **to_group_size()**
-    * returns a TidyVariable with size of groups
-    * useful for specifying group_size parameter to group_by
+    * differences:
+        - grouping is more explicit, non-grouping variables are collected into lists
+    * e.g. `channel.group_by('x', 'y')
 * **arrange()**
     * sort within columns by row contents
     * see `dplyr::arrange()`
-* **to_rows()**
-    * collect TidyChannel into  TidyVariable, List of LinkedHashMap
-* **to_columns()**
-    * collect TidyChannel into  TidyVariable, LinkedHashMap of Lists
+    * differences:
+        - only works on collected list variables, i.e. those produced by `group_by`
+* **collect_rows()**
+    * collect Channel into Variable, List of LinkedHashMap
+* **collect_cols()**
+    * collect Channel into Variable, LinkedHashMap of List
