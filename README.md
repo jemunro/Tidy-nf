@@ -1,6 +1,6 @@
 # Tidy-nf
 Channel operators for Nextflow based on dataframe manipulation in the
-tidyverse packages for R.
+tidyverse packages from the R programming language.
 
 ## usage example
 ```groovy
