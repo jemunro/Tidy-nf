@@ -103,7 +103,7 @@ class ChannelExtra {
     }
 
     /* From DataflowVariable containing path to json file
-    *  TODO: add error checks */
+    *  TODO: add tidyError checks */
     static fromJson(DataflowVariable dataflowVariable) {
         def slurper = new JsonSlurper()
         dataflowVariable.flatMap {

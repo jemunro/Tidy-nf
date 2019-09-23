@@ -9,29 +9,35 @@ import static tidynf.TidyHelpers.keySetList
 
 class UnnameOp {
 
-    private String method_name
+    private String method_name = 'unname'
     private DataflowChannel source
+    private LinkedHashSet keySet
 
-    UnnameOp(String method_name, DataflowChannel source) {
+    UnnameOp(DataflowChannel source) {
 
-        this.method_name = method_name
         this.source = source
     }
 
     DataflowChannel apply() {
 
-        withKeys(source).map {
+        source.map {
 
-            runChecks(it)
+            checkIsType(it, LinkedHashMap, method_name)
+            def data = it as LinkedHashMap
 
-            it.data.values() as List
+            synchronized (this) {
+                if (! keySet) {
+                    keySet = data.keySet()
+                }
+            }
+
+            mapChecks(data)
+
+            data.values() as ArrayList
         }
     }
 
-    void runChecks(LinkedHashMap map) {
-
-        checkIsType(map.keys, List, method_name)
-        checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, keySetList(map.data), method_name)
+    void mapChecks(LinkedHashMap data) {
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
     }
 }

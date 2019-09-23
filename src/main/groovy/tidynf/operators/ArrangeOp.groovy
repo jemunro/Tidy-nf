@@ -4,29 +4,27 @@ package tidynf.operators
 import groovyx.gpars.dataflow.DataflowChannel
 
 import static tidynf.TidyChecks.checkAllAreType
+import static tidynf.TidyChecks.checkContainsAll
 import static tidynf.TidyChecks.checkEqualSizes
-import static tidynf.TidyChecks.checkHasKeys
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
 import static tidynf.TidyChecks.checkNonEmpty
 import static tidynf.TidyChecks.checkParamTypes
 import static tidynf.TidyChecks.checkRequiredParams
-import static tidynf.TidyDataFlow.withKeys
-import static tidynf.TidyHelpers.keySetList
 
 
 class ArrangeOp {
 
-    private String method_name
+    private String method_name = 'arrange'
     private DataflowChannel source
     private boolean reverse
     private List by
     private List at
+    private LinkedHashSet keySet
 
-    ArrangeOp(String method_name, Map params, DataflowChannel source, List by) {
+    ArrangeOp(Map params, DataflowChannel source, List by) {
 
         this.source = source
-        this.method_name = method_name
         this.by = by
 
         def types = [at: List, at_: String, reverse: Boolean]
@@ -40,18 +38,26 @@ class ArrangeOp {
 
     DataflowChannel apply() {
 
-        withKeys(source).map {
+        source.map {
 
-            runChecks(it)
+            checkIsType(it, LinkedHashMap, method_name)
+            def data = it as LinkedHashMap
 
-            def data = it.data as LinkedHashMap
+            synchronized (this) {
+                if (! keySet) {
+                    keySet = data.keySet()
+                    firstChecks()
+                }
+            }
+
+            mapChecks(data)
 
             def set = at ?
                 (by + at).unique() :
                 (data
                     .findAll { k, v -> data[k] instanceof List && ! by.contains(k) }
                     .findAll { it.value.size() == data[by[0]].size() }
-                    .with { keySetList(it) }
+                    .with { it.keySet() as ArrayList }
                     .with { by + it }
                 )
 
@@ -75,13 +81,14 @@ class ArrangeOp {
         }
     }
 
-    void runChecks(LinkedHashMap map) {
+    void firstChecks() {
         checkNonEmpty(by, method_name)
-        checkIsType(map.keys, List, method_name)
-        checkIsType(map.data, LinkedHashMap, method_name)
-        checkHasKeys(map.data, by, method_name)
-        checkKeysMatch(map.keys, keySetList(map.data), method_name)
-        checkAllAreType(by.collect { map.data[it] }, List, method_name)
+        checkContainsAll(keySet, by, method_name)
+    }
+
+    void mapChecks(LinkedHashMap data) {
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
+        checkAllAreType(by.collect { data[it] }, List, method_name)
     }
 
 }

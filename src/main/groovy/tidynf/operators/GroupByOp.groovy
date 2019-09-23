@@ -11,7 +11,7 @@ import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
 import static tidynf.TidyChecks.checkParamTypes
 import static tidynf.TidyChecks.checkRequiredParams
-import static tidynf.exception.TidyError.error
+import static tidynf.exception.TidyError.tidyError
 import static tidynf.TidyDataFlow.withKeys
 import static nextflow.Nextflow.groupKey
 import static tidynf.TidyHelpers.keySetList
@@ -78,7 +78,7 @@ class GroupByOp {
                 it.merge(group_size_tuples) { d, m  ->
 
                     if (! m?.containsKey(d[0])) {
-                        error("Grouping tuple: ${d[0]} not found in group_size_tuples ${m}.", method_name)
+                        tidyError("Grouping tuple: ${d[0]} not found in group_size_tuples ${m}.", method_name)
                     }
 
                     [ groupKey(d[0], m[d[0]]), d[1] ]
@@ -103,7 +103,7 @@ class GroupByOp {
     void runGroupSizeChecks(DataflowVariable var){
 
         if (by.contains(group_size_key)) {
-            error("group_size_key ($group_size_key) must not be in by ($by)", method_name)
+            tidyError("group_size_key ($group_size_key) must not be in by ($by)", method_name)
         }
 
         var.map {
