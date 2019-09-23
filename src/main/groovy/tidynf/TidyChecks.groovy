@@ -117,9 +117,9 @@ class TidyChecks {
         }
     }
 
-    static void checkNoOverlap(String method_name, List set_a, List set_b){
+    static void checkNoOverlap(Collection set_a, Collection set_b, String method_name){
         if (set_a.any { set_b.contains(it) }) {
-            tidyError("Error - overlap in key sets", method_name)
+            tidyError("Error: sets must not overlap - ${set_a.toString()}, ${set_b.toString()}", method_name)
         }
     }
 

@@ -32,17 +32,12 @@ class TidyOps {
         new ArrangeOp(params, channel, by).apply()
     }
 
-
-    static DataflowQueue group_by(DataflowQueue queue, String... by) {
-        group_by([:], queue, by as List)
+    static DataflowQueue group_by( DataflowQueue queue, String... by) {
+        group_by(queue, by as List)
     }
 
-    static DataflowQueue group_by(Map params, DataflowQueue queue, String... by) {
-        group_by(params, queue, by as List)
-    }
-
-    static DataflowQueue group_by(Map params, DataflowQueue queue, List by) {
-        new GroupByOp('group_by', params, queue, by).apply()
+    static DataflowQueue group_by(DataflowQueue queue, List by) {
+        new GroupByOp(queue, by).apply()
     }
 
 
@@ -107,7 +102,7 @@ class TidyOps {
     }
 
     static DataflowChannel unnest(DataflowChannel channel, List at) {
-        new UnnestOp('unnest', channel, at).apply()
+        new UnnestOp(channel, at).apply()
     }
 
 
@@ -119,7 +114,6 @@ class TidyOps {
     static DataflowQueue left_join(DataflowQueue left, DataflowQueue right, List by) {
         new JoinOp('left_join', left, right, by).apply()
     }
-
 
 
     static DataflowQueue right_join(DataflowQueue left, DataflowQueue right, String... by) {

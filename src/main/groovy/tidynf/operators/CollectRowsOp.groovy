@@ -5,8 +5,6 @@ import groovyx.gpars.dataflow.DataflowVariable
 
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyDataFlow.withKeys
-import static tidynf.TidyHelpers.keySetList
 
 class CollectRowsOp {
 

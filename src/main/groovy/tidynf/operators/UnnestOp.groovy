@@ -2,56 +2,64 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
+import static tidynf.TidyChecks.checkContainsAll
 import static tidynf.TidyChecks.checkEqualSizes
-import static tidynf.TidyChecks.checkHasKeys
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyDataFlow.withKeys
-import static tidynf.TidyHelpers.keySetList
 
 class UnnestOp {
 
-    private String method_name
+    private String method_name = 'unnest'
     private DataflowChannel source
     private List at
+    private LinkedHashSet keySet
 
 
-    UnnestOp(String method_name, DataflowChannel source, List at){
+    UnnestOp(DataflowChannel source, List at){
 
-        this.method_name = method_name
         this.source = source
         this.at = at
     }
 
     DataflowChannel apply() {
 
-        withKeys(source).map {
+        source.map {
 
-            runChecks(it)
+            checkIsType(it, LinkedHashMap, method_name)
+            def data = it as LinkedHashMap
 
-            def data = it.data as LinkedHashMap
-            def _at= at
-            if (! _at){
-                _at = data.findAll { k, v -> v instanceof List }.collect { it.key }
+            synchronized (this) {
+                if (! keySet) {
+                    keySet = data.keySet()
+                    firstChecks()
+                }
             }
-            if (! _at) {
-                [ it.data ]
+
+            mapChecks(data)
+
+            def this_at = at
+            if (! this_at){
+                this_at = data.findAll { k, v -> v instanceof List }.collect { it.key }
+            }
+            if (! this_at) {
+                [ data ]
             } else {
-                checkEqualSizes(_at.collect { k -> data[k] }, method_name)
-                def n = data[_at[0]].size()
+                checkEqualSizes(this_at.collect { k -> data[k] }, method_name)
+                def n = data[this_at[0]].size()
                 (0..<n).collect { i ->
                     data.collectEntries { k, v ->
-                        [(k): _at.contains(k) ? data[k][i] : data[k]]
+                        [(k): this_at.contains(k) ? data[k][i] : data[k]]
                     }
                 }
             }
         }.flatMap { it }
     }
 
-    void runChecks(LinkedHashMap map) {
-        checkIsType(map.keys, List, method_name)
-        checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, keySetList(map.data), method_name)
-        checkHasKeys(map.data, at, method_name)
+    void firstChecks() {
+        checkContainsAll(keySet, at, method_name)
+    }
+
+    void mapChecks(LinkedHashMap data) {
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
     }
 }
