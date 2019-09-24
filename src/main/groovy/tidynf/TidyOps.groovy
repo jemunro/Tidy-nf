@@ -14,6 +14,7 @@ import tidynf.operators.SelectOp
 import tidynf.operators.SetNamesOp
 import tidynf.operators.CollectColsOp
 import tidynf.operators.CollectRowsOp
+import tidynf.operators.CollectDelimOp
 import tidynf.operators.UnnameOp
 import tidynf.operators.UnnestOp
 
@@ -56,11 +57,9 @@ class TidyOps {
     }
 
 
-
     static DataflowChannel rename(DataflowChannel channel, String new_name, String old_name){
         new RenameOp(channel, new_name, old_name).apply()
     }
-
 
 
     static DataflowChannel select(DataflowChannel channel, String... names){
@@ -70,7 +69,6 @@ class TidyOps {
     static DataflowChannel select(DataflowChannel channel, List names){
         new SelectOp(channel, names).apply()
     }
-
 
 
     static DataflowChannel set_names(DataflowChannel channel, String... names){
@@ -96,7 +94,6 @@ class TidyOps {
         new UnnameOp(channel).apply()
     }
 
-
     static DataflowChannel unnest(DataflowChannel channel, String... at) {
         unnest(channel, at as List)
     }
@@ -104,8 +101,6 @@ class TidyOps {
     static DataflowChannel unnest(DataflowChannel channel, List at) {
         new UnnestOp(channel, at).apply()
     }
-
-
 
     static DataflowQueue left_join(DataflowQueue left, DataflowQueue right, String... by) {
         left_join(left, right, by as List)
@@ -115,7 +110,6 @@ class TidyOps {
         new JoinOp('left_join', left, right, by).apply()
     }
 
-
     static DataflowQueue right_join(DataflowQueue left, DataflowQueue right, String... by) {
         right_join(left, right, by as List)
     }
@@ -123,8 +117,6 @@ class TidyOps {
     static DataflowQueue right_join(DataflowQueue left, DataflowQueue right, List by) {
         new JoinOp('right_join', left, right, by).apply()
     }
-
-
 
     static DataflowQueue full_join(DataflowQueue left, DataflowQueue right, String... by) {
         full_join(left, right, by as List)
@@ -134,13 +126,27 @@ class TidyOps {
         new JoinOp('full_join', left, right, by).apply()
     }
 
-
-
     static DataflowQueue inner_join(DataflowQueue left, DataflowQueue right, String... by) {
         inner_join(left, right, by as List)
     }
 
     static DataflowQueue inner_join(DataflowQueue left, DataflowQueue right, List by) {
         new JoinOp('inner_join', left, right, by).apply()
+    }
+
+    static DataflowVariable collect_tsv(DataflowQueue source, String filename, col_names = true, sort = true) {
+        collect_tsv(source, new File(filename), col_names, sort)
+    }
+
+    static DataflowVariable collect_tsv(DataflowQueue source, File file, col_names = true, sort = true) {
+        new CollectDelimOp(source, file, '\t', col_names, sort, 'collect_tsv').apply()
+    }
+
+    static DataflowVariable collect_csv(DataflowQueue source, String filename, col_names = true, sort = true) {
+        collect_csv(source, new File(filename), col_names, sort)
+    }
+
+    static DataflowVariable collect_csv(DataflowQueue source, File file, col_names = true, sort = true) {
+        new CollectDelimOp(source, file, ',', col_names, sort, 'collect_csv').apply()
     }
 }
