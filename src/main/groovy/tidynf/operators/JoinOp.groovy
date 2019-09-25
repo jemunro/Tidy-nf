@@ -2,6 +2,7 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 
+import static tidynf.TidyChecks.checkContainsAll
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
 import static tidynf.TidyChecks.checkNonEmpty
@@ -21,11 +22,12 @@ class JoinOp {
     private final static LinkedHashSet validMethods =  ["left_join", "right_join", "inner_join", "full_join"]
 
 
-    JoinOp(String method_name, DataflowQueue left, DataflowQueue right) {
+    JoinOp(String method_name, DataflowQueue left, DataflowQueue right, Collection by) {
 
         this.method_name = method_name
         this.left = left
         this.right = right
+        this.keySetBy = by
 
         if (! validMethods.contains(method_name)) {
             tidyError("unknown join method: $method_name", "join")
@@ -119,8 +121,12 @@ class JoinOp {
     }
 
     void initKeySets() {
-        keySetBy = keySetRight.intersect(keySetLeft)
-        checkNonEmpty(keySetBy, method_name)
+        if (keySetBy.size() < 1) {
+            tidyError("by must not be empty\n\t" +
+                "attmepted join of ${keySetRight.toString()} with ${keySetLeft.toString()}", method_name)
+        }
+        checkContainsAll(keySetRight, keySetBy, method_name)
+        checkContainsAll(keySetLeft, keySetBy, method_name)
         keySetFinal = keySetBy + keySetLeft + keySetRight
     }
 

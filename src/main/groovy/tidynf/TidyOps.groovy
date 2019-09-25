@@ -102,20 +102,36 @@ class TidyOps {
         new UnnestOp(channel, at).apply()
     }
 
-    static DataflowQueue left_join(DataflowQueue left, DataflowQueue right) {
-        new JoinOp('left_join', left, right).apply()
+    static DataflowQueue left_join(DataflowQueue left, DataflowQueue right, String... by) {
+        left_join(left, right, by as List)
     }
 
-    static DataflowQueue right_join(DataflowQueue left, DataflowQueue right) {
-        new JoinOp('right_join', left, right).apply()
+    static DataflowQueue left_join(DataflowQueue left, DataflowQueue right, List by) {
+        new JoinOp('left_join', left, right, by).apply()
     }
 
-    static DataflowQueue full_join(DataflowQueue left, DataflowQueue right) {
-        new JoinOp('full_join', left, right).apply()
+    static DataflowQueue right_join(DataflowQueue left, DataflowQueue right, String... by) {
+        right_join(left, right, by as List)
     }
 
-    static DataflowQueue inner_join(DataflowQueue left, DataflowQueue right) {
-        new JoinOp('inner_join', left, right).apply()
+    static DataflowQueue right_join(DataflowQueue left, DataflowQueue right, List by) {
+        new JoinOp('right_join', left, right, by).apply()
+    }
+
+    static DataflowQueue full_join(DataflowQueue left, DataflowQueue right, String... by) {
+        full_join(left, right, by as List)
+    }
+
+    static DataflowQueue full_join(DataflowQueue left, DataflowQueue right, List by) {
+        new JoinOp('full_join', left, right, by).apply()
+    }
+
+    static DataflowQueue inner_join(DataflowQueue left, DataflowQueue right, String... by) {
+        inner_join(left, right, by as List)
+    }
+
+    static DataflowQueue inner_join(DataflowQueue left, DataflowQueue right, List by) {
+        new JoinOp('inner_join', left, right, by).apply()
     }
 
     static DataflowVariable collect_tsv(DataflowQueue source, String filename, col_names = true, sort = true) {
