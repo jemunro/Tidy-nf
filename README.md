@@ -66,7 +66,7 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * rename a variable
     * see `dplyr::rename()`
     * differences:
-            - only a single variable may be renames
+            - only a single variable may be renamed
             - not given as a formula
     * e.g. `channel.rename('old_name', 'new_name')`
 * **unname()**
@@ -78,11 +78,11 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * see `tidyr::unnest()`
     * e.g. `channel.unnest()` or `channel.unnest('x', 'y')`
 * **left_join()**, **right_join()**, **full_join()**, **inner_join()**
-    * joins two 'TidyChannel' by selected variables, missing elements replaced by null
+    * joins two channels by selected variables, missing elements replaced by null
     * differences:
-        - overlapping variable names only permitted for names in `by`
+        - `by` cannot be specified, channels will be joined by all overlapping variable names
     * see `dplyr::left_join()`, `dplyr::right_join()`, `dplyr::full_join()`, `dplyr::inner_join()`
-    * e.g. `left.full_join(right, 'x')`
+    * e.g. `left.full_join(right)
 * **group_by()**
     * group by selected variables
     * see `dplyr::group_by()`
