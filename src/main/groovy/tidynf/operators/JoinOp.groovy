@@ -5,7 +5,6 @@ import groovyx.gpars.dataflow.DataflowQueue
 import static tidynf.TidyChecks.checkContainsAll
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkNonEmpty
 import static tidynf.TidyDataFlow.leftRightExclusive
 import static tidynf.TidyDataFlow.withUniqueKeyData
 import static tidynf.exception.TidyError.tidyError

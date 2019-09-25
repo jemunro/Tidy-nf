@@ -5,6 +5,7 @@ import groovyx.gpars.dataflow.DataflowVariable
 import groovyx.gpars.dataflow.DataflowQueue
 
 import tidynf.operators.ArrangeOp
+import tidynf.operators.CollectJsonOp
 import tidynf.operators.GroupByOp
 import tidynf.operators.JoinOp
 import tidynf.operators.MutateOp
@@ -148,5 +149,13 @@ class TidyOps {
 
     static DataflowVariable collect_csv(DataflowQueue source, File file, col_names = true, sort = true) {
         new CollectDelimOp(source, file, ',', col_names, sort, 'collect_csv').apply()
+    }
+
+    static DataflowVariable collect_json(DataflowQueue source, String filename, sort = true) {
+        collect_json(source, new File(filename), sort)
+    }
+
+    static DataflowVariable collect_json(DataflowQueue source, File file, sort = true) {
+        new CollectJsonOp(source, file, sort).apply()
     }
 }
