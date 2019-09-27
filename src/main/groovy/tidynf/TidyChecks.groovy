@@ -27,18 +27,6 @@ class TidyChecks {
         }
     }
 
-    static List coerceToList(Object object, String method_name){
-        if (object instanceof List){
-            return object
-        }
-        else if (object instanceof LinkedHashMap) {
-            return object.collect { it.value }
-        }
-        else {
-            return [ object ]
-        }
-    }
-
 
     static void checkEqualSizes(List lists, String method_name){
         if (lists.any { !(it instanceof Collection) }) {

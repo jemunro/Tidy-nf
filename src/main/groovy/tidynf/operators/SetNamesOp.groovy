@@ -3,9 +3,8 @@ package tidynf.operators
 import groovyx.gpars.dataflow.DataflowChannel
 
 import static tidynf.TidyChecks.checkEqualSizes
-import static tidynf.TidyChecks.checkKeysMatch
 import static tidynf.TidyChecks.checkUnique
-import static tidynf.TidyChecks.coerceToList
+import static tidynf.TidyHelpers.coerceToList
 
 class SetNamesOp {
 
