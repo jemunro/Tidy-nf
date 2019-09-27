@@ -1,6 +1,7 @@
 #!/usr/bin/env nextflow
 
 import static tidynf.TidyMethods.*
+import static tidynf.io.JsonWriter.toJson
 tidynf()
 
 left = Channel.from([
@@ -24,4 +25,5 @@ right = Channel.from([
 
 left.full_join(right, 'id')
     .unnest()
-    .subscribe { println it }
+    .toList()
+    .subscribe { println toJson(it) }

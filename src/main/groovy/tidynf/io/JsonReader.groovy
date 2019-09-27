@@ -1,4 +1,4 @@
 package tidynf.io
 
-class TidyIO {
+class JsonReader {
 }

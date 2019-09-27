@@ -2,12 +2,8 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
-import java.nio.file.Path
-import groovy.json.JsonGenerator
 
-import static groovy.json.JsonOutput.prettyPrint
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.io.JsonWriter.writeJson
 
 class CollectJsonOp {
 
@@ -16,12 +12,6 @@ class CollectJsonOp {
     private File file
 
     private static final String method_name = 'collect_json'
-    private static final generator = new JsonGenerator.Options()
-        .addConverter(Path) { Path path, String key ->
-            path.toAbsolutePath().toString()
-        }
-        .build()
-
 
     CollectJsonOp(DataflowQueue source, File file, Boolean sort) {
 
@@ -36,23 +26,12 @@ class CollectJsonOp {
         def parent = file.toPath().toAbsolutePath().toFile().parentFile
         if (! parent.exists()) { parent.mkdirs() }
 
-        source.with { sort ? it.toSortedList() : it.toList() }.map {
-
-            def list = it as ArrayList
-            runChecks(list)
-            file.write(prettyPrint(generator.toJson(list)) + '\n', 'utf-8')
+        source.with {
+            it instanceof DataflowQueue ?
+                ( sort ? it.toSortedList() : it.toList() ) : it
+        }.map {
+            writeJson(it, file)
             file.toPath()
-        }
-    }
-
-
-    static void runChecks(List list) {
-
-        list.collect { checkIsType(it, LinkedHashMap, method_name) }
-
-        if (list.size() > 0) {
-            def keySet = (list[0] as LinkedHashMap).keySet() as LinkedHashSet
-            list.collect { checkKeysMatch(keySet, (it as LinkedHashMap).keySet() as LinkedHashSet, method_name ) }
         }
     }
 }
