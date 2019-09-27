@@ -1,8 +1,10 @@
 package tidynf
 
-import channelextra.ChannelExtra
-import channelextra.ChannelExtraOperators
+import groovyx.gpars.dataflow.DataflowQueue
+import groovyx.gpars.dataflow.DataflowVariable
 import org.codehaus.groovy.runtime.NullObject
+import tidynf.extension.TidyDelegatingMetaClass
+
 import java.nio.file.Path
 
 
@@ -10,7 +12,14 @@ import java.nio.file.Path
 class TidyMethods {
 
     static tidynf() {
-        ChannelExtra.enable(ChannelExtraOperators, TidyOps)
+
+        def dataflowQueueMetaClass =  new TidyDelegatingMetaClass(DataflowQueue.metaClass, TidyOps)
+        dataflowQueueMetaClass.initialize()
+        DataflowQueue.metaClass = dataflowQueueMetaClass
+
+        def dataflowVariableMetaClass =  new TidyDelegatingMetaClass(DataflowVariable.metaClass, TidyOps)
+        dataflowVariableMetaClass.initialize()
+        DataflowVariable.metaClass = dataflowVariableMetaClass
     }
 
     static List as_file(List strings) {

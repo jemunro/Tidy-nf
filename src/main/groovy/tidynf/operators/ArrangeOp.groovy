@@ -32,7 +32,7 @@ class ArrangeOp {
         checkRequiredParams(method_name, required, params)
         checkParamTypes(method_name, types, params)
         this.reverse = params?.reverse ?: false
-        this.at = params?.at ?: []
+        this.at = params?.at as List ?: []
 
     }
 
