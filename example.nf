@@ -3,7 +3,17 @@
 import static tidynf.TidyMethods.*
 tidynf()
 
-println read_tsv('test.tsv', ['X', 'Y', 'Z'])
+left = Channel.from([
+    ['a', 1, '/file/path/1.bam'],
+    ['b', 2, '/file/path/2.bam'],
+    ['b', 3, '/file/path/3.bam'],
+    ['c', 4, '/file/path/4.bam'],
+    ['c', 5, '/file/path/5.bam'],
+    ['c', 6, 'test.tsv']])
+    .set_names('id', 'value', 'bam')
+    .collect_cols()
+    .mutate { bam = bam.collect { file(it) }; size = bam.collect { file_size(it, 'B') }.sum() }
+    .subscribe { println it }
 
 //
 //left = Channel.from([
