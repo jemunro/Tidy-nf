@@ -1,9 +1,9 @@
-package tidynf
+package tidynf.helpers
 
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-class TidyDataFlow {
+class JoinHelpers {
 
     static DataflowChannel[] withUniqueKeyData(DataflowChannel source, Set by) {
 

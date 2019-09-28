@@ -1,8 +1,8 @@
-package tidynf
+package tidynf.helpers
 
 class TidyHelpers {
 
-    static List coerceToList(Object object, String method_name){
+    static List coerceToList(Object object, String methodName){
         if (object instanceof List){
             return object
         }

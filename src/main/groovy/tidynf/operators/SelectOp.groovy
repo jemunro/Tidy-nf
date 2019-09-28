@@ -2,14 +2,14 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkContainsAll
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkNonEmpty
+import static tidynf.helpers.TidyChecks.checkContainsAll
+import static tidynf.helpers.TidyChecks.checkIsType
+import static tidynf.helpers.TidyChecks.checkKeysMatch
+import static tidynf.helpers.TidyChecks.checkNonEmpty
 
 class SelectOp {
 
-    private String method_name = 'select'
+    private String methodName = 'select'
     private DataflowChannel source
     private List keys
     private LinkedHashSet keySet
@@ -24,7 +24,7 @@ class SelectOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
+            checkIsType(it, LinkedHashMap, methodName)
             def data = it as LinkedHashMap
 
             synchronized (this) {
@@ -41,11 +41,11 @@ class SelectOp {
     }
 
     void firstChecks() {
-        checkNonEmpty(keys, method_name)
-        checkContainsAll(keySet, keys, method_name)
+        checkNonEmpty(keys, methodName)
+        checkContainsAll(keySet, keys, methodName)
     }
 
     void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
     }
 }

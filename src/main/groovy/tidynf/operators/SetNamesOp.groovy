@@ -2,13 +2,13 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkEqualSizes
-import static tidynf.TidyChecks.checkUnique
-import static tidynf.TidyHelpers.coerceToList
+import static tidynf.helpers.TidyChecks.checkEqualSizes
+import static tidynf.helpers.TidyChecks.checkUnique
+import static tidynf.helpers.TidyHelpers.coerceToList
 
 class SetNamesOp {
 
-    private String method_name = 'set_names'
+    private String methodName = 'set_names'
     private DataflowChannel source
     private List keys
 
@@ -22,11 +22,11 @@ class SetNamesOp {
 
     DataflowChannel apply(){
 
-        checkUnique(keys, method_name)
+        checkUnique(keys, methodName)
 
         source.map {
 
-            def list = coerceToList(it, method_name)
+            def list = coerceToList(it, methodName)
 
             mapChecks(list)
 
@@ -37,6 +37,6 @@ class SetNamesOp {
     }
 
     void mapChecks(List list) {
-        checkEqualSizes(list, keys, method_name)
+        checkEqualSizes(list, keys, methodName)
     }
 }

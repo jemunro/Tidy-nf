@@ -16,6 +16,7 @@ import tidynf.operators.SetNamesOp
 import tidynf.operators.CollectColsOp
 import tidynf.operators.CollectRowsOp
 import tidynf.operators.CollectDelimOp
+import tidynf.operators.SubscribeDelimOp
 import tidynf.operators.UnnameOp
 import tidynf.operators.UnnestOp
 
@@ -149,6 +150,22 @@ class TidyOps {
 
     static DataflowVariable collect_csv(DataflowQueue source, File file, col_names = true, sort = true) {
         new CollectDelimOp(source, file, ',', col_names, sort, 'collect_csv').apply()
+    }
+
+    static DataflowQueue subscribe_csv(DataflowQueue source, String filename, Boolean col_names = true) {
+        subscribe_csv(source, new File(filename), col_names)
+    }
+
+    static DataflowQueue subscribe_csv(DataflowQueue source, File file, Boolean col_names = true) {
+        new SubscribeDelimOp(source, file, ',', col_names, 'subscribe_csv').apply()
+    }
+
+    static DataflowQueue subscribe_tsv(DataflowQueue source, String filename, Boolean col_names = true) {
+        subscribe_tsv(source, new File(filename), col_names)
+    }
+
+    static DataflowQueue subscribe_tsv(DataflowQueue source, File file, Boolean col_names = true) {
+        new SubscribeDelimOp(source, file, '\t', col_names, 'subscribe_tsv').apply()
     }
 
     static DataflowVariable collect_json(DataflowQueue source, String filename, sort = true) {

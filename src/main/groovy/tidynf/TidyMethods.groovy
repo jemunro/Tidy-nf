@@ -9,6 +9,7 @@ import tidynf.extension.TidyDelegatingMetaClass
 
 import static tidynf.io.DelimHandler.readDelim
 import static tidynf.exception.TidyError.tidyError
+import static tidynf.io.DelimHandler.writeDelim
 
 
 class TidyMethods {
@@ -49,27 +50,31 @@ class TidyMethods {
             readDelim(file, delim, col_names)
         } else if (file instanceof Path) {
             readDelim(file, delim, col_names)
-        } else if (file instanceof String) {
+        } else if (file instanceof File) {
             readDelim(file, delim, col_names)
         } else {
             tidyError("argument file must be one of String, Path or File", "read_delim")
         }
     }
 
-    static void write_tsv(List data, String filename) {
-        write_delim(data, filename, '\t')
+    static void write_tsv(List data, Object file, Boolean col_names = true) {
+        write_delim(data, file, '\t', col_names)
     }
 
-    static void write_csv(List data, String filename) {
-        write_delim(data, filename, ',')
+    static void write_csv(List data, Object file, Boolean col_names = true) {
+        write_delim(data, file, ',', col_names)
     }
 
-    static void write_delim(List data, String filename, String delim) {
-        data
-            .collect { it instanceof List ? it : it instanceof Map ? it.values() as List : [it] }
-            .collect { it.collect { it.toString() } }
-            .collect { it.join(delim) }
-            .join('\n')
-            .with { (new File(filename)).write(it + '\n', 'utf-8') }
+    static void write_delim(List data, Object file, String delim, Boolean col_names = true) {
+
+        if (file instanceof String) {
+            writeDelim(data, file, delim, col_names, false)
+        } else if (file instanceof Path) {
+            writeDelim(data, file, delim, col_names, false)
+        } else if (file instanceof File) {
+            writeDelim(data, file, delim, col_names, false)
+        } else {
+            tidyError("argument file must be one of String, Path or File", "write_delim")
+        }
     }
 }

@@ -2,30 +2,30 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkContains
-import static tidynf.TidyChecks.checkContainsNot
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.helpers.TidyChecks.checkContains
+import static tidynf.helpers.TidyChecks.checkContainsNot
+import static tidynf.helpers.TidyChecks.checkIsType
+import static tidynf.helpers.TidyChecks.checkKeysMatch
 
 class RenameOp {
-    private String method_name = 'rename'
+    private String methodName = 'rename'
     private DataflowChannel source
-    private String new_key
-    private String old_key
+    private String newKey
+    private String oldKey
     private LinkedHashSet keySet
 
-    RenameOp(DataflowChannel source, String new_key, String old_key) {
+    RenameOp(DataflowChannel source, String newKey, String oldKey) {
 
         this.source = source
-        this.new_key = new_key
-        this.old_key = old_key
+        this.newKey = newKey
+        this.oldKey = oldKey
     }
 
     DataflowChannel apply() {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
+            checkIsType(it, LinkedHashMap, methodName)
             def data = it as LinkedHashMap
 
             synchronized (this) {
@@ -37,16 +37,16 @@ class RenameOp {
 
             mapChecks(data)
 
-            data.collectEntries { k, v -> [(old_key == k ? new_key: k): v] }
+            data.collectEntries { k, v -> [(oldKey == k ? newKey: k): v] }
         }
     }
 
     void firstChecks() {
-        checkContains(keySet, old_key, method_name)
-        checkContainsNot(keySet, new_key, method_name)
+        checkContains(keySet, oldKey, methodName)
+        checkContainsNot(keySet, newKey, methodName)
     }
 
     void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
     }
 }

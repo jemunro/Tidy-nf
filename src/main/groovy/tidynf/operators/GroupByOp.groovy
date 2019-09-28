@@ -3,14 +3,14 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 
-import static tidynf.TidyChecks.checkContainsAll
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkNonEmpty
+import static tidynf.helpers.TidyChecks.checkContainsAll
+import static tidynf.helpers.TidyChecks.checkIsType
+import static tidynf.helpers.TidyChecks.checkKeysMatch
+import static tidynf.helpers.TidyChecks.checkNonEmpty
 
 class GroupByOp {
 
-    private String method_name = 'group_by'
+    private String methodName = 'group_by'
     private DataflowQueue source
     private ArrayList by
     private LinkedHashSet keySet
@@ -26,7 +26,7 @@ class GroupByOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
+            checkIsType(it, LinkedHashMap, methodName)
             def data = it as LinkedHashMap
 
             synchronized (this) {
@@ -49,12 +49,12 @@ class GroupByOp {
     }
 
     void firstChecks() {
-        checkNonEmpty(by, method_name)
-        checkContainsAll(keySet, by, method_name)
+        checkNonEmpty(by, methodName)
+        checkContainsAll(keySet, by, methodName)
     }
 
     void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
     }
 
 }

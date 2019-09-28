@@ -2,16 +2,16 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 
-import static tidynf.TidyChecks.checkContainsAll
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyDataFlow.leftRightExclusive
-import static tidynf.TidyDataFlow.withUniqueKeyData
+import static tidynf.helpers.TidyChecks.checkContainsAll
+import static tidynf.helpers.TidyChecks.checkIsType
+import static tidynf.helpers.TidyChecks.checkKeysMatch
+import static tidynf.helpers.JoinHelpers.leftRightExclusive
+import static tidynf.helpers.JoinHelpers.withUniqueKeyData
 import static tidynf.exception.TidyError.tidyError
 
 class JoinOp {
 
-    private String method_name
+    private String methodName
     private DataflowQueue left
     private DataflowQueue right
     private LinkedHashSet keySetBy
@@ -21,22 +21,22 @@ class JoinOp {
     private final static LinkedHashSet validMethods =  ["left_join", "right_join", "inner_join", "full_join"]
 
 
-    JoinOp(String method_name, DataflowQueue left, DataflowQueue right, Collection by) {
+    JoinOp(String methodName, DataflowQueue left, DataflowQueue right, Collection by) {
 
-        this.method_name = method_name
+        this.methodName = methodName
         this.left = left
         this.right = right
         this.keySetBy = by
 
-        if (! validMethods.contains(method_name)) {
-            tidyError("unknown join method: $method_name", "join")
+        if (! validMethods.contains(methodName)) {
+            tidyError("unknown join method: $methodName", "join")
         }
     }
 
     DataflowQueue apply() {
 
         def res
-        switch(method_name) {
+        switch(methodName) {
             case "left_join":
                 res = combineByTuple().filter { it[1] }
                 break
@@ -85,7 +85,7 @@ class JoinOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
+            checkIsType(it, LinkedHashMap, methodName)
             def data = it as LinkedHashMap
 
             if (is_left){
@@ -98,7 +98,7 @@ class JoinOp {
                         }
                     }
                 }
-                checkKeysMatch(keySetLeft, data.keySet() as LinkedHashSet, method_name)
+                checkKeysMatch(keySetLeft, data.keySet() as LinkedHashSet, methodName)
 
                 [data.subMap(keySetBy), data.subMap(keySetLeft - keySetBy)]
 
@@ -112,7 +112,7 @@ class JoinOp {
                         }
                     }
                 }
-                checkKeysMatch(keySetRight, data.keySet() as LinkedHashSet, method_name)
+                checkKeysMatch(keySetRight, data.keySet() as LinkedHashSet, methodName)
 
                 [data.subMap(keySetBy), data.subMap(keySetRight - keySetBy)]
             }
@@ -122,20 +122,20 @@ class JoinOp {
     void initKeySets() {
         if (keySetBy.size() < 1) {
             tidyError("by must not be empty\n\t" +
-                "attmepted join of ${keySetRight.toString()} with ${keySetLeft.toString()}", method_name)
+                "attmepted join of ${keySetRight.toString()} with ${keySetLeft.toString()}", methodName)
         }
-        checkContainsAll(keySetRight, keySetBy, method_name)
-        checkContainsAll(keySetLeft, keySetBy, method_name)
+        checkContainsAll(keySetRight, keySetBy, methodName)
+        checkContainsAll(keySetLeft, keySetBy, methodName)
         keySetFinal = keySetBy + keySetLeft + keySetRight
     }
 
     void mapChecks(Collection coll) {
         if (coll.size() != 3) {
-            tidyError("Something went wrong, size is ${coll.size()} instead of 3", method_name)
+            tidyError("Something went wrong, size is ${coll.size()} instead of 3", methodName)
         }
-        checkIsType(coll[0], LinkedHashMap, method_name)
-        checkIsType(coll[1], LinkedHashMap, method_name)
-        checkIsType(coll[2], LinkedHashMap, method_name)
+        checkIsType(coll[0], LinkedHashMap, methodName)
+        checkIsType(coll[1], LinkedHashMap, methodName)
+        checkIsType(coll[2], LinkedHashMap, methodName)
     }
 
 }

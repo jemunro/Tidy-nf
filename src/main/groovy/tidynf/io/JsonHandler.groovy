@@ -18,10 +18,15 @@ class JsonHandler {
     private static final slurper = new JsonSlurper()
 
     static writeJson(Object object, File file) {
+
+        File parent = file.toPath().toAbsolutePath().toFile().parentFile
+        if (! parent.exists()) { parent.mkdirs() }
+
         file.write(toJson(object) + '\n', 'utf-8')
     }
 
     static toJson(Object object) {
+
         try {
             prettyPrint(generator.toJson(object))
         } catch (StackOverflowError e) {

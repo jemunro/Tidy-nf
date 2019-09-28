@@ -2,13 +2,13 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkIsType
+import static tidynf.helpers.TidyChecks.checkKeysMatch
+import static tidynf.helpers.TidyChecks.checkIsType
 import static tidynf.exception.TidyError.tidyError
 
 class MutateOp {
 
-    private String method_name = 'mutate'
+    private String methodName = 'mutate'
     private DataflowChannel source
     private Binding with
     private Closure dehydrated
@@ -26,7 +26,7 @@ class MutateOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
+            checkIsType(it, LinkedHashMap, methodName)
             def data = it as LinkedHashMap
 
             synchronized (this) {
@@ -44,10 +44,10 @@ class MutateOp {
                 rehydrated.call()
             } catch(MissingPropertyException e) {
                 tidyError("Unknown variable \"${e.getProperty()}\"\n" +
-                    "data: ${data.toString()}, with: ${with.getVariables().toString()}", method_name)
+                    "data: ${data.toString()}, with: ${with.getVariables().toString()}", methodName)
             } catch (Exception e) {
                 tidyError("${e.toString()}\n" +
-                    "data: ${data.toString()}, with: ${with.getVariables().toString()}", method_name)
+                    "data: ${data.toString()}, with: ${with.getVariables().toString()}", methodName)
             }
 
             binding.getVariables() as LinkedHashMap
@@ -55,6 +55,6 @@ class MutateOp {
     }
 
     void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
     }
 }

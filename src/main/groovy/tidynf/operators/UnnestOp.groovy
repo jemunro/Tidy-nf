@@ -2,14 +2,14 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkContainsAll
-import static tidynf.TidyChecks.checkEqualSizes
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.helpers.TidyChecks.checkContainsAll
+import static tidynf.helpers.TidyChecks.checkEqualSizes
+import static tidynf.helpers.TidyChecks.checkIsType
+import static tidynf.helpers.TidyChecks.checkKeysMatch
 
 class UnnestOp {
 
-    private String method_name = 'unnest'
+    private String methodName = 'unnest'
     private DataflowChannel source
     private List at
     private LinkedHashSet keySet
@@ -25,7 +25,7 @@ class UnnestOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
+            checkIsType(it, LinkedHashMap, methodName)
             def data = it as LinkedHashMap
 
             synchronized (this) {
@@ -44,7 +44,7 @@ class UnnestOp {
             if (! this_at) {
                 [ data ]
             } else {
-                checkEqualSizes(this_at.collect { k -> data[k] }, method_name)
+                checkEqualSizes(this_at.collect { k -> data[k] }, methodName)
                 def n = data[this_at[0]].size()
                 (0..<n).collect { i ->
                     data.collectEntries { k, v ->
@@ -56,10 +56,10 @@ class UnnestOp {
     }
 
     void firstChecks() {
-        checkContainsAll(keySet, at, method_name)
+        checkContainsAll(keySet, at, methodName)
     }
 
     void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
     }
 }

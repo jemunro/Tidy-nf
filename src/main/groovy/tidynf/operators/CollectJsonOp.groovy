@@ -11,7 +11,7 @@ class CollectJsonOp {
     private boolean sort
     private File file
 
-    private static final String method_name = 'collect_json'
+    private static final String methodName = 'collect_json'
 
     CollectJsonOp(DataflowQueue source, File file, Boolean sort) {
 
@@ -22,9 +22,6 @@ class CollectJsonOp {
     }
 
     DataflowVariable apply() {
-
-        def parent = file.toPath().toAbsolutePath().toFile().parentFile
-        if (! parent.exists()) { parent.mkdirs() }
 
         source.with {
             it instanceof DataflowQueue ?

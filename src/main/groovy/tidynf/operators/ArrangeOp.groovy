@@ -3,19 +3,19 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.TidyChecks.checkAllAreType
-import static tidynf.TidyChecks.checkContainsAll
-import static tidynf.TidyChecks.checkEqualSizes
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkNonEmpty
-import static tidynf.TidyChecks.checkParamTypes
-import static tidynf.TidyChecks.checkRequiredParams
+import static tidynf.helpers.TidyChecks.checkAllAreType
+import static tidynf.helpers.TidyChecks.checkContainsAll
+import static tidynf.helpers.TidyChecks.checkEqualSizes
+import static tidynf.helpers.TidyChecks.checkIsType
+import static tidynf.helpers.TidyChecks.checkKeysMatch
+import static tidynf.helpers.TidyChecks.checkNonEmpty
+import static tidynf.helpers.TidyChecks.checkParamTypes
+import static tidynf.helpers.TidyChecks.checkRequiredParams
 
 
 class ArrangeOp {
 
-    private String method_name = 'arrange'
+    private String methodName = 'arrange'
     private DataflowChannel source
     private boolean reverse
     private List by
@@ -29,8 +29,8 @@ class ArrangeOp {
 
         def types = [at: List, at_: String, reverse: Boolean]
         def required = []
-        checkRequiredParams(method_name, required, params)
-        checkParamTypes(method_name, types, params)
+        checkRequiredParams(methodName, required, params)
+        checkParamTypes(methodName, types, params)
         this.reverse = params?.reverse ?: false
         this.at = params?.at as List ?: []
 
@@ -40,7 +40,7 @@ class ArrangeOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
+            checkIsType(it, LinkedHashMap, methodName)
             def data = it as LinkedHashMap
 
             synchronized (this) {
@@ -61,7 +61,7 @@ class ArrangeOp {
                     .with { by + it }
                 )
 
-            checkEqualSizes(set.collect { data[it] }, method_name)
+            checkEqualSizes(set.collect { data[it] }, methodName)
 
             def sorted = set
                 .collect { data[it] }
@@ -82,13 +82,13 @@ class ArrangeOp {
     }
 
     void firstChecks() {
-        checkNonEmpty(by, method_name)
-        checkContainsAll(keySet, by, method_name)
+        checkNonEmpty(by, methodName)
+        checkContainsAll(keySet, by, methodName)
     }
 
     void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
-        checkAllAreType(by.collect { data[it] }, List, method_name)
+        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
+        checkAllAreType(by.collect { data[it] }, List, methodName)
     }
 
 }
