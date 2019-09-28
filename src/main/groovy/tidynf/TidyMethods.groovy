@@ -2,22 +2,24 @@ package tidynf
 
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
+import java.nio.file.Path
 import org.codehaus.groovy.runtime.NullObject
+
 import tidynf.extension.TidyDelegatingMetaClass
 
-import java.nio.file.Path
-
+import static tidynf.io.DelimHandler.readDelim
+import static tidynf.exception.TidyError.tidyError
 
 
 class TidyMethods {
 
     static tidynf() {
 
-        def dataflowQueueMetaClass =  new TidyDelegatingMetaClass(DataflowQueue.metaClass, TidyOps)
+        def dataflowQueueMetaClass = new TidyDelegatingMetaClass(DataflowQueue.metaClass, TidyOps)
         dataflowQueueMetaClass.initialize()
         DataflowQueue.metaClass = dataflowQueueMetaClass
 
-        def dataflowVariableMetaClass =  new TidyDelegatingMetaClass(DataflowVariable.metaClass, TidyOps)
+        def dataflowVariableMetaClass = new TidyDelegatingMetaClass(DataflowVariable.metaClass, TidyOps)
         dataflowVariableMetaClass.initialize()
         DataflowVariable.metaClass = dataflowVariableMetaClass
     }
@@ -72,50 +74,24 @@ class TidyMethods {
         }
     }
 
-    static List read_csv(String file, List col_names) {
+    static ArrayList read_csv(Object file, List col_names = null) {
         read_delim(file, ',', col_names)
     }
 
-    static List read_tsv(String file, List col_names) {
+    static ArrayList read_tsv(Object file, List col_names=null) {
         read_delim(file, '\t', col_names)
     }
 
-    static List read_csv(String file, Boolean col_names = true) {
-        read_delim(file, ',', col_names )
-    }
+    static ArrayList read_delim(Object file, String delim, List col_names) {
 
-    static List read_tsv(String file, Boolean col_names = true) {
-        read_delim(file, '\t', col_names)
-    }
-
-    static List read_delim(String filename, String delim = '\t', List col_names) {
-        read_delim_lines(filename, delim)
-            .collect { [col_names, it].transpose().collectEntries { k, v -> [(k): v] } }
-    }
-
-    static List read_delim(String filename, String delim = '\t', Boolean col_names) {
-        read_delim_lines(filename, delim).with {
-            if (col_names) {
-                it.size() <= 1 ? [] :
-                    it[1..(it.size() -1)].collect { row ->
-                        [it[0], row].transpose().collectEntries { k, v -> [(k): v] }
-                    }
-            } else {
-                it
-            }
-        }
-    }
-
-    static List read_delim_lines(String filename, String delim = '\t') {
-        def lines =
-            (new File(filename))
-            .getText('utf-8')
-            .with { it.split('\n') as List }
-            .collect { it.split(delim) as List }
-        def max_len = lines.collect { it.size() }.max()
-        lines.collect {
-            it.size() == max_len ? it :
-                it + (1..(max_len - it.size())).collect { null }
+        if (file instanceof String) {
+            readDelim(file, delim, col_names)
+        } else if (file instanceof Path) {
+            readDelim(file, delim, col_names)
+        } else if (file instanceof String) {
+            readDelim(file, delim, col_names)
+        } else {
+            tidyError("argument file must be one of String, Path or File", "read_delim")
         }
     }
 

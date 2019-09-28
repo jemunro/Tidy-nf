@@ -1,18 +1,21 @@
 package tidynf.io
 
-import groovy.json.JsonGenerator
 import java.nio.file.Path
-import static tidynf.exception.TidyError.tidyError
+import groovy.json.JsonGenerator
+import groovy.json.JsonSlurper
 
 import static groovy.json.JsonOutput.prettyPrint
+import static tidynf.exception.TidyError.tidyError
 
-class JsonWriter {
+class JsonHandler {
 
     private static final generator = new JsonGenerator.Options()
             .addConverter(Path) { Path path, String key ->
                 path.toAbsolutePath().toString()
             }
             .build()
+
+    private static final slurper = new JsonSlurper()
 
     static writeJson(Object object, File file) {
         file.write(toJson(object) + '\n', 'utf-8')
@@ -24,6 +27,18 @@ class JsonWriter {
         } catch (StackOverflowError e) {
             tidyError("Failed to convert object ${object.toString()} to json", "JsonWriter")
         }
+    }
+
+    static Object fromJson(File file) {
+        slurper.parse(file)
+    }
+
+    static Object fromJson(Path path) {
+        slurper.parse(path.toFile())
+    }
+
+    static Object fromJson(String string) {
+        slurper.parseText(string)
     }
 
 }

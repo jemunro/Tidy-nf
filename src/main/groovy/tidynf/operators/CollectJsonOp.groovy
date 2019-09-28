@@ -3,7 +3,7 @@ package tidynf.operators
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 
-import static tidynf.io.JsonWriter.writeJson
+import static tidynf.io.JsonHandler.writeJson
 
 class CollectJsonOp {
 

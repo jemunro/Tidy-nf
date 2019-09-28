@@ -12,6 +12,9 @@ class TidyChecks {
         }
     }
 
+    static Boolean allAreType(Collection coll, Class type){
+        coll.every { type.isInstance(it) }
+    }
 
     static void checkAllAreType(List list, Class type, String method_name){
         if ( ! list.every { type.isInstance(it) } ) {
