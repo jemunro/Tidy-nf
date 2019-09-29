@@ -3,8 +3,8 @@ package tidynf.operators
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 
-import static tidynf.helpers.TidyChecks.checkIsType
-import static tidynf.helpers.TidyChecks.checkKeysMatch
+import static tidynf.helpers.Checks.checkIsType
+import static tidynf.helpers.Checks.checkKeysMatch
 
 class CollectRowsOp {
 

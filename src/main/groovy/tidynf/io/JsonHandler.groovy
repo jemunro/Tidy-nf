@@ -5,7 +5,7 @@ import groovy.json.JsonGenerator
 import groovy.json.JsonSlurper
 
 import static groovy.json.JsonOutput.prettyPrint
-import static tidynf.exception.TidyError.tidyError
+import static tidynf.exception.Message.tidyError
 
 class JsonHandler {
 

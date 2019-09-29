@@ -8,7 +8,7 @@ import java.nio.file.Path
 import tidynf.extension.TidyDelegatingMetaClass
 
 import static tidynf.io.DelimHandler.readDelim
-import static tidynf.exception.TidyError.tidyError
+import static tidynf.exception.Message.tidyError
 import static tidynf.io.DelimHandler.writeDelim
 
 

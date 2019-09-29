@@ -1,11 +1,13 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
 
-import static tidynf.helpers.TidyChecks.checkIsType
-import static tidynf.helpers.TidyChecks.checkKeysMatch
-import static tidynf.exception.TidyError.tidyError
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.Checks.checkKeysMatch
 import static tidynf.io.DelimHandler.writeDelim
+import static tidynf.helpers.Predicates.*
 
 class SubscribeDelimOp {
 
@@ -25,33 +27,37 @@ class SubscribeDelimOp {
         this.file = file
         this.colNames = colNames
 
-        if (! validMethods.contains(methodName)) {
-            tidyError("unknown subscribe_delim method: $methodName", "subscribe_delim")
-        }
+        assert validMethods.contains(methodName)
     }
 
     DataflowQueue apply() {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, methodName)
-            def data = it as LinkedHashMap
+            if (! isType(it, Map))
+                throw new IllegalTypeException(errMsg(methodName, "Required Map type\n" +
+                        "got ${it.getClass().simpleName} with value $it"))
+
+            LinkedHashMap data = it as LinkedHashMap
 
             synchronized (this) {
+
                 if (! keySet) {
+
                     keySet = data.keySet()
                     writeDelim([data], file, delim, colNames, false)
+
                 } else {
-                    mapChecks(data)
-                    writeDelim([data], file, delim, colNames, true)
+
+                    if (! areSameSet(keySet, data.keySet()))
+                        throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
+                                "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
+
+                    writeDelim([data.subMap(keySet)], file, delim, colNames, true)
                 }
             }
             data
         }
-    }
-
-    void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
     }
 }
 

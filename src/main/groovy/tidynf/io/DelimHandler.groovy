@@ -1,8 +1,8 @@
 package tidynf.io
 
 import java.nio.file.Path
-import static tidynf.helpers.TidyChecks.checkAllAreType
-import static tidynf.helpers.TidyChecks.checkNonEmpty
+import static tidynf.helpers.Checks.checkAllAreType
+import static tidynf.helpers.Checks.checkNonEmpty
 
 class DelimHandler {
 

@@ -3,10 +3,12 @@ package tidynf.operators
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 
-import static tidynf.helpers.TidyChecks.checkIsType
-import static tidynf.helpers.TidyChecks.checkKeysMatch
-import static tidynf.exception.TidyError.tidyError
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
+
 import static tidynf.io.DelimHandler.writeDelim
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.Predicates.*
 
 class CollectDelimOp {
 
@@ -27,29 +29,30 @@ class CollectDelimOp {
         this.file = file
         this.colNames = colNames
 
-        if (! validMethods.contains(methodName)) {
-            tidyError("unknown collect_delim method: $methodName", "collect_delim")
-        }
+        assert validMethods.contains(methodName)
     }
 
     DataflowVariable apply() {
 
         source.with { sort ? it.toSortedList() : it.toList() }.map {
 
-            def list = it as ArrayList
-            runChecks(list)
-            writeDelim(list, file, delim, colNames, false)
+            ArrayList data = it
+
+            if(! isListOfMap(data))
+                throw new IllegalTypeException(
+                        errMsg(methodName, "Required List of Map\ngot: $data"))
+
+            if(! allKeySetsMatch(data))
+                throw new KeySetMismatchException(
+                        errMsg(methodName,"Required matching keysets\nfirst keyset:${data[0].keySet()}"))
+
+            if (! allKeySetsSameOrder(data)) {
+                LinkedHashSet keySet = (data[0] as LinkedHashMap).keySet()
+                data = data.collect { (it as LinkedHashMap).subMap(keySet) }
+            }
+
+            writeDelim(data, file, delim, colNames, false)
             file.toPath()
-        }
-    }
-
-    void runChecks(List list) {
-
-        list.collect { checkIsType(it, LinkedHashMap, methodName) }
-
-        if (list.size() > 0) {
-            def keySet = (list[0] as LinkedHashMap).keySet() as LinkedHashSet
-            list.collect { checkKeysMatch(keySet, (it as LinkedHashMap).keySet() as LinkedHashSet, methodName) }
         }
     }
 }

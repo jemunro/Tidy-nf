@@ -1,51 +1,52 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
 
-import static tidynf.helpers.TidyChecks.checkContainsAll
-import static tidynf.helpers.TidyChecks.checkIsType
-import static tidynf.helpers.TidyChecks.checkKeysMatch
-import static tidynf.helpers.TidyChecks.checkNonEmpty
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.Predicates.areSameSet
+import static tidynf.helpers.Predicates.isType
 
 class SelectOp {
 
     private String methodName = 'select'
     private DataflowChannel source
-    private List keys
+    private LinkedHashSet keySetSelect
     private LinkedHashSet keySet
 
     SelectOp(DataflowChannel source, List keys){
 
         this.source = source
-        this.keys = keys
+        this.keySetSelect = keys
     }
 
     DataflowChannel apply() {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, methodName)
-            def data = it as LinkedHashMap
+            if (! isType(it, Map))
+                throw new IllegalTypeException(errMsg(methodName, "Required Map type\n" +
+                        "got ${it.getClass().simpleName} with value $it"))
+
+            LinkedHashMap data = it as LinkedHashMap
 
             synchronized (this) {
+
                 if (! keySet) {
                     keySet = data.keySet()
-                    firstChecks()
+
+                    if (! keySet.containsAll(keySetSelect))
+                        throw new KeySetMismatchException(errMsg(methodName, "select keySet not all present in keySet\n" +
+                                "select: $keySetSelect, keyset: $keySet"))
                 }
             }
 
-            mapChecks(data)
+            if (! areSameSet(keySet, data.keySet()))
+                throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
+                        "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
 
-            data.subMap(keys)
+            data.subMap(keySetSelect)
         }
-    }
-
-    void firstChecks() {
-        checkNonEmpty(keys, methodName)
-        checkContainsAll(keySet, keys, methodName)
-    }
-
-    void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
     }
 }

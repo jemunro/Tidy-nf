@@ -2,8 +2,8 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.helpers.TidyChecks.checkIsType
-import static tidynf.helpers.TidyChecks.checkKeysMatch
+import static tidynf.helpers.Checks.checkIsType
+import static tidynf.helpers.Checks.checkKeysMatch
 
 class UnnameOp {
 

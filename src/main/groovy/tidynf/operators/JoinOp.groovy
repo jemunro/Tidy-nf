@@ -2,12 +2,12 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 
-import static tidynf.helpers.TidyChecks.checkContainsAll
-import static tidynf.helpers.TidyChecks.checkIsType
-import static tidynf.helpers.TidyChecks.checkKeysMatch
+import static tidynf.helpers.Checks.checkContainsAll
+import static tidynf.helpers.Checks.checkIsType
+import static tidynf.helpers.Checks.checkKeysMatch
 import static tidynf.helpers.JoinHelpers.leftRightExclusive
 import static tidynf.helpers.JoinHelpers.withUniqueKeyData
-import static tidynf.exception.TidyError.tidyError
+import static tidynf.exception.Message.tidyError
 
 class JoinOp {
 

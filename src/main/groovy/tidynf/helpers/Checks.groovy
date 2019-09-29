@@ -1,9 +1,9 @@
 package tidynf.helpers
 
-import static tidynf.exception.TidyError.tidyError
+import static tidynf.exception.Message.tidyError
 
 
-class TidyChecks {
+class Checks {
 
 
     static void checkIsType(Object object, Class type, String methodName){

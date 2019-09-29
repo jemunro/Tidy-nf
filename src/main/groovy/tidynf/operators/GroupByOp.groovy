@@ -3,10 +3,10 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 
-import static tidynf.helpers.TidyChecks.checkContainsAll
-import static tidynf.helpers.TidyChecks.checkIsType
-import static tidynf.helpers.TidyChecks.checkKeysMatch
-import static tidynf.helpers.TidyChecks.checkNonEmpty
+import static tidynf.helpers.Checks.checkContainsAll
+import static tidynf.helpers.Checks.checkIsType
+import static tidynf.helpers.Checks.checkKeysMatch
+import static tidynf.helpers.Checks.checkNonEmpty
 
 class GroupByOp {
 

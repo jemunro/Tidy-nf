@@ -3,14 +3,14 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 
-import static tidynf.helpers.TidyChecks.checkAllAreType
-import static tidynf.helpers.TidyChecks.checkContainsAll
-import static tidynf.helpers.TidyChecks.checkEqualSizes
-import static tidynf.helpers.TidyChecks.checkIsType
-import static tidynf.helpers.TidyChecks.checkKeysMatch
-import static tidynf.helpers.TidyChecks.checkNonEmpty
-import static tidynf.helpers.TidyChecks.checkParamTypes
-import static tidynf.helpers.TidyChecks.checkRequiredParams
+import static tidynf.helpers.Checks.checkAllAreType
+import static tidynf.helpers.Checks.checkContainsAll
+import static tidynf.helpers.Checks.checkEqualSizes
+import static tidynf.helpers.Checks.checkIsType
+import static tidynf.helpers.Checks.checkKeysMatch
+import static tidynf.helpers.Checks.checkNonEmpty
+import static tidynf.helpers.Checks.checkParamTypes
+import static tidynf.helpers.Checks.checkRequiredParams
 
 
 class ArrangeOp {
