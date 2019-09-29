@@ -1,15 +1,15 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
+import tidynf.exception.IllegalTypeException
 
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.Predicates.isType
 
 class UnnameOp {
 
-    private String method_name = 'unname'
+    private String methodName = 'unname'
     private DataflowChannel source
-    private LinkedHashSet keySet
 
     UnnameOp(DataflowChannel source) {
 
@@ -20,22 +20,14 @@ class UnnameOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
-            def data = it as LinkedHashMap
+            if (! isType(it, Map))
+                throw new IllegalTypeException(errMsg(methodName, "Required Map type\n" +
+                        "got ${it.getClass().simpleName} with value $it"))
 
-            synchronized (this) {
-                if (! keySet) {
-                    keySet = data.keySet()
-                }
-            }
-
-            mapChecks(data)
+            LinkedHashMap data = it as LinkedHashMap
 
             data.values() as ArrayList
         }
     }
 
-    void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
-    }
 }

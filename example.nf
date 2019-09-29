@@ -1,7 +1,10 @@
 #!/usr/bin/env nextflow
 
 import static tidynf.TidyMethods.*
+
 tidynf()
+
+workflow.onComplete { println 'done.' }
 
 left = Channel.from([
     ['a', 1, '/file/path/1.bam'],
@@ -10,17 +13,23 @@ left = Channel.from([
     ['c', 4, '/file/path/4.bam'],
     ['c', 5, '/file/path/5.bam'],
     ['c', 6, '/file/path/6.bam']])
-    .set_names('id', 'value', 'file')
-    .mutate { file = as_file(file) ; bai = file_ext(file, '.bai')}
+    .set_names('id', 'value', 'bam')
+    .mutate { bam = file(bam) }
     .group_by('id')
-    .arrange('value')
     .mutate { n = value.size() }
+    .unnest()
 
 right = Channel.from([
     ['a', 'foo'],
     ['b', 'bar'],
-    ['c', 'baz']])
+    ['c', 'baz'],
+    ['d', 'zum']])
     .set_names('id', 'var')
 
-left.full_join(right, 'id')
-    .subscribe { println it }
+left.inner_join(right, 'id')
+    .collect_cols()
+    .arrange('id', 'value')
+    .unnest()
+    .select('id', 'value', 'var', 'n', 'bam')
+    .collect_rows()
+    .subscribe { println it.collect { it.toString() }.join('\n') }

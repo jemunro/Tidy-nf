@@ -1,58 +1,63 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
+import tidynf.exception.EmptySetException
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
+import tidynf.exception.TidyException
 
-import static tidynf.TidyChecks.checkContainsAll
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkNoOverlap
-import static tidynf.TidyChecks.checkNonEmpty
-import static tidynf.TidyDataFlow.leftRightExclusive
-import static tidynf.TidyDataFlow.withUniqueKeyData
-import static tidynf.exception.TidyError.tidyError
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.JoinHelpers.leftRightExclusive
+import static tidynf.helpers.JoinHelpers.withUniqueKeyData
+import static tidynf.helpers.Predicates.areSameSet
+import static tidynf.helpers.Predicates.isEmpty
+import static tidynf.helpers.Predicates.isListOfMap
+import static tidynf.helpers.Predicates.isType
 
 class JoinOp {
 
-    private String method_name
+    private String methodName
     private DataflowQueue left
     private DataflowQueue right
-    private LinkedHashSet by
+    private LinkedHashSet keySetBy
     private LinkedHashSet keySetLeft
     private LinkedHashSet keySetRight
     private LinkedHashSet keySetFinal
     private final static LinkedHashSet validMethods =  ["left_join", "right_join", "inner_join", "full_join"]
 
 
-    JoinOp(String method_name, DataflowQueue left, DataflowQueue right, List by) {
+    JoinOp(String methodName, DataflowQueue left, DataflowQueue right, Collection by) {
 
-        this.method_name = method_name
+        this.methodName = methodName
         this.left = left
         this.right = right
-        this.by = by
+        this.keySetBy = by
 
-        if (! validMethods.contains(method_name)) {
-            tidyError("unknown join method: $method_name", "join")
-        }
+        assert validMethods.contains(methodName)
+
+        if (isEmpty(keySetBy))
+            throw new EmptySetException(errMsg(methodName, "keyset by must not be empty"))
     }
 
     DataflowQueue apply() {
 
         def res
-        switch(method_name) {
+
+        switch(methodName) {
             case "left_join":
-                res = combineByTuple().filter { it[1] }
+                res = doJoin().filter { it[1] }
                 break
 
             case "right_join":
-                res = combineByTuple().filter { it[2] }
+                res = doJoin().filter { it[2] }
                 break
 
             case "inner_join":
-                res = combineByTuple().filter { it[1] && it[2] }
+                res = doJoin().filter { it[1] && it[2] }
                 break
 
             default:
-                res = combineByTuple()
+                res = doJoin()
         }
 
         res.map {
@@ -63,7 +68,7 @@ class JoinOp {
         }
     }
 
-    DataflowQueue combineByTuple() {
+    DataflowQueue doJoin() {
 
         def left_unique
         def left_queue
@@ -72,71 +77,90 @@ class JoinOp {
         def right_queue
         def right_exc
 
-        (left_unique, left_queue) = withUniqueKeyData(left, by)
-        (right_unique, right_queue) = withUniqueKeyData(right, by)
+        (left_unique, left_queue) = withUniqueKeyData(left, keySetBy)
+        (right_unique, right_queue) = withUniqueKeyData(right, keySetBy)
 
         (left_exc, right_exc) = leftRightExclusive(left_unique, right_unique)
 
-        def left_side = prepareForCombine(left_queue, true).mix(right_exc.map { [ it, [:] ] })
-        def right_side = prepareForCombine(right_queue, false).mix(left_exc.map { [ it, [:] ] })
+        def left_side = prepareCombine(left_queue, true).mix(right_exc.map { [it, [:] ] })
+        def right_side = prepareCombine(right_queue, false).mix(left_exc.map { [it, [:] ] })
 
-        left_side.combine(right_side, by:0).map { mapChecks(it as List); it }
+        left_side.combine(right_side, by: 0).map {
+
+            if (!isType(it, List))
+                throw new IllegalTypeException(errMsg(methodName, "Required List type\n" +
+                        "got ${it.getClass().simpleName} with value $it"))
+
+            ArrayList list = it as ArrayList
+
+            if (list.size() != 3)
+                throw new TidyException(errMsg(methodName, "Something went wrong, size is ${list.size()} instead of 3"))
+
+            if (!isListOfMap(list))
+                throw new IllegalTypeException(errMsg("Required List of Map\ngot: $list"))
+
+            list
+        }
     }
 
-    DataflowQueue prepareForCombine(DataflowQueue source, Boolean is_left) {
+    DataflowQueue prepareCombine(DataflowQueue source, Boolean is_left) {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
-            def data = it as LinkedHashMap
+            if (! isType(it, Map))
+                throw new IllegalTypeException(errMsg(methodName, "Required Map type\n" +
+                        "got ${it.getClass().simpleName} with value $it"))
+
+            LinkedHashMap data = it as LinkedHashMap
 
             if (is_left){
                 synchronized (this) {
                     if (! keySetLeft) {
                         keySetLeft = data.keySet()
-                        firstChecks(keySetLeft)
 
                         if (keySetRight) {
-                            checkNoOverlap(keySetLeft - by, keySetRight - by, method_name)
-                            keySetFinal = by + keySetLeft + keySetRight
+                           initKeySets()
                         }
                     }
                 }
-                checkKeysMatch(keySetLeft, data.keySet() as LinkedHashSet, method_name)
 
-                [data.subMap(by), data.subMap(keySetLeft - by)]
+                if (! areSameSet(keySetLeft, data.keySet()))
+                    throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
+                            "\nfirst keyset: $keySetLeft\nmismatch keyset: ${data.keySet()}"))
+
+                [data.subMap(keySetBy), data.subMap(keySetLeft - keySetBy)]
 
             } else {
                 synchronized (this) {
                     if (! keySetRight) {
                         keySetRight = data.keySet()
-                        firstChecks(keySetRight)
 
                         if (keySetLeft) {
-                            checkNoOverlap(keySetLeft - by, keySetRight - by, method_name)
-                            keySetFinal = by + keySetLeft + keySetRight
+                            initKeySets()
                         }
                     }
                 }
-                checkKeysMatch(keySetRight, data.keySet() as LinkedHashSet, method_name)
 
-                [data.subMap(by), data.subMap(keySetRight - by)]
+                if (! areSameSet(keySetRight, data.keySet()))
+                    throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
+                            "\nfirst keyset: $keySetRight\nmismatch keyset: ${data.keySet()}"))
+
+                [data.subMap(keySetBy), data.subMap(keySetRight - keySetBy)]
             }
         }
     }
 
-    void firstChecks(LinkedHashSet keySet) {
-        checkNonEmpty(by, method_name)
-        checkContainsAll(keySet, by, method_name)
-    }
+    void initKeySets() {
 
-    void mapChecks(Collection coll) {
-        if (coll.size() != 3) {
-            tidyError("Something went wrong, size is ${coll.size()} instead of 3", method_name)
-        }
-        checkIsType(coll[0], LinkedHashMap, method_name)
-        checkIsType(coll[1], LinkedHashMap, method_name)
-        checkIsType(coll[2], LinkedHashMap, method_name)
+        if (!keySetRight.containsAll(keySetBy))
+            throw new KeySetMismatchException(errMsg(methodName, "keyset right does not contain all of keyset by\n" +
+                    "keyset by: $keySetBy, keyset right: $keySetRight"))
+
+        if (!keySetLeft.containsAll(keySetBy))
+            throw new KeySetMismatchException(errMsg(methodName, "keyset left does not contain all of keyset by\n" +
+                    "keyset by: $keySetBy, keyset right: $keySetLeft"))
+
+        keySetFinal = keySetBy + keySetLeft + keySetRight
     }
 
 }

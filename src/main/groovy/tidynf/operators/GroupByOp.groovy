@@ -2,59 +2,61 @@ package tidynf.operators
 
 
 import groovyx.gpars.dataflow.DataflowQueue
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
 
-import static tidynf.TidyChecks.checkContainsAll
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkNonEmpty
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.Predicates.areSameSet
+import static tidynf.helpers.Predicates.isType
 
 class GroupByOp {
 
-    private String method_name = 'group_by'
+    private String methodName = 'group_by'
     private DataflowQueue source
-    private ArrayList by
+    private LinkedHashSet keySetBy
     private LinkedHashSet keySet
 
-    GroupByOp(DataflowQueue source, List by){
+    GroupByOp(DataflowQueue source, List keySetBy){
 
         this.source = source
-        this.by = by
+        this.keySetBy = keySetBy
 
+        assert keySetBy.size() > 0
     }
 
     DataflowQueue apply() {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
-            def data = it as LinkedHashMap
+            if (! isType(it, Map))
+                throw new IllegalTypeException(errMsg(methodName, "Required Map type\n" +
+                        "got ${it.getClass().simpleName} with value $it"))
+
+            LinkedHashMap data = it as LinkedHashMap
 
             synchronized (this) {
+
                 if (! keySet) {
                     keySet = data.keySet()
-                    firstChecks()
+
+                    if (! keySet.containsAll(keySetBy))
+                        throw new KeySetMismatchException(errMsg(methodName, "by keyset not all present in keyset\n" +
+                                "by keyset: $keySetBy, keyset: $keySet"))
                 }
             }
 
-            mapChecks(data)
+            if (! areSameSet(keySet, data.keySet()))
+                throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
+                        "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
 
-            [ data.subMap(by), data ]
+            [data.subMap(keySetBy), data ]
 
         }.groupTuple(by:0)
             .map {
                 keySet.collectEntries { k ->
-                    [ (k) : (by.contains(k) ? it[0][k] : it[1].collect { m -> m[k] } )]
+                    [ (k) : (keySetBy.contains(k) ? it[0][k] : it[1].collect { m -> m[k] } )]
                 }
             }
-    }
-
-    void firstChecks() {
-        checkNonEmpty(by, method_name)
-        checkContainsAll(keySet, by, method_name)
-    }
-
-    void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
     }
 
 }

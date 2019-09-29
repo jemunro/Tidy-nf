@@ -1,43 +1,45 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
+import tidynf.exception.CollectionSizeMismatchException
 
-import static tidynf.TidyChecks.checkEqualSizes
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkUnique
-import static tidynf.TidyChecks.coerceToList
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.Predicates.areSameSize
+import static tidynf.helpers.Predicates.isType
 
 class SetNamesOp {
 
-    private String method_name = 'set_names'
+    private String methodName = 'set_names'
     private DataflowChannel source
-    private List keys
+    private LinkedHashSet keySet
 
 
-    SetNamesOp(DataflowChannel source, List keys){
+    SetNamesOp(DataflowChannel source, List keySet){
 
         this.source = source
-        this.keys = keys
-
+        this.keySet = keySet
     }
 
-    DataflowChannel apply(){
-
-        checkUnique(keys, method_name)
+    DataflowChannel apply() {
 
         source.map {
 
-            def list = coerceToList(it, method_name)
+            ArrayList list
+            if (isType(it, List)) {
+                list = it as ArrayList
+            } else if(isType(it, LinkedHashMap)) {
+                list = (it as LinkedHashMap).values()
+            } else {
+                list = [it]
+            }
 
-            mapChecks(list)
+            if (! areSameSize(list, keySet))
+                throw new CollectionSizeMismatchException(errMsg(methodName, "keySet and values are not same size\n" +
+                        "keySet: $keySet, values: $list"))
 
-            [keys, list]
+            [ keySet as ArrayList, list ]
                 .transpose()
                 .collectEntries { k, v -> [(k): v] }
         }
-    }
-
-    void mapChecks(List list) {
-        checkEqualSizes(list, keys, method_name)
     }
 }

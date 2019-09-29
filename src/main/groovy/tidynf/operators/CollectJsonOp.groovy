@@ -1,5 +1,6 @@
 package tidynf.operators
 
+import groovyx.gpars.dataflow.DataflowChannel
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 import tidynf.exception.IllegalTypeException
@@ -8,23 +9,31 @@ import tidynf.exception.KeySetMismatchException
 import static tidynf.exception.Message.errMsg
 import static tidynf.helpers.DataHelpers.arrange
 import static tidynf.helpers.Predicates.allKeySetsMatch
+import static tidynf.helpers.Predicates.allKeySetsSameOrder
 import static tidynf.helpers.Predicates.isListOfMap
+import static tidynf.io.JsonHandler.writeJson
 
-class CollectRowsOp {
+class CollectJsonOp {
 
-    private static final String methodName = 'collect_rows'
-    private DataflowQueue source
+    private DataflowChannel source
     private boolean sort
+    private File file
 
-    CollectRowsOp(DataflowQueue source, Boolean sort) {
+    private static final String methodName = 'collect_json'
+
+    CollectJsonOp(DataflowChannel source, File file, Boolean sort) {
 
         this.source = source
         this.sort = sort
+        this.file = file
+
     }
 
     DataflowVariable apply() {
 
-        source.toList().map {
+        source.with {
+            it instanceof DataflowQueue ? it.toList() : it
+        }.map {
             ArrayList data = it
 
             if(! isListOfMap(data))
@@ -39,7 +48,14 @@ class CollectRowsOp {
                 data = arrange(data)
             }
 
-            data
+            if (! allKeySetsSameOrder(data)) {
+                LinkedHashSet keySet = (data[0] as LinkedHashMap).keySet()
+                data = data.collect { (it as LinkedHashMap).subMap(keySet) }
+            }
+
+            writeJson(it, file)
+            file.toPath()
         }
     }
 }
+

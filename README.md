@@ -14,29 +14,37 @@ left = Channel.from([
     ['c', 4, '/file/path/4.bam'],
     ['c', 5, '/file/path/5.bam'],
     ['c', 6, '/file/path/6.bam']])
-    .set_names('id', 'value', 'file')
-    .mutate { file = as_file(file) ; bai = file_ext(file, '.bai') }
+    .set_names('id', 'value', 'bam')
+    .mutate { bam = file(bam) }
     .group_by('id')
-    .arrange('value')
     .mutate { n = value.size() }
+    .unnest()
 
 right = Channel.from([
     ['a', 'foo'],
     ['b', 'bar'],
-    ['c', 'baz']])
+    ['c', 'baz'],
+    ['d', 'zum']])
     .set_names('id', 'var')
 
-left.full_join(right, 'id')
-    .subscribe { println it }
-
+left.inner_join(right, 'id')
+    .collect_cols()
+    .arrange('id', 'value')
+    .unnest()
+    .select('id', 'value', 'var', 'n', 'bam')
+    .collect_rows()
+    .subscribe { println it.collect { it.toString() }.join('\n') }
 ```
 
 ```console
-N E X T F L O W  ~  version 19.01.0
-Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
-[id:a, value:[1], file:[/file/path/1.bam], bai:[/file/path/1.bam.bai], n:1, var:foo]
-[id:b, value:[2, 3], file:[/file/path/2.bam, /file/path/3.bam], bai:[/file/path/2.bam.bai, /file/path/3.bam.bai], n:2, var:bar]
-[id:c, value:[4, 5, 6], file:[/file/path/4.bam, /file/path/5.bam, /file/path/6.bam], bai:[/file/path/4.bam.bai, /file/path/5.bam.bai, /file/path/6.bam.bai], n:3, var:baz]
+N E X T F L O W  ~  version 19.07.0
+Launching `example.nf` [maniac_crick] - revision: 44bc4689e5
+[id:a, value:1, var:foo, n:1, bam:/file/path/1.bam]
+[id:b, value:2, var:bar, n:2, bam:/file/path/2.bam]
+[id:b, value:3, var:bar, n:2, bam:/file/path/3.bam]
+[id:c, value:4, var:baz, n:3, bam:/file/path/4.bam]
+[id:c, value:5, var:baz, n:3, bam:/file/path/5.bam]
+[id:c, value:6, var:baz, n:3, bam:/file/path/6.bam]
 ```
 
 ## TidyOperators
@@ -66,7 +74,7 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * rename a variable
     * see `dplyr::rename()`
     * differences:
-            - only a single variable may be renames
+            - only a single variable may be renamed
             - not given as a formula
     * e.g. `channel.rename('old_name', 'new_name')`
 * **unname()**
@@ -78,11 +86,11 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
     * see `tidyr::unnest()`
     * e.g. `channel.unnest()` or `channel.unnest('x', 'y')`
 * **left_join()**, **right_join()**, **full_join()**, **inner_join()**
-    * joins two 'TidyChannel' by selected variables, missing elements replaced by null
+    * joins two channels by selected variables, missing elements replaced by null
     * differences:
-        - overlapping variable names only permitted for names in `by`
+        - `by` is required and names must be the same in both left and right channels
     * see `dplyr::left_join()`, `dplyr::right_join()`, `dplyr::full_join()`, `dplyr::inner_join()`
-    * e.g. `left.full_join(right, 'x')`
+    * e.g. `left.full_join(right)
 * **group_by()**
     * group by selected variables
     * see `dplyr::group_by()`
@@ -100,3 +108,8 @@ Launching `example.nf` [dreamy_jennings] - revision: 6ec6ccc094
 * **collect_cols()**
     * collect Channel into Variable, LinkedHashMap of List
     * e.g. channel.collect_cols()
+    
+## TidyMethods
+* **read_tsv()**
+* **read_csv()**
+* **read_delim()**

@@ -2,44 +2,46 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
 
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.TidyChecks.checkKeysMatch
+import static tidynf.helpers.DataHelpers.arrange
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.DataHelpers.transpose
+import static tidynf.helpers.Predicates.allKeySetsMatch
+import static tidynf.helpers.Predicates.isListOfMap
 
 class CollectColsOp {
 
-    private String method_name = 'collect_cols'
+    private static final String methodName = 'collect_cols'
     private DataflowQueue source
-    private LinkedHashSet keySet
+    private boolean sort
 
-    CollectColsOp(DataflowQueue source) {
+    CollectColsOp(DataflowQueue source, boolean sort) {
+
         this.source = source
+        this.sort = sort
     }
 
     DataflowVariable apply() {
 
-        source.map {
+        source.toList().map {
 
-            checkIsType(it, LinkedHashMap, method_name)
-            def data = it as LinkedHashMap
+            ArrayList data = it
 
-            synchronized (this) {
-                if (! keySet) {
-                    keySet = data.keySet()
-                }
+            if (!isListOfMap(data))
+                throw new IllegalTypeException(
+                        errMsg(methodName, "Required List of Map\ngot: $data"))
+
+            if (!allKeySetsMatch(data))
+                throw new KeySetMismatchException(
+                        errMsg(methodName, "Required matching keysets\nfirst keyset:${data[0].keySet()}"))
+
+            if (sort) {
+                data = arrange(data)
             }
 
-            mapChecks(data)
-
-            data
-
-        }.toList().map {
-
-            keySet?.collectEntries{ k -> [ (k): it.collect { it[k] } ] }
+            transpose(data)
         }
-    }
-
-    void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
     }
 }

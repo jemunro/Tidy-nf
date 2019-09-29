@@ -3,6 +3,6 @@ package tidynf.exception
 
 @groovy.transform.InheritConstructors
 
-class TidyException extends Exception {
+class CollectionSizeMismatchException extends TidyException {
 
 }

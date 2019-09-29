@@ -1,14 +1,16 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
 
-import static tidynf.TidyChecks.checkKeysMatch
-import static tidynf.TidyChecks.checkIsType
-import static tidynf.exception.TidyError.tidyError
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.Predicates.areSameSet
+import static tidynf.helpers.Predicates.isType
 
 class MutateOp {
 
-    private String method_name = 'mutate'
+    private String methodName = 'mutate'
     private DataflowChannel source
     private Binding with
     private Closure dehydrated
@@ -26,8 +28,11 @@ class MutateOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, method_name)
-            def data = it as LinkedHashMap
+            if (! isType(it, Map))
+                throw new IllegalTypeException(errMsg(methodName, "Required Map type\n" +
+                        "got ${it.getClass().simpleName} with value $it"))
+
+            LinkedHashMap data = it as LinkedHashMap
 
             synchronized (this) {
                 if (! keySet) {
@@ -35,26 +40,15 @@ class MutateOp {
                 }
             }
 
-            mapChecks(data)
+            if (! areSameSet(keySet, data.keySet()))
+                throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
+                        "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
 
-            def binding = new Binding(data)
-            def rehydrated = dehydrated.rehydrate(with, binding, null)
+            Binding binding = new Binding(data)
 
-            try {
-                rehydrated.call()
-            } catch(MissingPropertyException e) {
-                tidyError("Unknown variable \"${e.getProperty()}\"\n" +
-                    "data: ${data.toString()}, with: ${with.getVariables().toString()}", method_name)
-            } catch (Exception e) {
-                tidyError("${e.toString()}\n" +
-                    "data: ${data.toString()}, with: ${with.getVariables().toString()}", method_name)
-            }
+            dehydrated.rehydrate(with, binding, null).call()
 
             binding.getVariables() as LinkedHashMap
         }
-    }
-
-    void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, method_name)
     }
 }
