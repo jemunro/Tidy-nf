@@ -24,7 +24,7 @@ class CollectRowsOp {
 
     DataflowVariable apply() {
 
-        source.toList.map {
+        source.toList().map {
             ArrayList data = it
 
             if(! isListOfMap(data))
