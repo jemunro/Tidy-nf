@@ -3,16 +3,16 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 import tidynf.exception.CollectionSizeMismatchException
+import tidynf.exception.EmptySetException
 import tidynf.exception.IllegalTypeException
 import tidynf.exception.KeySetMismatchException
 
 import static tidynf.helpers.DataHelpers.arrange
 import static tidynf.exception.Message.errMsg
-import static tidynf.helpers.Checks.checkParamTypes
-import static tidynf.helpers.Checks.checkRequiredParams
 import static tidynf.helpers.Predicates.allAreSameSize
 import static tidynf.helpers.Predicates.allAreType
 import static tidynf.helpers.Predicates.areSameSet
+import static tidynf.helpers.Predicates.isEmpty
 import static tidynf.helpers.Predicates.isType
 
 
@@ -30,16 +30,11 @@ class ArrangeOp {
 
         this.source = source
         this.keySetBy = keySetBy
-
-        def types = [at: List, at_: String, reverse: Boolean]
-        def required = []
-        checkRequiredParams(methodName, required, params)
-        checkParamTypes(methodName, types, params)
         this.reverse = params?.reverse ?: false
         this.keySetAt = params?.at as List ?: []
 
-        assert keySetBy.size() > 0
-
+        if (isEmpty(keySetBy))
+            throw new EmptySetException(errMsg(methodName, "keyset by must not be empty"))
     }
 
     DataflowChannel apply() {

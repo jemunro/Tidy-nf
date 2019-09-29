@@ -5,9 +5,6 @@ import tidynf.exception.IllegalTypeException
 import tidynf.exception.KeySetMismatchException
 
 import static tidynf.exception.Message.errMsg
-import static tidynf.helpers.Checks.checkKeysMatch
-import static tidynf.helpers.Checks.checkIsType
-import static tidynf.exception.Message.tidyError
 import static tidynf.helpers.Predicates.areSameSet
 import static tidynf.helpers.Predicates.isType
 

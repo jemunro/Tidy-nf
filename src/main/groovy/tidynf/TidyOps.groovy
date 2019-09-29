@@ -82,8 +82,8 @@ class TidyOps {
     }
 
 
-    static DataflowVariable collect_cols(DataflowQueue queue) {
-        new CollectColsOp(queue).apply()
+    static DataflowVariable collect_cols(DataflowQueue queue, sort = true) {
+        new CollectColsOp(queue, sort).apply()
     }
 
 

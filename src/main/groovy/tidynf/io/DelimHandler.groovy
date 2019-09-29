@@ -1,8 +1,13 @@
 package tidynf.io
 
+import tidynf.exception.EmptySetException
+import tidynf.exception.IllegalTypeException
+
 import java.nio.file.Path
-import static tidynf.helpers.Checks.checkAllAreType
-import static tidynf.helpers.Checks.checkNonEmpty
+
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.Predicates.allAreType
+import static tidynf.helpers.Predicates.isEmpty
 
 class DelimHandler {
 
@@ -18,7 +23,8 @@ class DelimHandler {
 
         ArrayList split = splitLines(file, delim)
         if (colNames) {
-            checkAllAreType(colNames, String, 'read_delim')
+            if(!allAreType(colNames, String))
+                throw new IllegalTypeException(errMsg("Required List of String\ngot: $colNames"))
         } else {
             colNames = split[0] as List
             split = split.drop(1)
@@ -42,7 +48,9 @@ class DelimHandler {
 
     static void writeDelim(List data, File file, String delim, Boolean colNames, Boolean append) {
 
-        checkNonEmpty(data, 'writeDelim')
+        if (isEmpty(data))
+            throw new EmptySetException(errMsg("writeDelime", "data must not be empty"))
+
         File parent = file.toPath().toAbsolutePath().toFile().parentFile
         if (! parent.exists()) { parent.mkdirs() }
 
