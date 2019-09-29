@@ -88,7 +88,7 @@ Launching `example.nf` [maniac_crick] - revision: 44bc4689e5
 * **left_join()**, **right_join()**, **full_join()**, **inner_join()**
     * joins two channels by selected variables, missing elements replaced by null
     * differences:
-        - `by` cannot be specified, channels will be joined by all overlapping variable names
+        - `by` is required and names must be the same in both left and right channels
     * see `dplyr::left_join()`, `dplyr::right_join()`, `dplyr::full_join()`, `dplyr::inner_join()`
     * e.g. `left.full_join(right)
 * **group_by()**
