@@ -37,7 +37,7 @@ class SetNamesOp {
                 throw new CollectionSizeMismatchException(errMsg(methodName, "keySet and values are not same size\n" +
                         "keySet: $keySet, values: $list"))
 
-            [keySet, list]
+            [ keySet as ArrayList, list ]
                 .transpose()
                 .collectEntries { k, v -> [(k): v] }
         }

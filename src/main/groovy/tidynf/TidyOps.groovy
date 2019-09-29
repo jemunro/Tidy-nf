@@ -136,19 +136,19 @@ class TidyOps {
         new JoinOp('inner_join', left, right, by).apply()
     }
 
-    static DataflowVariable collect_tsv(DataflowQueue source, String filename, col_names = true, sort = true) {
+    static DataflowVariable collect_tsv(DataflowChannel source, String filename, col_names = true, sort = true) {
         collect_tsv(source, new File(filename), col_names, sort)
     }
 
-    static DataflowVariable collect_tsv(DataflowQueue source, File file, col_names = true, sort = true) {
+    static DataflowVariable collect_tsv(DataflowChannel source, File file, col_names = true, sort = true) {
         new CollectDelimOp(source, file, '\t', col_names, sort, 'collect_tsv').apply()
     }
 
-    static DataflowVariable collect_csv(DataflowQueue source, String filename, col_names = true, sort = true) {
+    static DataflowVariable collect_csv(DataflowChannel source, String filename, col_names = true, sort = true) {
         collect_csv(source, new File(filename), col_names, sort)
     }
 
-    static DataflowVariable collect_csv(DataflowQueue source, File file, col_names = true, sort = true) {
+    static DataflowVariable collect_csv(DataflowChannel source, File file, col_names = true, sort = true) {
         new CollectDelimOp(source, file, ',', col_names, sort, 'collect_csv').apply()
     }
 
@@ -168,11 +168,11 @@ class TidyOps {
         new SubscribeDelimOp(source, file, '\t', col_names, 'subscribe_tsv').apply()
     }
 
-    static DataflowVariable collect_json(DataflowQueue source, String filename, sort = true) {
+    static DataflowVariable collect_json(DataflowChannel source, String filename, sort = true) {
         collect_json(source, new File(filename), sort)
     }
 
-    static DataflowVariable collect_json(DataflowQueue source, File file, sort = true) {
+    static DataflowVariable collect_json(DataflowChannel source, File file, sort = true) {
         new CollectJsonOp(source, file, sort).apply()
     }
 }

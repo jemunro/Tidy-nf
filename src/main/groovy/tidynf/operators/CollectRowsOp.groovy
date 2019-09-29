@@ -2,15 +2,18 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
 
-import static tidynf.helpers.Checks.checkIsType
-import static tidynf.helpers.Checks.checkKeysMatch
+import static tidynf.exception.Message.errMsg
+import static tidynf.helpers.DataHelpers.arrange
+import static tidynf.helpers.Predicates.allKeySetsMatch
+import static tidynf.helpers.Predicates.isListOfMap
 
 class CollectRowsOp {
 
-    private String methodName = 'collect_rows'
+    private static final String methodName = 'collect_rows'
     private DataflowQueue source
-    private LinkedHashSet keySet
     private boolean sort
 
     CollectRowsOp(DataflowQueue source, Boolean sort) {
@@ -21,27 +24,22 @@ class CollectRowsOp {
 
     DataflowVariable apply() {
 
-        source.map {
+        source.toList.map {
+            ArrayList data = it
 
-            checkIsType(it, LinkedHashMap, methodName)
-            def data = it as LinkedHashMap
+            if(! isListOfMap(data))
+                throw new IllegalTypeException(
+                        errMsg(methodName, "Required List of Map\ngot: $data"))
 
-            synchronized (this) {
-                if (! keySet) {
-                    keySet = data.keySet()
-                }
+            if(! allKeySetsMatch(data))
+                throw new KeySetMismatchException(
+                        errMsg(methodName,"Required matching keysets\nfirst keyset:${data[0].keySet()}"))
+
+            if (sort) {
+                data = arrange(data)
             }
 
-            mapChecks(data)
-
             data
-
-        }.with {
-            sort ? it.toSortedList() : it.toList()
         }
-    }
-
-    void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
     }
 }

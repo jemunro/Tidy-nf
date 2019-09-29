@@ -6,8 +6,17 @@ class Predicates {
         object instanceof List && ! isEmpty(object) && object.every { it instanceof Map }
     }
 
+    static boolean isMapOfList(Object object) {
+        object instanceof Map && ! isEmpty(object) && object.values().every { it instanceof List }
+    }
+
+
     static boolean isEmpty(Collection coll) {
         coll.size() == 0
+    }
+
+    static boolean isEmpty(Map map) {
+        map.size() == 0
     }
 
     static boolean isType(Object obj, Class type) {

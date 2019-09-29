@@ -5,9 +5,9 @@ import tidynf.exception.IllegalTypeException
 import tidynf.exception.KeySetMismatchException
 
 import static tidynf.exception.Message.errMsg
-import static tidynf.helpers.Checks.checkKeysMatch
 import static tidynf.io.DelimHandler.writeDelim
-import static tidynf.helpers.Predicates.*
+import static tidynf.helpers.Predicates.isType
+import static tidynf.helpers.Predicates.areSameSet
 
 class SubscribeDelimOp {
 

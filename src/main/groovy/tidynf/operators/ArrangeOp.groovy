@@ -2,15 +2,18 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
+import tidynf.exception.CollectionSizeMismatchException
+import tidynf.exception.IllegalTypeException
+import tidynf.exception.KeySetMismatchException
 
-import static tidynf.helpers.Checks.checkAllAreType
-import static tidynf.helpers.Checks.checkContainsAll
-import static tidynf.helpers.Checks.checkEqualSizes
-import static tidynf.helpers.Checks.checkIsType
-import static tidynf.helpers.Checks.checkKeysMatch
-import static tidynf.helpers.Checks.checkNonEmpty
+import static tidynf.helpers.DataHelpers.arrange
+import static tidynf.exception.Message.errMsg
 import static tidynf.helpers.Checks.checkParamTypes
 import static tidynf.helpers.Checks.checkRequiredParams
+import static tidynf.helpers.Predicates.allAreSameSize
+import static tidynf.helpers.Predicates.allAreType
+import static tidynf.helpers.Predicates.areSameSet
+import static tidynf.helpers.Predicates.isType
 
 
 class ArrangeOp {
@@ -18,21 +21,24 @@ class ArrangeOp {
     private String methodName = 'arrange'
     private DataflowChannel source
     private boolean reverse
-    private List by
-    private List at
+    private LinkedHashSet keySetBy
+    private LinkedHashSet keySetAt
     private LinkedHashSet keySet
+    private LinkedHashSet keySetByAt
 
-    ArrangeOp(Map params, DataflowChannel source, List by) {
+    ArrangeOp(Map params, DataflowChannel source, List keySetBy) {
 
         this.source = source
-        this.by = by
+        this.keySetBy = keySetBy
 
         def types = [at: List, at_: String, reverse: Boolean]
         def required = []
         checkRequiredParams(methodName, required, params)
         checkParamTypes(methodName, types, params)
         this.reverse = params?.reverse ?: false
-        this.at = params?.at as List ?: []
+        this.keySetAt = params?.at as List ?: []
+
+        assert keySetBy.size() > 0
 
     }
 
@@ -40,55 +46,48 @@ class ArrangeOp {
 
         source.map {
 
-            checkIsType(it, LinkedHashMap, methodName)
-            def data = it as LinkedHashMap
+            if (! isType(it, Map))
+                throw new IllegalTypeException(errMsg(methodName, "Required Map type\n" +
+                        "got ${it.getClass().simpleName} with value $it"))
+
+            LinkedHashMap data = it as LinkedHashMap
 
             synchronized (this) {
+
                 if (! keySet) {
                     keySet = data.keySet()
-                    firstChecks()
+
+                    if (! keySet.containsAll(keySetBy))
+                        throw new KeySetMismatchException(errMsg(methodName, "by keyset not all present in keyset\n" +
+                                "by keyset: $keySetBy, keyset: $keySet"))
+
+                    if (! keySetAt) {
+                        keySetAt = data
+                                .findAll { k, v -> v instanceof List && ! keySetBy.contains(k) }
+                                .findAll { k, v -> (v as List).size() == data[keySetBy[0]].size() }
+                                .keySet()
+                    }
+
+                    keySetByAt = keySetBy + keySetAt
                 }
             }
 
-            mapChecks(data)
+            if (! areSameSet(keySet, data.keySet()))
+                throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
+                        "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
 
-            def set = at ?
-                (by + at).unique() :
-                (data
-                    .findAll { k, v -> data[k] instanceof List && ! by.contains(k) }
-                    .findAll { it.value.size() == data[by[0]].size() }
-                    .with { it.keySet() as ArrayList }
-                    .with { by + it }
-                )
+            if (! allAreType(keySetByAt.collect { k -> data[k] }, List))
+                throw new IllegalTypeException(errMsg(methodName, "all selected variables must be lists\n" +
+                        "${keySetByAt.collectEntries { k -> [(k) : data[k].getClass() ] } }"))
 
-            checkEqualSizes(set.collect { data[it] }, methodName)
+            if (! allAreSameSize(keySetByAt.collect { k -> data[k] } ))
+                throw new CollectionSizeMismatchException(errMsg(methodName, "all selected variables in arrange must be the same size\n" +
+                        "${keySetByAt.collectEntries { k -> [(k) : data[k]?.size() ] } }"))
 
-            def sorted = set
-                .collect { data[it] }
-                .transpose()
-                .collect { [it.take(by.size()), it.takeRight(it.size() - by.size())] }
-                .sort { l1, l2 ->
-                    [l1[0], l2[0]].transpose()
-                        .find { e1, e2 -> e1 != e2 }
-                        .with { it ? it[0] <=> it[1] : 0 } }
-                .with { reverse ? it.reverse() : it }
-                .collect { it[0] + it[1] }
-                .transpose()
-                .withIndex()
-                .collectEntries { item, i -> [(set[i]) : item] }
+            LinkedHashMap sorted = arrange(data.subMap(keySetByAt) as LinkedHashMap, keySetBy, reverse)
 
-            data.collectEntries { k, v -> [(k): sorted.containsKey(k) ? sorted[k] : v ] }
+            keySet.collectEntries{ k -> [(k): sorted.containsKey(k) ? sorted[k] : data[k] ] }
         }
-    }
-
-    void firstChecks() {
-        checkNonEmpty(by, methodName)
-        checkContainsAll(keySet, by, methodName)
-    }
-
-    void mapChecks(LinkedHashMap data) {
-        checkKeysMatch(keySet, data.keySet() as LinkedHashSet, methodName)
-        checkAllAreType(by.collect { data[it] }, List, methodName)
     }
 
 }
