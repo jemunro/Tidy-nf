@@ -2,11 +2,16 @@ package tidynf
 
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
+import tidynf.exception.IllegalTypeException
+import tidynf.helpers.DataFrame
+import tidynf.helpers.ListOfMapDF
+import tidynf.helpers.MapOfListDF
 
 import java.nio.file.Path
 
 import tidynf.extension.TidyDelegatingMetaClass
 
+import static tidynf.exception.Message.errMsg
 import static tidynf.io.DelimHandler.readDelim
 import static tidynf.exception.Message.tidyError
 import static tidynf.io.DelimHandler.writeDelim
@@ -53,7 +58,8 @@ class TidyMethods {
         } else if (file instanceof File) {
             readDelim(file, delim, col_names)
         } else {
-            tidyError("argument file must be one of String, Path or File", "read_delim")
+            throw new IllegalTypeException(errMsg('read_delim',
+                    'argument file must be one of String, Path or File'))
         }
     }
 
@@ -74,7 +80,16 @@ class TidyMethods {
         } else if (file instanceof File) {
             writeDelim(data, file, delim, col_names, false)
         } else {
-            tidyError("argument file must be one of String, Path or File", "write_delim")
+            throw new IllegalTypeException(errMsg('write_delim',
+                    'argument file must be one of String, Path or File'))
         }
+    }
+
+    static ListOfMapDF as_data_frame(ArrayList data) {
+        data as ListOfMapDF
+    }
+
+    static MapOfListDF as_data_frame(LinkedHashMap data) {
+        data as MapOfListDF
     }
 }
