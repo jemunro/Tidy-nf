@@ -5,9 +5,9 @@ import groovyx.gpars.dataflow.DataflowVariable
 import tidynf.exception.IllegalTypeException
 import tidynf.exception.KeySetMismatchException
 
-import static tidynf.helpers.DataHelpers.arrange
+import static tidynf.dataframe.DataFrameMethods.arrange
 import static tidynf.exception.Message.errMsg
-import static tidynf.helpers.DataHelpers.transpose
+import static tidynf.dataframe.DataFrameMethods.transpose
 import static tidynf.helpers.Predicates.allKeySetsMatch
 import static tidynf.helpers.Predicates.isListOfMap
 

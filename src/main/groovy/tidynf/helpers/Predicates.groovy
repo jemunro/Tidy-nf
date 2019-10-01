@@ -3,13 +3,16 @@ package tidynf.helpers
 class Predicates {
 
     static boolean isListOfMap(Object object) {
-        object instanceof List && ! isEmpty(object) && object.every { it instanceof Map }
+        object instanceof List && !isEmpty(object) && object.every { it instanceof Map }
+    }
+
+    static boolean isListOfList(Object object) {
+        object instanceof List && !isEmpty(object) && object.every { it instanceof List }
     }
 
     static boolean isMapOfList(Object object) {
-        object instanceof Map && ! isEmpty(object) && object.values().every { it instanceof List }
+        object instanceof Map && !isEmpty(object) && object.values().every { it instanceof List }
     }
-
 
     static boolean isEmpty(Collection coll) {
         coll.size() == 0
@@ -23,12 +26,13 @@ class Predicates {
         type.isInstance(obj)
     }
 
-    static boolean allAreType(Collection coll, Class type){
+    static boolean allAreType(Collection coll, Class type) {
         coll.every { type.isInstance(it) }
     }
 
     static boolean allAreSameSize(Collection coll) {
-        (! isEmpty(coll)) && allAreType(coll, Collection) && coll.drop(1).every { areSameSize(it, coll[0]) }
+        (!isEmpty(coll)) && allAreType(coll, Collection) &&
+                coll.drop(1).every { areSameSize(it as List, coll[0] as List) }
     }
 
     static boolean allAreUnique(Collection coll) {
@@ -36,7 +40,39 @@ class Predicates {
     }
 
     static boolean allKeySetsMatch(Collection coll) {
-        (! isEmpty(coll)) && isListOfMap(coll) && coll.drop(1).every { it.keySet() == coll[0].keySet() }
+        (!isEmpty(coll)) && isListOfMap(coll) && coll.drop(1).every { it.keySet() == coll[0].keySet() }
+    }
+
+    static boolean isListOfMapOfSameType(Collection coll) {
+        if (allKeySetsMatch(coll)) {
+            LinkedHashMap types = [:]
+            return coll.collect {
+                it.collect {
+                    k, v ->
+                        v == null ?: types[k] == null ?
+                                { types[k] = v.getClass(); true }() :
+                                types[k] == v.getClass()
+                }.every()
+            }.every()
+        }
+        false
+    }
+
+    static boolean isListOfSameType(Collection coll) {
+        Class type = null
+        coll.collect { item ->
+            item == null ?: type == null ?
+                    { type = item.getClass(); true }() :
+                    type == item.getClass()
+        }.every()
+    }
+
+    static boolean allAreListOfSameType(Collection coll) {
+        isListOfList(coll) && coll.every { isListOfSameType(it) }
+    }
+
+    static boolean allAreListOfSameType(Map map) {
+        allAreListOfSameType(map.values())
     }
 
     static boolean allKeySetsSameOrder(Collection coll) {

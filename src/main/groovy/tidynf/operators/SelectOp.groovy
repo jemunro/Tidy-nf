@@ -15,7 +15,7 @@ class SelectOp {
     private LinkedHashSet keySetSelect
     private LinkedHashSet keySet
 
-    SelectOp(DataflowChannel source, List keys){
+    SelectOp(DataflowChannel source, Collection keys){
 
         this.source = source
         this.keySetSelect = keys

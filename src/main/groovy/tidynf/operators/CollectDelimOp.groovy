@@ -10,7 +10,7 @@ import tidynf.exception.KeySetMismatchException
 import static tidynf.io.DelimHandler.writeDelim
 import static tidynf.exception.Message.errMsg
 import static tidynf.helpers.Predicates.*
-import static tidynf.helpers.DataHelpers.arrange
+import static tidynf.dataframe.DataFrameMethods.arrange
 
 
 class CollectDelimOp {

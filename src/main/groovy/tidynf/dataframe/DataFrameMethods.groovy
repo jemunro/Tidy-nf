@@ -1,4 +1,4 @@
-package tidynf.helpers
+package tidynf.dataframe
 
 import tidynf.exception.CollectionSizeMismatchException
 import tidynf.exception.IllegalTypeException
@@ -10,7 +10,7 @@ import static tidynf.helpers.Predicates.allKeySetsMatch
 import static tidynf.helpers.Predicates.isListOfMap
 import static tidynf.helpers.Predicates.isMapOfList
 
-class DataHelpers {
+class DataFrameMethods {
 
     static ArrayList arrange(ArrayList data, boolean reverse = false) {
         transpose(arrange(transpose(data), reverse))

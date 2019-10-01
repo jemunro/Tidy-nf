@@ -7,7 +7,7 @@ import tidynf.exception.EmptySetException
 import tidynf.exception.IllegalTypeException
 import tidynf.exception.KeySetMismatchException
 
-import static tidynf.helpers.DataHelpers.arrange
+import static tidynf.dataframe.DataFrameMethods.arrange
 import static tidynf.exception.Message.errMsg
 import static tidynf.helpers.Predicates.allAreSameSize
 import static tidynf.helpers.Predicates.allAreType

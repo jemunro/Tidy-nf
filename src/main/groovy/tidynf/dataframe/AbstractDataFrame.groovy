@@ -1,15 +1,10 @@
-package tidynf.helpers
+package tidynf.dataframe
 
-import groovyx.gpars.dataflow.DataflowChannel
-import tidynf.operators.SelectOp
+interface AbstractDataFrame {
 
-interface DataFrame {
+    AbstractDataFrame mutate(Closure closure)
 
-    DataFrame t()
-
-    DataFrame mutate(Closure closure)
-
-    DataFrame select(Collection variables)
+    AbstractDataFrame select(Collection variables)
 
 //    List pull(String variable)
 
