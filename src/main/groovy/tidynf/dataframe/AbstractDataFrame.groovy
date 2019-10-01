@@ -4,16 +4,20 @@ interface AbstractDataFrame {
 
     AbstractDataFrame mutate(Closure closure)
 
-    AbstractDataFrame select(Collection variables)
+    AbstractDataFrame select(String... vars)
+
+    AbstractDataFrame select(Collection vars)
 
 //    List pull(String variable)
 
 //    DataFrame left_join(DataFrame dataFrame)
 //
-//    DataFrame semi_join(DataFrame dataFrame)
+//    DataFrame right_join(DataFrame dataFrame)
 //
 //    DataFrame inner_join(DataFrame dataFrame)
 //
 //    DataFrame full_join(DataFrame dataFrame)
+//
+//    DataFrame anti_join(DataFrame dataFrame)
 
 }

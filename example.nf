@@ -1,4 +1,5 @@
 #!/usr/bin/env nextflow
+import tidynf.dataframe.DataflowDataFrame
 import tidynf.helpers.DataFrame
 import tidynf.helpers.ListOfMapDF
 import static tidynf.TidyMethods.*
@@ -7,7 +8,13 @@ import static tidynf.TidyMethods.*
 tidynf()
 
 x =  read_csv('coll.csv')
-println as_data_frame(x).t()
+println data_frame(x).t()
+
+data_frame(Channel.from(x))
+    .mutate {y = x + 1}
+    .select()
+    .t()
+
 
 //workflow.onComplete { println 'done.' }
 //

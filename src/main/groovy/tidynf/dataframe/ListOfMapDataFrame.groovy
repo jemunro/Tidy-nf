@@ -35,7 +35,7 @@ class ListOfMapDataFrame implements DataFrame {
     }
 
     ListOfMapDataFrame(LinkedHashMap data) {
-        this.data = [ data ]
+        this.data = [data]
         this.keySet = data.keySet()
     }
 
@@ -47,12 +47,16 @@ class ListOfMapDataFrame implements DataFrame {
         transpose(this.data)
     }
 
-    private MapOfListDataFrame t() {
+    MapOfListDataFrame t() {
         transpose(this.data) as MapOfListDataFrame
     }
 
-    ListOfMapDataFrame mutate(Closure cl){
+    ListOfMapDataFrame mutate(Closure cl) {
         this.data.collect(cl) as ListOfMapDataFrame
+    }
+
+    ListOfMapDataFrame select(String... vars) {
+        select(vars as Collection)
     }
 
     ListOfMapDataFrame select(Collection vars) {

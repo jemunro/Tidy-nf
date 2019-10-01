@@ -32,10 +32,10 @@ class Predicates {
 
     static boolean allAreSameSize(Collection coll) {
         (!isEmpty(coll)) && allAreType(coll, Collection) &&
-                coll.drop(1).every { areSameSize(it as List, coll[0] as List) }
+                coll.drop(1).every { areSameSize(it as List, coll[0] as Collection) }
     }
 
-    static boolean allAreUnique(Collection coll) {
+    static boolean isSet(Collection coll) {
         coll.size() == coll.unique().size()
     }
 
@@ -68,7 +68,7 @@ class Predicates {
     }
 
     static boolean allAreListOfSameType(Collection coll) {
-        isListOfList(coll) && coll.every { isListOfSameType(it) }
+        isListOfList(coll) && coll.every { isListOfSameType(it as Collection) }
     }
 
     static boolean allAreListOfSameType(Map map) {
@@ -90,6 +90,4 @@ class Predicates {
     static boolean areSameSize(Collection c1, Collection c2) {
         c1.size() == c2.size()
     }
-
-
 }

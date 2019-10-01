@@ -24,7 +24,7 @@ class MapOfListDataFrame implements DataFrame {
 
         if (!allAreSameSize(data.values()))
             throw new CollectionSizeMismatchException(
-                    errMsg('MapOfListDF',"Required all lists to be same size"))
+                    errMsg('MapOfListDF', "Required all lists to be same size"))
 
         if (!allAreListOfSameType(data))
             throw new TypeMismatchException(
@@ -42,12 +42,16 @@ class MapOfListDataFrame implements DataFrame {
         this.data
     }
 
-    private ListOfMapDataFrame t() {
+    ListOfMapDataFrame t() {
         transpose(this.data) as ListOfMapDataFrame
     }
 
-    MapOfListDataFrame mutate(Closure cl){
+    MapOfListDataFrame mutate(Closure cl) {
         t().mutate(cl).t()
+    }
+
+    MapOfListDataFrame select(String... vars) {
+        select(vars as Collection)
     }
 
     MapOfListDataFrame select(Collection vars) {
