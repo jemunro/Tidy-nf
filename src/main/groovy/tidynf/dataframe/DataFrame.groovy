@@ -10,4 +10,13 @@ interface DataFrame extends AbstractDataFrame {
 
     int ncol()
 
+    Set names()
+
+    DataFrame select(String... vars)
+
+    DataFrame select(Set vars)
+
+    //List pull(String var)
+
+
 }

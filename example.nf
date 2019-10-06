@@ -1,10 +1,14 @@
 #!/usr/bin/env nextflow
+import tidynf.dataframe.ColMapDataFrame
+import tidynf.dataframe.RowListDataFrame
+
 import static tidynf.TidyMethods.*
 
 tidynf()
 
 
 x = data_frame(read_csv('coll.csv'))
+print x as ColMapDataFrame
 
 println '\n' +  x.as_list().join('\n')
 

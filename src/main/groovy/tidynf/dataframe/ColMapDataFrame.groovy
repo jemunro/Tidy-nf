@@ -36,6 +36,11 @@ class ColMapDataFrame implements DataFrame {
     @Override
     String toString() {
         "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') +']'
+
+        if (data[keySet[0]].size() < 6)
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') + ']'
+        else
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().subList(0, 5).join('\n') + '\n[... ]]'
     }
 
     int nrow() {
@@ -44,6 +49,10 @@ class ColMapDataFrame implements DataFrame {
 
     int ncol() {
         keySet.size()
+    }
+
+    Set names(){
+        this.keySet
     }
 
     ArrayList as_list() {
@@ -71,9 +80,7 @@ class ColMapDataFrame implements DataFrame {
     }
 
     ColMapDataFrame select(Set vars) {
-        data = data.subMap(vars) as LinkedHashMap
-        keySet = data.keySet()
-        this
+        (data.subMap(vars) as LinkedHashMap) as ColMapDataFrame
     }
 
     ColMapDataFrame arrange(Map par = [:]) {
@@ -89,7 +96,7 @@ class ColMapDataFrame implements DataFrame {
         final LinkedHashSet byAt = by + keySet
         final boolean reverse = par?.desc ?: false
 
-        data = byAt.collect { data[it] }.transpose()
+        LinkedHashMap data = byAt.collect { data[it] }.transpose()
             .collect { [it.take(by.size()), it.takeRight(it.size() - by.size())] }
             .sort { l1, l2 ->
                 [l1[0], l2[0]].transpose()
@@ -103,6 +110,24 @@ class ColMapDataFrame implements DataFrame {
             .collectEntries { item, i -> [(byAt[i]): item] }
             .subMap(keySet) as LinkedHashMap
 
-        this
+        data as ColMapDataFrame
+    }
+
+    ColMapDataFrame full_join(DataFrame right, String... by) {
+        transpose().full_join(right, by as Set).transpose()
+    }
+
+
+    ColMapDataFrame full_join(DataFrame right, Set by) {
+        transpose().full_join(right, by).transpose()
+    }
+
+    AbstractDataFrame full_join(AbstractDataFrame right, String... by) {
+        transpose().full_join(right, by as Set).transpose()
+    }
+
+
+    AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
+        transpose().full_join(right, by).transpose()
     }
 }

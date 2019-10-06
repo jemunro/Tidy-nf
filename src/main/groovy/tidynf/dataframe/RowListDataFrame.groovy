@@ -33,14 +33,12 @@ class RowListDataFrame implements DataFrame {
         this.keySet = (data[0] as LinkedHashMap).keySet()
     }
 
-    RowListDataFrame(LinkedHashMap data) {
-        this.data = [data]
-        this.keySet = data.keySet()
-    }
-
     @Override
     String toString() {
-        "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.join('\n') + ']'
+        if (data.size() < 6)
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.join('\n') + ']'
+        else
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.subList(0, 5).join('\n') + '\n[... ]]'
     }
 
     int nrow() {
@@ -49,6 +47,10 @@ class RowListDataFrame implements DataFrame {
 
     int ncol() {
         keySet.size()
+    }
+
+    Set names(){
+        this.keySet
     }
 
     ArrayList as_list() {
@@ -74,9 +76,7 @@ class RowListDataFrame implements DataFrame {
     }
 
     RowListDataFrame select(Set vars) {
-        data = data.collect { (it as LinkedHashMap).subMap(vars) }
-        keySet = (data[0] as LinkedHashMap).keySet()
-        this
+        data.collect { (it as LinkedHashMap).subMap(vars) } as RowListDataFrame
     }
 
     ColMapDataFrame arrange(Map par = [:]) {
@@ -91,5 +91,37 @@ class RowListDataFrame implements DataFrame {
         transpose().arrange(par, by)
     }
 
+    RowListDataFrame full_join(DataFrame right, String... by) {
+        full_join(right, by as Set)
+    }
 
+
+    RowListDataFrame full_join(DataFrame right, Set by) {
+
+        if (right instanceof ColMapDataFrame) {
+            rigth = right.transpose()
+        }
+
+        ArrayList right_sub = right.select(by).as_list()
+
+        ArrayList matches =
+            select(by)
+            .as_list()
+            .withIndex()
+            .collect { l, i -> right_sub.withIndex().findAll { r, j ->  l == r }.collect { [i, it[1]] }}
+            .collectMany { it }
+
+    }
+
+    AbstractDataFrame full_join(AbstractDataFrame right, String... by) {
+        full_join(right, by as Set)
+    }
+
+
+    AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
+        if (right instanceof ColMapDataFrame) {
+            rigth
+        }
+
+    }
 }

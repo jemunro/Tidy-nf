@@ -14,16 +14,33 @@ interface AbstractDataFrame {
 
     AbstractDataFrame transpose()
 
-//    List pull(String variable)
+    AbstractDataFrame full_join(AbstractDataFrame right, String... by)
 
-//    DataFrame left_join(DataFrame dataFrame)
+    AbstractDataFrame full_join(AbstractDataFrame right, Set by)
+
+    Object names()
+
+    Object as_list()
+
+    Object as_map()
+
+
+//    AbstractDataFrame rename(Map namesFromTo)
+
+//    AbstractDataFrame group_by(DataFrame dataFrame)
 //
-//    DataFrame right_join(DataFrame dataFrame)
+//    AbstractDataFrame group_by(DataFrame dataFrame)
+
+//    AbstractDataFrame left_join(DataFrame dataFrame)
 //
-//    DataFrame inner_join(DataFrame dataFrame)
+//    AbstractDataFrame right_join(DataFrame dataFrame)
 //
-//    DataFrame full_join(DataFrame dataFrame)
+//    AbstractDataFrame inner_join(DataFrame dataFrame)
 //
-//    DataFrame anti_join(DataFrame dataFrame)
+
+//
+//    AbstractDataFrame anti_join(DataFrame dataFrame)
+
+//    AbstractDataFrame semi_join(DataFrame dataFrame)
 
 }
