@@ -2,12 +2,12 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
+import tidynf.dataframe.RowListDataFrame
 import tidynf.exception.CollectionSizeMismatchException
 import tidynf.exception.EmptySetException
 import tidynf.exception.IllegalTypeException
 import tidynf.exception.KeySetMismatchException
 
-import static tidynf.dataframe.DataFrameMethods.arrange
 import static tidynf.exception.Message.errMsg
 import static tidynf.helpers.Predicates.allAreSameSize
 import static tidynf.helpers.Predicates.allAreType
@@ -79,9 +79,7 @@ class ArrangeOp {
                 throw new CollectionSizeMismatchException(errMsg(methodName, "all selected variables in arrange must be the same size\n" +
                         "${keySetByAt.collectEntries { k -> [(k) : data[k]?.size() ] } }"))
 
-            LinkedHashMap sorted = arrange(data.subMap(keySetByAt) as LinkedHashMap, keySetBy, reverse)
-
-            keySet.collectEntries{ k -> [(k): sorted.containsKey(k) ? sorted[k] : data[k] ] }
+            ([data] as RowListDataFrame).arrange().as_list()[0]
         }
     }
 

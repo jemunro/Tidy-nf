@@ -5,8 +5,8 @@ import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 import tidynf.dataframe.DataflowDataFrame
 import tidynf.exception.IllegalTypeException
-import tidynf.dataframe.ListOfMapDataFrame
-import tidynf.dataframe.MapOfListDataFrame
+import tidynf.dataframe.RowListDataFrame
+import tidynf.dataframe.ColMapDataFrame
 
 import java.nio.file.Path
 
@@ -86,15 +86,15 @@ class TidyMethods {
         }
     }
 
-    static ListOfMapDataFrame data_frame(ArrayList data) {
-        data as ListOfMapDataFrame
+    static RowListDataFrame data_frame(ArrayList data) {
+        data as RowListDataFrame
     }
 
-    static MapOfListDataFrame data_frame(LinkedHashMap data) {
-        data as MapOfListDataFrame
+    static ColMapDataFrame data_frame(LinkedHashMap data) {
+        data as ColMapDataFrame
     }
 
-    static DataflowDataFrame data_frame(DataflowChannel channel) {
-        channel as DataflowDataFrame
-    }
+//    static DataflowDataFrame data_frame(DataflowChannel channel) {
+//        channel as DataflowDataFrame
+//    }
 }

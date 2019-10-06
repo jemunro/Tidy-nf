@@ -6,7 +6,13 @@ interface AbstractDataFrame {
 
     AbstractDataFrame select(String... vars)
 
-    AbstractDataFrame select(Collection vars)
+    AbstractDataFrame select(Set vars)
+
+    AbstractDataFrame arrange(Map par, String... by)
+
+    AbstractDataFrame arrange(Map par, Set by)
+
+    AbstractDataFrame transpose()
 
 //    List pull(String variable)
 

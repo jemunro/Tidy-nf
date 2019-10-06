@@ -3,11 +3,11 @@ package tidynf.helpers
 class Predicates {
 
     static boolean isListOfMap(Object object) {
-        object instanceof List && !isEmpty(object) && object.every { it instanceof Map }
+        object instanceof Collection && !isEmpty(object) && object.every { it instanceof Map }
     }
 
     static boolean isListOfList(Object object) {
-        object instanceof List && !isEmpty(object) && object.every { it instanceof List }
+        object instanceof Collection && !isEmpty(object) && object.every { it instanceof List }
     }
 
     static boolean isMapOfList(Object object) {
@@ -32,7 +32,7 @@ class Predicates {
 
     static boolean allAreSameSize(Collection coll) {
         (!isEmpty(coll)) && allAreType(coll, Collection) &&
-                coll.drop(1).every { areSameSize(it as List, coll[0] as Collection) }
+                coll.drop(1).every { areSameSize(it as Collection, coll[0] as Collection) }
     }
 
     static boolean isSet(Collection coll) {

@@ -6,4 +6,8 @@ interface DataFrame extends AbstractDataFrame {
 
     LinkedHashMap as_map()
 
+    int nrow()
+
+    int ncol()
+
 }

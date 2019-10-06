@@ -2,12 +2,11 @@ package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
+import tidynf.dataframe.RowListDataFrame
 import tidynf.exception.IllegalTypeException
 import tidynf.exception.KeySetMismatchException
 
-import static tidynf.dataframe.DataFrameMethods.arrange
 import static tidynf.exception.Message.errMsg
-import static tidynf.dataframe.DataFrameMethods.transpose
 import static tidynf.helpers.Predicates.allKeySetsMatch
 import static tidynf.helpers.Predicates.isListOfMap
 
@@ -38,10 +37,10 @@ class CollectColsOp {
                         errMsg(methodName, "Required matching keysets\nfirst keyset:${data[0].keySet()}"))
 
             if (sort) {
-                data = arrange(data)
+                data = (data as RowListDataFrame).arrange().as_list()
             }
 
-            transpose(data)
+            (data as RowListDataFrame).as_map()
         }
     }
 }

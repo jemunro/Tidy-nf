@@ -1,20 +1,19 @@
 #!/usr/bin/env nextflow
-import tidynf.dataframe.DataflowDataFrame
-import tidynf.helpers.DataFrame
-import tidynf.helpers.ListOfMapDF
 import static tidynf.TidyMethods.*
-
 
 tidynf()
 
-x =  read_csv('coll.csv')
-println data_frame(x).t()
 
-data_frame(Channel.from(x))
-    .mutate {y = x + 1}
-    .select()
-    .t()
+x = data_frame(read_csv('coll.csv'))
 
+println '\n' +  x.as_list().join('\n')
+
+y = x.transpose().select('id', 'value', 'var', 'n')
+    .arrange().transpose()
+
+println y
+
+println y.transpose()
 
 //workflow.onComplete { println 'done.' }
 //
