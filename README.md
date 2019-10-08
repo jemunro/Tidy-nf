@@ -2,6 +2,15 @@
 Channel operators for Nextflow based on dataframe manipulation in the
 tidyverse packages from the R programming language.
 
+## Installation
+The recommended way to include in a nextflow project is to add Tidy-nf as a git submodule.
+```
+cd my_project
+mkdir lib
+cd lib
+git submodule add https://github.com/jemunro/tidyflow.git
+```
+
 ## usage example
 ```groovy
 import static tidynf.TidyMethods.*
