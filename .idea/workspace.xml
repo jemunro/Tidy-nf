@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="58dcc665-cfa9-4cef-ba89-88aa08817c8a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/example.nf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/tidynf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/TidyMethods.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/TidyMethods.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/TidyOps.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/TidyOps.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/dataframe/AbstractDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/dataframe/ColMapDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/ColMapDataFrame.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/dataframe/DataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/dataframe/DataflowDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataflowDataFrame.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/dataframe/RowListDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/RowListDataFrame.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/exception/CollectionSizeMismatchException.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/exception/CollectionSizeMismatchException.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/exception/EmptySetException.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/exception/EmptySetException.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/exception/IllegalTypeException.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/exception/IllegalTypeException.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/exception/KeySetMismatchException.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/exception/KeySetMismatchException.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/exception/Message.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/exception/Message.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/exception/TidyException.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/exception/TidyException.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/exception/TypeMismatchException.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/exception/TypeMismatchException.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/extension/TidyDelegatingMetaClass.groovy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/helpers/JoinHelpers.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/helpers/JoinHelpers.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/helpers/Predicates.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/helpers/Predicates.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/io/DelimHandler.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/io/DelimHandler.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/io/JsonHandler.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/io/JsonHandler.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/ArrangeOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/ArrangeOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/CollectColsOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectColsOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/CollectDelimOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectDelimOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/CollectJsonOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectJsonOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/CollectRowsOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectRowsOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/GroupByOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/GroupByOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/JoinOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/JoinOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/MutateOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/MutateOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/PullOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/PullOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/RenameOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/RenameOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/SelectOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/SelectOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/SetNamesOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/SetNamesOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/SubscribeDelimOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/SubscribeDelimOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/UnnameOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/UnnameOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidynf/operators/UnnestOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/UnnestOp.groovy" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1S5qMxqfa7lA0dKnWDUo7LB85Ef" />
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/tests" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="58dcc665-cfa9-4cef-ba89-88aa08817c8a" name="Default Changelist" comment="" />
+      <created>1570863759624</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1570863759624</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
