@@ -28,7 +28,7 @@ interface DataFrame extends AbstractDataFrame {
 
     DataFrame slice(ArrayList rows)
 
-
+    ArrayList pull(String var)
 
     //List pull(String var)
 

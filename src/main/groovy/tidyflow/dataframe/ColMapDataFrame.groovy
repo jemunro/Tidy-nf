@@ -35,14 +35,34 @@ class ColMapDataFrame implements DataFrame {
         this.keySet = data.keySet()
     }
 
-    @Override
-    String toString() {
-        "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') + ']'
+    ColMapDataFrame arrange(Map par = [:]) {
+        arrange(par, keySet)
+    }
 
-        if (data[keySet[0]].size() < 6)
-            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') + ']'
-        else
-            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().subList(0, 5).join('\n') + '\n[... ]]'
+    ColMapDataFrame arrange(Map par = [:], String... by) {
+        arrange(par, by as Set)
+    }
+
+    ColMapDataFrame arrange(Map par, Set by) {
+
+        final LinkedHashSet byAt = by + keySet
+        final boolean reverse = par?.desc ?: false
+
+        LinkedHashMap data = byAt.collect { data[it] }.transpose()
+            .collect { [it.take(by.size()), it.takeRight(it.size() - by.size())] }
+            .sort { l1, l2 ->
+                [l1[0], l2[0]].transpose()
+                    .find { e1, e2 -> e1 != e2 }
+                    .with { it ? it[0] <=> it[1] : 0 }
+            }
+            .with { reverse ? it.reverse() : it }
+            .collect { it[0] + it[1] }
+            .transpose()
+            .withIndex()
+            .collectEntries { item, i -> [(byAt[i]): item] }
+            .subMap(keySet) as LinkedHashMap
+
+        data as ColMapDataFrame
     }
 
     int nrow() {
@@ -81,6 +101,16 @@ class ColMapDataFrame implements DataFrame {
         transpose().mutate_with(with, closure)
     }
 
+    ArrayList pull(String var){
+        if (!keySet.contains(var)) {
+            throw new KeySetMismatchException(
+                errMsg("pull", "var not all present in keyset.\n" +
+                    "var: $var, keyset: $keySet"))
+        }
+
+        data[var]
+    }
+
     RowListDataFrame rename(Map nameMap) {
         transpose().rename(nameMap)
     }
@@ -112,36 +142,6 @@ class ColMapDataFrame implements DataFrame {
         transpose().slice(rows)
     }
 
-    ColMapDataFrame arrange(Map par = [:]) {
-        arrange(par, keySet)
-    }
-
-    ColMapDataFrame arrange(Map par = [:], String... by) {
-        arrange(par, by as Set)
-    }
-
-    ColMapDataFrame arrange(Map par, Set by) {
-
-        final LinkedHashSet byAt = by + keySet
-        final boolean reverse = par?.desc ?: false
-
-        LinkedHashMap data = byAt.collect { data[it] }.transpose()
-            .collect { [it.take(by.size()), it.takeRight(it.size() - by.size())] }
-            .sort { l1, l2 ->
-                [l1[0], l2[0]].transpose()
-                    .find { e1, e2 -> e1 != e2 }
-                    .with { it ? it[0] <=> it[1] : 0 }
-            }
-            .with { reverse ? it.reverse() : it }
-            .collect { it[0] + it[1] }
-            .transpose()
-            .withIndex()
-            .collectEntries { item, i -> [(byAt[i]): item] }
-            .subMap(keySet) as LinkedHashMap
-
-        data as ColMapDataFrame
-    }
-
     ColMapDataFrame full_join(DataFrame right, String... by) {
         transpose().full_join(right, by as Set).transpose()
     }
@@ -158,5 +158,15 @@ class ColMapDataFrame implements DataFrame {
 
     AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
         transpose().full_join(right, by).transpose()
+    }
+
+    @Override
+    String toString() {
+        "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') + ']'
+
+        if (data[keySet[0]].size() < 6)
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') + ']'
+        else
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().subList(0, 5).join('\n') + '\n[... ]]'
     }
 }

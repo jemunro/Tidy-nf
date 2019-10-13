@@ -20,6 +20,8 @@ interface AbstractDataFrame {
 
     AbstractDataFrame select(Set vars)
 
+    Object pull(String var)
+
 
 
 //    Object names()

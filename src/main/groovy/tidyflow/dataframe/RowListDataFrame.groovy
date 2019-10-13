@@ -114,22 +114,15 @@ class RowListDataFrame implements DataFrame {
         } as RowListDataFrame
     }
 
-    @Override
-    String toString() {
+    ArrayList pull(String var){
+        if (!keySet.contains(var)) {
+            throw new KeySetMismatchException(
+                errMsg("pull", "var not all present in keyset.\n" +
+                    "var: $var, keyset: $keySet"))
+        }
 
-        if (data.size() < 6)
-            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.join('\n') + ']'
-        else
-            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.subList(0, 5).join('\n') + '\n[... ]]'
+        data.collect { (it as LinkedHashMap)[var] }
     }
-
-
-    ColMapDataFrame transpose() {
-        (keySet.collectEntries { k ->
-            [(k): data.collect { it[k] }]
-        } as LinkedHashMap) as ColMapDataFrame
-    }
-
 
     RowListDataFrame rename(Map nameMap) {
         if (!allAreType(nameMap.values(), String)) {
@@ -199,6 +192,22 @@ class RowListDataFrame implements DataFrame {
 
         rows.collect { data[it as int] } as RowListDataFrame
 
+    }
+
+    @Override
+    String toString() {
+
+        if (data.size() < 6)
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.join('\n') + ']'
+        else
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.subList(0, 5).join('\n') + '\n[... ]]'
+    }
+
+
+    ColMapDataFrame transpose() {
+        (keySet.collectEntries { k ->
+            [(k): data.collect { it[k] }]
+        } as LinkedHashMap) as ColMapDataFrame
     }
 
 
