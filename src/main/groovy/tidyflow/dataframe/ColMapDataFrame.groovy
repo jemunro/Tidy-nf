@@ -81,6 +81,10 @@ class ColMapDataFrame implements DataFrame {
         transpose().mutate_with(with, closure)
     }
 
+    RowListDataFrame rename(Map nameMap) {
+        transpose().rename(nameMap)
+    }
+
     ColMapDataFrame select(String... vars) {
         select(vars as Set)
     }
@@ -96,8 +100,16 @@ class ColMapDataFrame implements DataFrame {
         (data.subMap(vars) as LinkedHashMap) as ColMapDataFrame
     }
 
-    RowListDataFrame rename(Map nameMap) {
-        transpose().rename(nameMap)
+    RowListDataFrame slice(int... rows){
+        slice(rows as ArrayList)
+    }
+
+    RowListDataFrame slice(IntRange rows){
+        slice(rows as ArrayList)
+    }
+
+    RowListDataFrame slice(ArrayList rows){
+        transpose().slice(rows)
     }
 
     ColMapDataFrame arrange(Map par = [:]) {

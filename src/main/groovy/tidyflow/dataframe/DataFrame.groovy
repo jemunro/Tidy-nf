@@ -22,7 +22,11 @@ interface DataFrame extends AbstractDataFrame {
 
     DataFrame select(Set vars)
 
+    DataFrame slice(int... rows)
 
+    DataFrame slice(IntRange rows)
+
+    DataFrame slice(ArrayList rows)
 
 
 

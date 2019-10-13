@@ -2,15 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58dcc665-cfa9-4cef-ba89-88aa08817c8a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/tests/groovy/test/MutateTests.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tests/groovy/test/SliceTests.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/ColMapDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/ColMapDataFrame.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/RowListDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/RowListDataFrame.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tests/groovy/run_tests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/run_tests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/RenameTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/RenameTests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/SelectTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/SelectTests.groovy" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

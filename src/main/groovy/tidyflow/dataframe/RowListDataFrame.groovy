@@ -1,6 +1,5 @@
 package tidyflow.dataframe
 
-import sun.awt.image.ImageWatched
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
 import tidyflow.exception.TypeMismatchException
@@ -172,6 +171,34 @@ class RowListDataFrame implements DataFrame {
         }
 
         data.collect { (it as LinkedHashMap).subMap(vars) } as RowListDataFrame
+    }
+
+    RowListDataFrame slice(int... rows){
+        slice(rows as ArrayList)
+    }
+
+    RowListDataFrame slice(IntRange rows){
+        slice(rows as ArrayList)
+    }
+
+    RowListDataFrame slice(ArrayList rows){
+        if (! allAreType(rows, Integer))
+            throw new IllegalTypeException(
+                errMsg("slice", "rows must be a list of integers.\n" +
+                    "rows: $rows"))
+
+        if (rows.any { it < 0 })
+            throw new IndexOutOfBoundsException(
+                errMsg("slice", "rows must all be positive .\n" +
+                    "rows: $rows"))
+
+        if (rows.max() >= nrow())
+            throw new IndexOutOfBoundsException(
+                errMsg("slice", "row index out of bounds.\n" +
+                    "rows: $rows, ncol: ${nrow()}"))
+
+        rows.collect { data[it as int] } as RowListDataFrame
+
     }
 
 
