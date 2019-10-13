@@ -5,16 +5,16 @@ import tidyflow.exception.KeySetMismatchException
 import static groovy.test.GroovyAssert.shouldFail
 import static tidyflow.TidyMethods.*
 
-class SelectTests {
+class MutateTests {
 
     private static df = as_df(
         x: [1,2,3,4,5],
         y: [5,4,3,2,1],
         z: ['a','b','c','d','e'])
 
-    private static String name = 'select'
+    private static String name = 'mutate'
 
-    static void selectTests() {
+    static void mutateTests() {
         test_01()
         test_02()
         println "$name tests complete."
@@ -23,9 +23,9 @@ class SelectTests {
     static void test_01() {
         final String num = '01'
 
-        assert df.select('z', 'y', 'z').names() == ['z', 'y', 'z'] as LinkedHashSet
-        assert df.select('x', 'z').names() == ['x', 'z'] as LinkedHashSet
-        assert df.select('y').names() == ['y'] as LinkedHashSet
+        assert df.mutate { x = x + 1 }.as_map()['x'] == [2,3,4,5,6]
+        assert df.mutate { w = y - 1 }.as_map()['w'] == [4,3,2,1,0]
+        assert df.mutate_with(a:1) { w = y - a }.as_map()['w'] == [4,3,2,1,0]
 
         println "$name test $num passed."
     }
@@ -33,12 +33,16 @@ class SelectTests {
     static void test_02() {
         final String num = '02'
 
-        shouldFail (KeySetMismatchException) {
-            df.select('a', 'b', 'c')
+        shouldFail (NullPointerException) {
+            df.mutate { x = null + x }
         }
 
-        shouldFail (KeySetMismatchException) {
-            df.transpose().select('a', 'b', 'c')
+        shouldFail (MissingPropertyException) {
+            df.mutate { a = b }
+        }
+
+        shouldFail (MissingPropertyException) {
+            df.mutate_with(a:1) { a = b }
         }
 
         println "$name test $num passed."

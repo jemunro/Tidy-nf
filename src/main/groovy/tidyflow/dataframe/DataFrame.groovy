@@ -6,17 +6,25 @@ interface DataFrame extends AbstractDataFrame {
 
     LinkedHashMap as_map()
 
+    DataFrame mutate(Closure closure)
+
+    DataFrame mutate_with(Map with, Closure closure)
+
+    Set names()
+
     int nrow()
 
     int ncol()
 
-    Set names()
+    DataFrame rename(Map nameMap)
 
     DataFrame select(String... vars)
 
     DataFrame select(Set vars)
 
-    DataFrame rename(Map nameMap)
+
+
+
 
     //List pull(String var)
 

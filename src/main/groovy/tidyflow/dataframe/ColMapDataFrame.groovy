@@ -21,15 +21,15 @@ class ColMapDataFrame implements DataFrame {
 
         if (!isMapOfList(data))
             throw new IllegalTypeException(
-                    errMsg("${this.getClass().simpleName}", "Required List of Map\ngot: $data"))
+                errMsg("${this.getClass().simpleName}", "Required List of Map\ngot: $data"))
 
         if (!allAreSameSize(data.values()))
             throw new CollectionSizeMismatchException(
-                    errMsg("${this.getClass().simpleName}", "Required all lists to be same size"))
+                errMsg("${this.getClass().simpleName}", "Required all lists to be same size"))
 
         if (!allAreListOfSameType(data))
             throw new TypeMismatchException(
-                    errMsg("${this.getClass().simpleName}", "Required matching data types for each variable"))
+                errMsg("${this.getClass().simpleName}", "Required matching data types for each variable"))
 
         this.data = data
         this.keySet = data.keySet()
@@ -37,7 +37,7 @@ class ColMapDataFrame implements DataFrame {
 
     @Override
     String toString() {
-        "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') +']'
+        "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') + ']'
 
         if (data[keySet[0]].size() < 6)
             "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + as_list().join('\n') + ']'
@@ -53,7 +53,7 @@ class ColMapDataFrame implements DataFrame {
         keySet.size()
     }
 
-    Set names(){
+    Set names() {
         this.keySet
     }
 
@@ -73,8 +73,12 @@ class ColMapDataFrame implements DataFrame {
             } as RowListDataFrame
     }
 
-    ColMapDataFrame mutate(Closure cl) {
-        transpose().mutate(cl).transpose()
+    RowListDataFrame mutate( Closure closure) {
+        transpose().mutate(closure)
+    }
+
+    RowListDataFrame mutate_with(Map with = [:], Closure closure) {
+        transpose().mutate_with(with, closure)
     }
 
     ColMapDataFrame select(String... vars) {
@@ -83,7 +87,7 @@ class ColMapDataFrame implements DataFrame {
 
     ColMapDataFrame select(Set vars) {
 
-        if (! keySet.containsAll(vars)){
+        if (!keySet.containsAll(vars)) {
             throw new KeySetMismatchException(
                 errMsg("select", "names not all present in keyset.\n" +
                     "names: ${vars}, keyset: ${keySet}"))

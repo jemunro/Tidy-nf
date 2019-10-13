@@ -1,6 +1,6 @@
 package tidyflow.dataframe
 
-
+import sun.awt.image.ImageWatched
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
 import tidyflow.exception.TypeMismatchException
@@ -34,12 +34,60 @@ class RowListDataFrame implements DataFrame {
         this.keySet = (data[0] as LinkedHashMap).keySet()
     }
 
-    @Override
-    String toString() {
-        if (data.size() < 6)
-            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.join('\n') + ']'
-        else
-            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.subList(0, 5).join('\n') + '\n[... ]]'
+    ColMapDataFrame arrange(Map par = [:]) {
+        transpose().arrange(par, keySet)
+    }
+
+    ColMapDataFrame arrange(Map par = [:], String... by) {
+        transpose().arrange(par, by)
+    }
+
+    ColMapDataFrame arrange(Map par, Set by) {
+        transpose().arrange(par, by)
+    }
+
+    ArrayList as_list() {
+        data
+    }
+
+    LinkedHashMap as_map() {
+        transpose().as_map()
+    }
+
+    RowListDataFrame full_join(DataFrame right, String... by) {
+        full_join(right, by as Set)
+    }
+
+
+    RowListDataFrame full_join(DataFrame right, Set by) {
+
+        if (right instanceof ColMapDataFrame) {
+            right = right.transpose()
+        }
+
+        ArrayList right_sub = right.select(by).as_list()
+
+        ArrayList matches = select(by)
+            .as_list()
+            .withIndex()
+            .collect { l, i -> right_sub.withIndex().findAll { r, j -> l == r }.collect { [i, it[1]] } }
+            .collectMany { it }
+    }
+
+    AbstractDataFrame full_join(AbstractDataFrame right, String... by) {
+        full_join(right, by as Set)
+    }
+
+
+    AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
+        if (right instanceof ColMapDataFrame) {
+            null
+        }
+
+    }
+
+    Set names() {
+        keySet
     }
 
     int nrow() {
@@ -50,17 +98,32 @@ class RowListDataFrame implements DataFrame {
         keySet.size()
     }
 
-    Set names(){
-        this.keySet
+    RowListDataFrame mutate(Closure closure) {
+        data.collect {
+            Binding binding = new Binding(it as LinkedHashMap)
+            closure.rehydrate(closure.delegate, binding, closure.thisObject).call()
+            binding.getVariables() as LinkedHashMap
+        } as RowListDataFrame
     }
 
-    ArrayList as_list() {
-        this.data
+    RowListDataFrame mutate_with(Map with = [:], Closure closure) {
+        data.collect {
+            Binding binding = new Binding(it as LinkedHashMap)
+            Binding withBinding = new Binding(with)
+            closure.rehydrate(withBinding, binding, closure.thisObject).call()
+            binding.getVariables() as LinkedHashMap
+        } as RowListDataFrame
     }
 
-    LinkedHashMap as_map() {
-        transpose().as_map()
+    @Override
+    String toString() {
+
+        if (data.size() < 6)
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.join('\n') + ']'
+        else
+            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.subList(0, 5).join('\n') + '\n[... ]]'
     }
+
 
     ColMapDataFrame transpose() {
         (keySet.collectEntries { k ->
@@ -68,24 +131,21 @@ class RowListDataFrame implements DataFrame {
         } as LinkedHashMap) as ColMapDataFrame
     }
 
-    RowListDataFrame mutate(Closure cl) {
-        this.data.collect(cl) as RowListDataFrame
-    }
 
     RowListDataFrame rename(Map nameMap) {
-        if (! allAreType(nameMap.values(), String)){
+        if (!allAreType(nameMap.values(), String)) {
             throw new IllegalTypeException(
                 errMsg("rename", "all from values must be strings.\n" +
                     "from: ${nameMap.values()}"))
         }
 
-        if (! keySet.containsAll(nameMap.values())){
+        if (!keySet.containsAll(nameMap.values())) {
             throw new KeySetMismatchException(
                 errMsg("rename", "names from not all present in keyset.\n" +
                     "from: ${nameMap.values()}, keyset: ${keySet}"))
         }
 
-        if (keySet.any{ nameMap.keySet().contains(it) }) {
+        if (keySet.any { nameMap.keySet().contains(it) }) {
             throw new KeySetMismatchException(
                 errMsg("rename", "some of names to not present in keyset.\n" +
                     "to: ${nameMap.keySet()}, keyset: ${keySet}"))
@@ -105,7 +165,7 @@ class RowListDataFrame implements DataFrame {
 
     RowListDataFrame select(Set vars) {
 
-        if (! keySet.containsAll(vars)){
+        if (!keySet.containsAll(vars)) {
             throw new KeySetMismatchException(
                 errMsg("select", "names not all present in keyset.\n" +
                     "names: ${vars}, keyset: ${keySet}"))
@@ -114,47 +174,5 @@ class RowListDataFrame implements DataFrame {
         data.collect { (it as LinkedHashMap).subMap(vars) } as RowListDataFrame
     }
 
-    ColMapDataFrame arrange(Map par = [:]) {
-        transpose().arrange(par, keySet)
-    }
 
-    ColMapDataFrame arrange(Map par = [:], String... by) {
-        transpose().arrange(par, by)
-    }
-
-    ColMapDataFrame arrange(Map par, Set by) {
-        transpose().arrange(par, by)
-    }
-
-    RowListDataFrame full_join(DataFrame right, String... by) {
-        full_join(right, by as Set)
-    }
-
-
-    RowListDataFrame full_join(DataFrame right, Set by) {
-
-        if (right instanceof ColMapDataFrame) {
-            right = right.transpose()
-        }
-
-        ArrayList right_sub = right.select(by).as_list()
-
-        ArrayList matches = select(by)
-            .as_list()
-            .withIndex()
-            .collect { l, i -> right_sub.withIndex().findAll { r, j ->  l == r }.collect { [i, it[1]] }}
-            .collectMany { it }
-    }
-
-    AbstractDataFrame full_join(AbstractDataFrame right, String... by) {
-        full_join(right, by as Set)
-    }
-
-
-    AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
-        if (right instanceof ColMapDataFrame) {
-            null
-        }
-
-    }
 }

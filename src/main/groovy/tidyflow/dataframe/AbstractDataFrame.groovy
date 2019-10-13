@@ -2,23 +2,25 @@ package tidyflow.dataframe
 
 interface AbstractDataFrame {
 
-    AbstractDataFrame mutate(Closure closure)
-
-    AbstractDataFrame select(String... vars)
-
-    AbstractDataFrame select(Set vars)
-
     AbstractDataFrame arrange(Map par, String... by)
 
     AbstractDataFrame arrange(Map par, Set by)
-
-    AbstractDataFrame transpose()
 
     AbstractDataFrame full_join(AbstractDataFrame right, String... by)
 
     AbstractDataFrame full_join(AbstractDataFrame right, Set by)
 
-    DataFrame rename(Map nameMap)
+    AbstractDataFrame mutate(Closure closure)
+
+    AbstractDataFrame mutate_with(Map with, Closure closure)
+
+    AbstractDataFrame rename(Map nameMap)
+
+    AbstractDataFrame select(String... vars)
+
+    AbstractDataFrame select(Set vars)
+
+
 
 //    Object names()
 //

@@ -17,7 +17,7 @@ class RenameTests {
     static void renameTests() {
         test_01()
         test_02()
-        println "all $name tests complete."
+        println "$name tests complete."
     }
 
     static void test_01() {
@@ -26,7 +26,7 @@ class RenameTests {
         assert df.rename(a: 'x').names() == ['a', 'y', 'z'] as LinkedHashSet
         assert df.rename(b:'y', c:'z').names() == ['x', 'b', 'c'] as LinkedHashSet
 
-        println "$name test $num complete."
+        println "$name test $num passed."
     }
 
     static void test_02() {
@@ -40,7 +40,7 @@ class RenameTests {
             df.rename(a: 'q')
         }
 
-        println "$name test $num complete."
+        println "$name test $num passed."
     }
 
 
