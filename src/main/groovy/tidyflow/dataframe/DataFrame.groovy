@@ -16,6 +16,8 @@ interface DataFrame extends AbstractDataFrame {
 
     DataFrame select(Set vars)
 
+    DataFrame rename(Map nameMap)
+
     //List pull(String var)
 
 

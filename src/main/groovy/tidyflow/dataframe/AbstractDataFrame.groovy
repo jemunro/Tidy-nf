@@ -18,11 +18,13 @@ interface AbstractDataFrame {
 
     AbstractDataFrame full_join(AbstractDataFrame right, Set by)
 
-    Object names()
+    DataFrame rename(Map nameMap)
 
-    Object as_list()
-
-    Object as_map()
+//    Object names()
+//
+//    Object as_list()
+//
+//    Object as_map()
 
 
 //    AbstractDataFrame rename(Map namesFromTo)

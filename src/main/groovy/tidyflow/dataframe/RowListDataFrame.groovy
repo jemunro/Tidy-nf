@@ -6,6 +6,7 @@ import tidyflow.exception.KeySetMismatchException
 import tidyflow.exception.TypeMismatchException
 
 import static tidyflow.exception.Message.errMsg
+import static tidyflow.helpers.Predicates.allAreType
 import static tidyflow.helpers.Predicates.allKeySetsMatch
 import static tidyflow.helpers.Predicates.isListOfMap
 import static tidyflow.helpers.Predicates.isListOfMapOfSameType
@@ -71,11 +72,45 @@ class RowListDataFrame implements DataFrame {
         this.data.collect(cl) as RowListDataFrame
     }
 
+    RowListDataFrame rename(Map nameMap) {
+        if (! allAreType(nameMap.values(), String)){
+            throw new IllegalTypeException(
+                errMsg("rename", "all from values must be strings.\n" +
+                    "from: ${nameMap.values()}"))
+        }
+
+        if (! keySet.containsAll(nameMap.values())){
+            throw new KeySetMismatchException(
+                errMsg("rename", "names from not all present in keyset.\n" +
+                    "from: ${nameMap.values()}, keyset: ${keySet}"))
+        }
+
+        if (keySet.any{ nameMap.keySet().contains(it) }) {
+            throw new KeySetMismatchException(
+                errMsg("rename", "some of names to not present in keyset.\n" +
+                    "to: ${nameMap.keySet()}, keyset: ${keySet}"))
+        }
+        Map invNameMap = nameMap.collectEntries { k, v -> [(v): k] }
+
+        data.collect {
+            keySet.collectEntries { k ->
+                [(invNameMap.containsKey(k) ? invNameMap[k] : k): it[k]]
+            } as LinkedHashMap
+        } as RowListDataFrame
+    }
+
     RowListDataFrame select(String... vars) {
         select(vars as Set)
     }
 
     RowListDataFrame select(Set vars) {
+
+        if (! keySet.containsAll(vars)){
+            throw new KeySetMismatchException(
+                errMsg("select", "names not all present in keyset.\n" +
+                    "names: ${vars}, keyset: ${keySet}"))
+        }
+
         data.collect { (it as LinkedHashMap).subMap(vars) } as RowListDataFrame
     }
 

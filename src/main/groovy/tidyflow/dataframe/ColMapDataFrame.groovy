@@ -3,11 +3,13 @@ package tidyflow.dataframe
 
 import tidyflow.exception.CollectionSizeMismatchException
 import tidyflow.exception.IllegalTypeException
+import tidyflow.exception.KeySetMismatchException
 import tidyflow.exception.TypeMismatchException
 
 import static tidyflow.exception.Message.errMsg
 import static tidyflow.helpers.Predicates.allAreListOfSameType
 import static tidyflow.helpers.Predicates.allAreSameSize
+import static tidyflow.helpers.Predicates.allAreType
 import static tidyflow.helpers.Predicates.isMapOfList
 
 class ColMapDataFrame implements DataFrame {
@@ -80,7 +82,18 @@ class ColMapDataFrame implements DataFrame {
     }
 
     ColMapDataFrame select(Set vars) {
+
+        if (! keySet.containsAll(vars)){
+            throw new KeySetMismatchException(
+                errMsg("select", "names not all present in keyset.\n" +
+                    "names: ${vars}, keyset: ${keySet}"))
+        }
+
         (data.subMap(vars) as LinkedHashMap) as ColMapDataFrame
+    }
+
+    RowListDataFrame rename(Map nameMap) {
+        transpose().rename(nameMap)
     }
 
     ColMapDataFrame arrange(Map par = [:]) {
