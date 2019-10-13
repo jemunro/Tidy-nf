@@ -6,9 +6,9 @@ interface AbstractDataFrame {
 
     AbstractDataFrame arrange(Map par, Set by)
 
-    AbstractDataFrame full_join(AbstractDataFrame right, String... by)
-
-    AbstractDataFrame full_join(AbstractDataFrame right, Set by)
+//    AbstractDataFrame full_join(AbstractDataFrame right, String... by)
+//
+//    AbstractDataFrame full_join(AbstractDataFrame right, Set by)
 
     AbstractDataFrame mutate(Closure closure)
 

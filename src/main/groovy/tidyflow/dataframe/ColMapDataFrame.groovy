@@ -1,6 +1,5 @@
 package tidyflow.dataframe
 
-
 import tidyflow.exception.CollectionSizeMismatchException
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
@@ -9,7 +8,6 @@ import tidyflow.exception.TypeMismatchException
 import static tidyflow.exception.Message.errMsg
 import static tidyflow.helpers.Predicates.allAreListOfSameType
 import static tidyflow.helpers.Predicates.allAreSameSize
-import static tidyflow.helpers.Predicates.allAreType
 import static tidyflow.helpers.Predicates.isMapOfList
 
 class ColMapDataFrame implements DataFrame {
@@ -85,6 +83,22 @@ class ColMapDataFrame implements DataFrame {
         this.data
     }
 
+    ArrayList getAt(String var){
+        data[var]
+    }
+
+    LinkedHashMap getAt(IntRange i){
+        keySet.collectEntries { k -> [(k): data[k][i]] } as LinkedHashMap
+    }
+
+    LinkedHashMap getAt(List i){
+        keySet.collectEntries { k -> [(k): data[k][i]] } as LinkedHashMap
+    }
+
+    LinkedHashMap getAt(Integer i){
+        keySet.collectEntries { k -> [(k): data[k][i]] } as LinkedHashMap
+    }
+
     RowListDataFrame transpose() {
 
         (0..<nrow())
@@ -142,22 +156,36 @@ class ColMapDataFrame implements DataFrame {
         transpose().slice(rows)
     }
 
-    ColMapDataFrame full_join(DataFrame right, String... by) {
-        transpose().full_join(right, by as Set).transpose()
+    RowListDataFrame inner_join(DataFrame right, String... by) {
+        inner_join(right, by as Set)
     }
 
-
-    ColMapDataFrame full_join(DataFrame right, Set by) {
-        transpose().full_join(right, by).transpose()
+    RowListDataFrame inner_join(DataFrame right, Set by) {
+        transpose().inner_join(right, by)
     }
 
-    AbstractDataFrame full_join(AbstractDataFrame right, String... by) {
-        transpose().full_join(right, by as Set).transpose()
+    RowListDataFrame left_join(DataFrame right, String... by) {
+        left_join(right, by as Set)
     }
 
+    RowListDataFrame left_join(DataFrame right, Set by) {
+        transpose().left_join(right, by)
+    }
 
-    AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
-        transpose().full_join(right, by).transpose()
+    RowListDataFrame right_join(DataFrame right, String... by) {
+        right_join(right, by as Set)
+    }
+
+    RowListDataFrame right_join(DataFrame right, Set by) {
+        transpose().right_join(right, by)
+    }
+
+    RowListDataFrame full_join(DataFrame right, String... by) {
+        full_join(right, by as Set)
+    }
+
+    RowListDataFrame full_join(DataFrame right, Set by) {
+        transpose().full_join(right, by)
     }
 
     @Override

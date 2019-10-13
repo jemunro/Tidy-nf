@@ -17,17 +17,16 @@ class MutateTests {
     static void mutateTests() {
         test_01()
         test_02()
-        println "$name tests complete."
     }
 
     static void test_01() {
         final String num = '01'
 
-        assert df.mutate { x = x + 1 }.as_map()['x'] == [2,3,4,5,6]
-        assert df.mutate { w = y - 1 }.as_map()['w'] == [4,3,2,1,0]
-        assert df.mutate_with(a:1) { w = y - a }.as_map()['w'] == [4,3,2,1,0]
+        assert df.mutate { x = x + 1 }['x'] == [2,3,4,5,6]
+        assert df.mutate { w = y - 1 }['w'] == [4,3,2,1,0]
+        assert df.mutate_with(a:1) { w = y - a }['w'] == [4,3,2,1,0]
 
-        println "$name test $num passed."
+        println "$name test $num - pass"
     }
 
     static void test_02() {
@@ -45,7 +44,7 @@ class MutateTests {
             df.mutate_with(a:1) { a = b }
         }
 
-        println "$name test $num passed."
+        println "$name test $num - pass"
     }
 
 

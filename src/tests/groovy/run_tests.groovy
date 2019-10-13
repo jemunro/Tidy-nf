@@ -5,6 +5,7 @@ import static test.RenameTests.renameTests
 import static test.MutateTests.mutateTests
 import static test.SliceTests.sliceTests
 import static test.PullTests.pullTests
+import static test.JoinTests.joinTests
 
 
 df = as_df(
@@ -17,5 +18,6 @@ pullTests()
 renameTests()
 selectTests()
 sliceTests()
+joinTests()
 
 println "done."

@@ -17,7 +17,6 @@ class SelectTests {
     static void selectTests() {
         test_01()
         test_02()
-        println "$name tests complete."
     }
 
     static void test_01() {
@@ -27,7 +26,7 @@ class SelectTests {
         assert df.select('x', 'z').names() == ['x', 'z'] as LinkedHashSet
         assert df.select('y').names() == ['y'] as LinkedHashSet
 
-        println "$name test $num passed."
+        println "$name test $num - pass"
     }
 
     static void test_02() {
@@ -41,7 +40,7 @@ class SelectTests {
             df.transpose().select('a', 'b', 'c')
         }
 
-        println "$name test $num passed."
+        println "$name test $num - pass"
     }
 
 

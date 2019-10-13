@@ -1,7 +1,6 @@
 package test
 
 import tidyflow.exception.IllegalTypeException
-import tidyflow.exception.KeySetMismatchException
 
 import static groovy.test.GroovyAssert.shouldFail
 import static tidyflow.TidyMethods.*
@@ -18,17 +17,16 @@ class SliceTests {
     static void sliceTests() {
         test_01()
         test_02()
-        println "$name tests complete."
     }
 
     static void test_01() {
         final String num = '01'
 
-        assert df.slice(0).as_map()['x'] == [1]
-        assert df.slice(2,4).as_map()['y'] == [3,1]
-        assert df.slice(0..<df.nrow()).as_map()['x'] == [1,2,3,4,5]
+        assert df.slice(0)['x'] == [1]
+        assert df.slice(2,4)['y'] == [3,1]
+        assert df.slice(0..<df.nrow())['x'] == [1,2,3,4,5]
 
-        println "$name test $num passed."
+        println "$name test $num - pass"
     }
 
     static void test_02() {
@@ -46,7 +44,7 @@ class SliceTests {
             df.slice(['a'])
         }
 
-        println "$name test $num passed."
+        println "$name test $num - pass"
     }
 
 

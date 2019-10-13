@@ -14,6 +14,7 @@ class RowListDataFrame implements DataFrame {
 
     private ArrayList data
     private LinkedHashSet keySet
+    private enum Join { FULL, INNER, LEFT, RIGHT, SEMI, ANTI }
 
     RowListDataFrame(List data) {
 
@@ -53,36 +54,113 @@ class RowListDataFrame implements DataFrame {
         transpose().as_map()
     }
 
+    LinkedHashMap getAt(IntRange i){
+        data[i]
+    }
+
+    LinkedHashMap getAt(List i){
+        data[i]
+    }
+
+    LinkedHashMap getAt(Integer i){
+        data[i]
+    }
+
+    ArrayList getAt(String var){
+        data.collect { it[var] }
+    }
+
+    RowListDataFrame inner_join(DataFrame right, String... by) {
+        inner_join(right, by as Set)
+    }
+
+    RowListDataFrame inner_join(DataFrame right, Set by) {
+        join(right, by, Join.INNER)
+    }
+
+    RowListDataFrame left_join(DataFrame right, String... by) {
+        left_join(right, by as Set)
+    }
+
+    RowListDataFrame left_join(DataFrame right, Set by) {
+        join(right, by, Join.LEFT)
+    }
+
+    RowListDataFrame right_join(DataFrame right, String... by) {
+        right_join(right, by as Set)
+    }
+
+    RowListDataFrame right_join(DataFrame right, Set by) {
+        join(right, by, Join.RIGHT)
+    }
+
     RowListDataFrame full_join(DataFrame right, String... by) {
         full_join(right, by as Set)
     }
 
-
     RowListDataFrame full_join(DataFrame right, Set by) {
+        join(right, by, Join.FULL)
+    }
 
-        if (right instanceof ColMapDataFrame) {
-            right = right.transpose()
+    private RowListDataFrame join(DataFrame right, Set by, Join join) {
+
+        if (!keySet.containsAll(by)) {
+            throw new KeySetMismatchException(
+                errMsg("join", "by  not all present in keyset left.\n" +
+                    "by: $by, keyset left: ${keySet}"))
         }
 
-        ArrayList right_sub = right.select(by).as_list()
+        if (!right.names().containsAll(by)) {
+            throw new KeySetMismatchException(
+                errMsg("join", "by  not all present in keyset right.\n" +
+                    "by: $by, keyset right: ${right.names()}"))
+        }
 
-        ArrayList matches = select(by)
-            .as_list()
-            .withIndex()
-            .collect { l, i -> right_sub.withIndex().findAll { r, j -> l == r }.collect { [i, it[1]] } }
-            .collectMany { it }
-    }
-
-    AbstractDataFrame full_join(AbstractDataFrame right, String... by) {
-        full_join(right, by as Set)
-    }
-
-
-    AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
-        if (right instanceof ColMapDataFrame) {
+        if (join == Join.ANTI) {
             null
-        }
+        } else {
+            if (right instanceof ColMapDataFrame) {
+                right = right.transpose()
+            }
 
+            ArrayList right_sub = right.select(by).as_list()
+
+            ArrayList matches = select(by)
+                .as_list()
+                .withIndex()
+                .collect { l, i -> right_sub.withIndex().findAll { r, j -> l == r }.collect { [i, it[1]] } }
+                .collectMany { it }
+
+            ArrayList inner_j = matches.collect { i, j -> (data[i] + right[j]) as LinkedHashMap }
+            ArrayList left_j
+            ArrayList right_j
+
+            if (join == Join.LEFT || join == Join.FULL) {
+                Set leftUnique = ((0..<nrow()) - matches.collect { it[0] } )
+                LinkedHashMap right_null = (right.names() - by).collectEntries { k -> [(k): null]} as LinkedHashMap
+                left_j = leftUnique.collect { (data[it as int] + right_null) as LinkedHashMap }
+            }
+
+            if (join == Join.RIGHT || join == Join.FULL) {
+                Set rightUnique = ((0..<right.nrow()) - matches.collect { it[1] } )
+                LinkedHashMap left_null = (names() - by).collectEntries { k -> [(k): null]} as LinkedHashMap
+                right_j = rightUnique.collect { (left_null + right[it as int]) as LinkedHashMap }
+            }
+
+            switch (join){
+                case Join.INNER:
+                    inner_j as RowListDataFrame
+                    break
+                case Join.LEFT:
+                    inner_j + left_j as RowListDataFrame
+                    break
+                case Join.RIGHT:
+                    inner_j + right_j as RowListDataFrame
+                    break
+                default:
+                    inner_j + left_j + right_j as RowListDataFrame
+            }
+        }
     }
 
     Set names() {
@@ -120,7 +198,6 @@ class RowListDataFrame implements DataFrame {
                 errMsg("pull", "var not all present in keyset.\n" +
                     "var: $var, keyset: $keySet"))
         }
-
         data.collect { (it as LinkedHashMap)[var] }
     }
 

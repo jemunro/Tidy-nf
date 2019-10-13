@@ -18,7 +18,6 @@ class PullTests {
     static void pullTests() {
         test_01()
         test_02()
-        println "$name tests complete."
     }
 
     static void test_01() {
@@ -26,7 +25,7 @@ class PullTests {
 
         assert df.pull('x') == [1,2,3,4,5]
 
-        println "$name test $num passed."
+        println "$name test $num - pass"
     }
 
     static void test_02() {
@@ -36,7 +35,7 @@ class PullTests {
             df.pull('a')
         }
 
-        println "$name test $num passed."
+        println "$name test $num - pass"
     }
 
 

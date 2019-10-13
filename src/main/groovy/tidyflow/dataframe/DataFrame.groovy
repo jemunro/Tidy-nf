@@ -6,6 +6,30 @@ interface DataFrame extends AbstractDataFrame {
 
     LinkedHashMap as_map()
 
+    LinkedHashMap getAt(IntRange i)
+
+    LinkedHashMap getAt(List i)
+
+    LinkedHashMap getAt(Integer i)
+
+    ArrayList getAt(String var)
+
+    DataFrame inner_join(DataFrame right, String... by)
+
+    DataFrame inner_join(DataFrame right, Set by)
+
+    DataFrame left_join(DataFrame right, String... by)
+
+    DataFrame left_join(DataFrame right, Set by)
+
+    DataFrame right_join(DataFrame right, String... by)
+
+    DataFrame right_join(DataFrame right, Set by)
+
+    DataFrame full_join(DataFrame right, String... by)
+
+    DataFrame full_join(DataFrame right, Set by)
+
     DataFrame mutate(Closure closure)
 
     DataFrame mutate_with(Map with, Closure closure)
@@ -29,8 +53,6 @@ interface DataFrame extends AbstractDataFrame {
     DataFrame slice(ArrayList rows)
 
     ArrayList pull(String var)
-
-    //List pull(String var)
 
 
 }
