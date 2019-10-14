@@ -2,7 +2,7 @@
 package tidyflow.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
-import tidyflow.dataframe.RowListDataFrame
+import tidyflow.dataframe.DataFrame
 import tidyflow.exception.CollectionSizeMismatchException
 import tidyflow.exception.EmptySetException
 import tidyflow.exception.IllegalTypeException
@@ -79,7 +79,7 @@ class ArrangeOp {
                 throw new CollectionSizeMismatchException(errMsg(methodName, "all selected variables in arrange must be the same size\n" +
                         "${keySetByAt.collectEntries { k -> [(k) : data[k]?.size() ] } }"))
 
-            ([data] as RowListDataFrame).arrange().as_list()[0]
+            ([data] as DataFrame).arrange().as_list()[0]
         }
     }
 

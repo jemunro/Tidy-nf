@@ -1,23 +1,17 @@
 package tidyflow
 
 import groovyx.gpars.dataflow.DataflowChannel
-import groovyx.gpars.dataflow.DataflowQueue
-import groovyx.gpars.dataflow.DataflowVariable
-import tidyflow.dataframe.DataFrame
 import tidyflow.dataframe.DataflowDataFrame
 import tidyflow.exception.IllegalTypeException
-import tidyflow.dataframe.RowListDataFrame
-import tidyflow.dataframe.ColMapDataFrame
+import tidyflow.dataframe.DataFrame
+import tidyflow.dataframe.TransposedDataFrame
 
 import java.nio.file.Path
-
-//import tidyflow.extension.TidyDelegatingMetaClass
 
 import static tidyflow.exception.Message.errMsg
 import static tidyflow.io.DelimHandler.readDelim
 import static tidyflow.exception.Message.tidyError
 import static tidyflow.io.DelimHandler.writeDelim
-import static tidyflow.helpers.Predicates.isMapOfList
 
 
 class TidyMethods {
@@ -89,15 +83,11 @@ class TidyMethods {
     }
 
     static DataFrame as_df(ArrayList data) {
-        data as RowListDataFrame
+        data as DataFrame
     }
 
     static DataFrame as_df(LinkedHashMap data) {
-        if (isMapOfList(data)){
-            data as ColMapDataFrame
-        } else {
-            [data] as RowListDataFrame
-        }
+        (data as TransposedDataFrame).transpose()
     }
 
     static as_dfc(DataflowChannel channel){

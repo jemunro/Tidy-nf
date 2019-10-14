@@ -36,10 +36,6 @@ class SelectTests {
             df.select('a', 'b', 'c')
         }
 
-        shouldFail (KeySetMismatchException) {
-            df.transpose().select('a', 'b', 'c')
-        }
-
         println "$name test $num - pass"
     }
 

@@ -2,7 +2,7 @@ package tidyflow.operators
 
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
-import tidyflow.dataframe.RowListDataFrame
+import tidyflow.dataframe.DataFrame
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
 
@@ -37,10 +37,10 @@ class CollectColsOp {
                         errMsg(methodName, "Required matching keysets\nfirst keyset:${data[0].keySet()}"))
 
             if (sort) {
-                data = (data as RowListDataFrame).arrange().as_list()
+                data = (data as DataFrame).arrange().as_list()
             }
 
-            (data as RowListDataFrame).as_map()
+            (data as DataFrame).as_map()
         }
     }
 }
