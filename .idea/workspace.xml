@@ -2,25 +2,50 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58dcc665-cfa9-4cef-ba89-88aa08817c8a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/TransposedDataFrame.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/Join.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/Operator.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/TidyMethods.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/TidyMethods.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/TidyMethods.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/Methods.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/TidyOps.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/TidyOps.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/ColMapDataFrame.groovy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataflowDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataflowDataFrame.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/RowListDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/ArrangeOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/ArrangeOp.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectColsOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectColsOp.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectDelimOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectDelimOp.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectJsonOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectJsonOp.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectRowsOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectRowsOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/helpers/Predicates.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/helpers/Predicates.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/ArrangeOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/ArrangeOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectColsOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/CollectColsOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectDelimOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/CollectDelimOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectJsonOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/CollectJsonOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/CollectRowsOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/CollectRowsOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/GroupByOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/GroupByOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/JoinOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/JoinOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/MutateOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/MutateOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/PullOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/PullOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/RenameOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/RenameOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/SelectOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/SelectOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/SetNamesOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/SetNamesOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/SubscribeDelimOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/SubscribeDelimOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/UnnameOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/UnnameOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/operators/UnnestOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/UnnestOp.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/groovy/run_tests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/run_tests.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/JoinTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/JoinTests.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/MutateTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/MutateTests.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/PullTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/PullTests.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/RenameTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/RenameTests.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/SelectTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/SelectTests.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/SliceTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/SliceTests.groovy" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -36,6 +61,9 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="tidyflow.dataframe" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/tests/groovy/test" />
     </key>

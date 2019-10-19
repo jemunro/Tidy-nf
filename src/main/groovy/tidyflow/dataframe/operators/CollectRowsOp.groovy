@@ -1,43 +1,31 @@
-package tidyflow.operators
+package tidyflow.dataframe.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 import tidyflow.dataframe.DataFrame
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
 
-import static tidyflow.io.DelimHandler.writeDelim
 import static tidyflow.exception.Message.errMsg
+import static tidyflow.helpers.Predicates.allKeySetsMatch
+import static tidyflow.helpers.Predicates.allKeySetsSameOrder
+import static tidyflow.helpers.Predicates.isListOfMap
 
-class CollectDelimOp {
+class CollectRowsOp {
 
-    private String methodName
-    private DataflowChannel source
+    private static final String methodName = 'collect_rows'
+    private DataflowQueue source
     private boolean sort
-    private String delim
-    private File file
-    private Boolean colNames
-    private final static LinkedHashSet validMethods =  ["collect_delim", "collect_tsv", "collect_csv"]
 
-    CollectDelimOp(DataflowChannel source, File file, String delim, Boolean colNames, Boolean sort, String methodName) {
+    CollectRowsOp(DataflowQueue source, Boolean sort) {
 
         this.source = source
         this.sort = sort
-        this.methodName = methodName
-        this.delim = delim
-        this.file = file
-        this.colNames = colNames
-
-        assert validMethods.contains(methodName)
     }
 
     DataflowVariable apply() {
 
-        source.with {
-            it instanceof DataflowQueue ? it.toList() : it
-        }.map {
-
+        source.toList().map {
             ArrayList data = it
 
             if(! isListOfMap(data))
@@ -57,9 +45,7 @@ class CollectDelimOp {
                 data = (data as DataFrame).select(keySet).as_list()
             }
 
-            writeDelim(data, file, delim, colNames, false)
-            file.toPath()
+            data
         }
     }
 }
-

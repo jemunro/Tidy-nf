@@ -14,7 +14,7 @@ import static tidyflow.exception.Message.tidyError
 import static tidyflow.io.DelimHandler.writeDelim
 
 
-class TidyMethods {
+class Methods {
 
     private static LinkedHashMap size_units = [B:1, KB:1e3, MB:1e6, GB:1e9]
 

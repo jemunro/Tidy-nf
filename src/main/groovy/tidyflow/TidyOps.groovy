@@ -4,21 +4,21 @@ import groovyx.gpars.dataflow.DataflowChannel
 import groovyx.gpars.dataflow.DataflowVariable
 import groovyx.gpars.dataflow.DataflowQueue
 
-import tidyflow.operators.ArrangeOp
-import tidyflow.operators.CollectJsonOp
-import tidyflow.operators.GroupByOp
-import tidyflow.operators.JoinOp
-import tidyflow.operators.MutateOp
-import tidyflow.operators.PullOp
-import tidyflow.operators.RenameOp
-import tidyflow.operators.SelectOp
-import tidyflow.operators.SetNamesOp
-import tidyflow.operators.CollectColsOp
-import tidyflow.operators.CollectRowsOp
-import tidyflow.operators.CollectDelimOp
-import tidyflow.operators.SubscribeDelimOp
-import tidyflow.operators.UnnameOp
-import tidyflow.operators.UnnestOp
+import tidyflow.dataframe.operators.ArrangeOp
+import tidyflow.dataframe.operators.CollectJsonOp
+import tidyflow.dataframe.operators.GroupByOp
+import tidyflow.dataframe.operators.JoinOp
+import tidyflow.dataframe.operators.MutateOp
+import tidyflow.dataframe.operators.PullOp
+import tidyflow.dataframe.operators.RenameOp
+import tidyflow.dataframe.operators.SelectOp
+import tidyflow.dataframe.operators.SetNamesOp
+import tidyflow.dataframe.operators.CollectColsOp
+import tidyflow.dataframe.operators.CollectRowsOp
+import tidyflow.dataframe.operators.CollectDelimOp
+import tidyflow.dataframe.operators.SubscribeDelimOp
+import tidyflow.dataframe.operators.UnnameOp
+import tidyflow.dataframe.operators.UnnestOp
 
 
 class TidyOps {

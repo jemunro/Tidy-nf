@@ -1,6 +1,7 @@
-package tidyflow.operators
+package tidyflow.dataframe.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+
+import groovyx.gpars.dataflow.DataflowQueue
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
 
@@ -8,21 +9,22 @@ import static tidyflow.exception.Message.errMsg
 import static tidyflow.helpers.Predicates.areSameSet
 import static tidyflow.helpers.Predicates.isType
 
-class RenameOp {
-    private String methodName = 'rename'
-    private DataflowChannel source
-    private String newKey
-    private String oldKey
+class GroupByOp {
+
+    private String methodName = 'group_by'
+    private DataflowQueue source
+    private LinkedHashSet keySetBy
     private LinkedHashSet keySet
 
-    RenameOp(DataflowChannel source, String newKey, String oldKey) {
+    GroupByOp(DataflowQueue source, List keySetBy){
 
         this.source = source
-        this.newKey = newKey
-        this.oldKey = oldKey
+        this.keySetBy = keySetBy
+
+        assert keySetBy.size() > 0
     }
 
-    DataflowChannel apply() {
+    DataflowQueue apply() {
 
         source.map {
 
@@ -37,13 +39,9 @@ class RenameOp {
                 if (! keySet) {
                     keySet = data.keySet()
 
-                    if (!keySet.contains(oldKey))
-                        throw new KeySetMismatchException(errMsg(methodName, "key not present in keySet\n" +
-                                "key: $oldKey, keyset: $keySet"))
-
-                    if (keySet.contains(newKey))
-                        throw new KeySetMismatchException(errMsg(methodName, "key already present in keySet\n" +
-                                "key: $newKey, keyset: $keySet"))
+                    if (! keySet.containsAll(keySetBy))
+                        throw new KeySetMismatchException(errMsg(methodName, "by keyset not all present in keyset\n" +
+                                "by keyset: $keySetBy, keyset: $keySet"))
                 }
             }
 
@@ -51,7 +49,14 @@ class RenameOp {
                 throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
                         "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
 
-            data.collectEntries { k, v -> [(oldKey == k ? newKey: k): v] }
-        }
+            [data.subMap(keySetBy), data ]
+
+        }.groupTuple(by:0)
+            .map {
+                keySet.collectEntries { k ->
+                    [ (k) : (keySetBy.contains(k) ? it[0][k] : it[1].collect { m -> m[k] } )]
+                }
+            }
     }
+
 }

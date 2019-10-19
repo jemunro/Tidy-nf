@@ -1,4 +1,4 @@
-package tidyflow.operators
+package tidyflow.dataframe.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 import tidyflow.exception.IllegalTypeException
@@ -8,17 +8,18 @@ import static tidyflow.exception.Message.errMsg
 import static tidyflow.helpers.Predicates.areSameSet
 import static tidyflow.helpers.Predicates.isType
 
-class PullOp {
-
-    private String methodName = 'pull'
+class RenameOp {
+    private String methodName = 'rename'
     private DataflowChannel source
-    private String key
+    private String newKey
+    private String oldKey
     private LinkedHashSet keySet
 
-    PullOp(DataflowChannel source, String key) {
+    RenameOp(DataflowChannel source, String newKey, String oldKey) {
 
         this.source = source
-        this.key = key
+        this.newKey = newKey
+        this.oldKey = oldKey
     }
 
     DataflowChannel apply() {
@@ -36,9 +37,13 @@ class PullOp {
                 if (! keySet) {
                     keySet = data.keySet()
 
-                    if (!keySet.contains(key))
+                    if (!keySet.contains(oldKey))
                         throw new KeySetMismatchException(errMsg(methodName, "key not present in keySet\n" +
-                                "key: $key, keyset: $keySet"))
+                                "key: $oldKey, keyset: $keySet"))
+
+                    if (keySet.contains(newKey))
+                        throw new KeySetMismatchException(errMsg(methodName, "key already present in keySet\n" +
+                                "key: $newKey, keyset: $keySet"))
                 }
             }
 
@@ -46,7 +51,7 @@ class PullOp {
                 throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
                         "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
 
-            data[key]
+            data.collectEntries { k, v -> [(oldKey == k ? newKey: k): v] }
         }
     }
 }

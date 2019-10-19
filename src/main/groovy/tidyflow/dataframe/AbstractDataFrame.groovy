@@ -60,9 +60,9 @@ interface AbstractDataFrame {
 
     AbstractDataFrame semi_join(AbstractDataFrame right, Set by)
 
-    AbstractDataFrame summarize_by(String... by)
-
-    AbstractDataFrame summarize_by(Set by)
+//    AbstractDataFrame summarize_by(String... by)
+//
+//    AbstractDataFrame summarize_by(Set by)
 
     AbstractDataFrame unnest(String... at)
 

@@ -4,12 +4,19 @@ import groovyx.gpars.dataflow.DataflowChannel
 
 class DataflowDataFrame implements AbstractDataFrame {
 
+    private static Integer instanceCount = 0
     private DataflowChannel source
     private LinkedHashSet colNames
-    private enum Join { FULL, INNER, LEFT, RIGHT, SEMI, ANTI }
+    private Integer instanceID
 
     DataflowDataFrame(DataflowChannel source){
+
         this.source = source
+        this.instanceID = nextInstance()
+    }
+
+    static synchronized Integer nextInstance(){
+        ++instanceCount
     }
 
     @Override

@@ -1,7 +1,6 @@
-package tidyflow.operators
+package tidyflow.dataframe.operators
 
-
-import groovyx.gpars.dataflow.DataflowQueue
+import groovyx.gpars.dataflow.DataflowChannel
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
 
@@ -9,22 +8,20 @@ import static tidyflow.exception.Message.errMsg
 import static tidyflow.helpers.Predicates.areSameSet
 import static tidyflow.helpers.Predicates.isType
 
-class GroupByOp {
+class PullOp {
 
-    private String methodName = 'group_by'
-    private DataflowQueue source
-    private LinkedHashSet keySetBy
+    private String methodName = 'pull'
+    private DataflowChannel source
+    private String key
     private LinkedHashSet keySet
 
-    GroupByOp(DataflowQueue source, List keySetBy){
+    PullOp(DataflowChannel source, String key) {
 
         this.source = source
-        this.keySetBy = keySetBy
-
-        assert keySetBy.size() > 0
+        this.key = key
     }
 
-    DataflowQueue apply() {
+    DataflowChannel apply() {
 
         source.map {
 
@@ -39,9 +36,9 @@ class GroupByOp {
                 if (! keySet) {
                     keySet = data.keySet()
 
-                    if (! keySet.containsAll(keySetBy))
-                        throw new KeySetMismatchException(errMsg(methodName, "by keyset not all present in keyset\n" +
-                                "by keyset: $keySetBy, keyset: $keySet"))
+                    if (!keySet.contains(key))
+                        throw new KeySetMismatchException(errMsg(methodName, "key not present in keySet\n" +
+                                "key: $key, keyset: $keySet"))
                 }
             }
 
@@ -49,14 +46,7 @@ class GroupByOp {
                 throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
                         "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
 
-            [data.subMap(keySetBy), data ]
-
-        }.groupTuple(by:0)
-            .map {
-                keySet.collectEntries { k ->
-                    [ (k) : (keySetBy.contains(k) ? it[0][k] : it[1].collect { m -> m[k] } )]
-                }
-            }
+            data[key]
+        }
     }
-
 }

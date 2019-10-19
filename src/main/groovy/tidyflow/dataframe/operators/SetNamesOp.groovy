@@ -1,4 +1,4 @@
-package tidyflow.operators
+package tidyflow.dataframe.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
 import tidyflow.exception.CollectionSizeMismatchException

@@ -12,9 +12,9 @@ import static tidyflow.helpers.Predicates.isListOfMapOfSameType
 
 class DataFrame implements AbstractDataFrame {
 
+
     private ArrayList data
     private LinkedHashSet colNames
-    private enum Join { FULL, INNER, LEFT, RIGHT, SEMI, ANTI }
 
     DataFrame(List data) {
 

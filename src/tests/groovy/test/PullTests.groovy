@@ -1,10 +1,10 @@
 package test
 
-import tidyflow.exception.IllegalTypeException
+
 import tidyflow.exception.KeySetMismatchException
 
 import static groovy.test.GroovyAssert.shouldFail
-import static tidyflow.TidyMethods.*
+import static tidyflow.Methods.*
 
 class PullTests {
 

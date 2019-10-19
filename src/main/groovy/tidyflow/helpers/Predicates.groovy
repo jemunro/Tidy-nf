@@ -35,10 +35,6 @@ class Predicates {
                 coll.drop(1).every { areSameSize(it as Collection, coll[0] as Collection) }
     }
 
-    static boolean isSet(Collection coll) {
-        coll.size() == coll.unique().size()
-    }
-
     static boolean allKeySetsMatch(Collection coll) {
         (!isEmpty(coll)) && isListOfMap(coll) && coll.drop(1).every { it.keySet() == coll[0].keySet() }
     }
