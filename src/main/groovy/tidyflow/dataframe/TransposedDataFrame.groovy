@@ -32,6 +32,10 @@ class TransposedDataFrame {
         this.colNames = data.keySet()
     }
 
+    static new_trans_df(LinkedHashMap data){
+        new TransposedDataFrame(data)
+    }
+
     TransposedDataFrame arrange(Map par = [:]) {
         arrange(par, colNames)
     }

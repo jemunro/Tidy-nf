@@ -1,6 +1,7 @@
 package tidyflow.dataframe.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
+import tidyflow.dataframe.DataFrame
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
 
@@ -8,47 +9,39 @@ import static tidyflow.exception.Message.errMsg
 import static tidyflow.helpers.Predicates.areSameSet
 import static tidyflow.helpers.Predicates.isType
 
-class MutateOp {
+class MutateOp extends Operator {
 
-    private String methodName = 'mutate'
-    private DataflowChannel source
-    private Binding with
-    private Closure dehydrated
-    private LinkedHashSet keySet
+    private Map with
+    private Closure closure
 
-    MutateOp(DataflowChannel source, Closure closure, Map with){
+    MutateOp(DataflowChannel source, Closure closure, Map with, boolean debug = false){
 
+        this.name = 'mutate'
         this.source = source
-        this.with = with as Binding
-        this.dehydrated = closure.dehydrate()
-
+        this.debug = debug
+        this.with = with
+        this.closure = closure
     }
 
     DataflowChannel apply() {
 
         source.map {
 
-            if (! isType(it, Map))
-                throw new IllegalTypeException(errMsg(methodName, "Required Map type\n" +
-                        "got ${it.getClass().simpleName} with value $it"))
+            counter++
 
-            LinkedHashMap data = it as LinkedHashMap
+            checkIsDataFrame(it)
+
+            DataFrame df = (DataFrame)it
 
             synchronized (this) {
-                if (! keySet) {
-                    keySet = data.keySet()
+                if (! colNames) {
+                    colNames = df.names()
                 }
             }
 
-            if (! areSameSet(keySet, data.keySet()))
-                throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
-                        "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
+            checkColNames(df)
 
-            Binding binding = new Binding(data)
-
-            dehydrated.rehydrate(with, binding, null).call()
-
-            binding.getVariables() as LinkedHashMap
+            df.mutate_with(with, closure)
         }
     }
 }

@@ -34,6 +34,14 @@ class DataFrame implements AbstractDataFrame {
         this.colNames = (data[0] as LinkedHashMap).keySet()
     }
 
+    static DataFrame new_df(ArrayList data) {
+        data as DataFrame
+    }
+
+    static DataFrame new_df(LinkedHashMap data) {
+        [data] as DataFrame
+    }
+
     @Override
     AbstractDataFrame anti_join(AbstractDataFrame right, String... by) {
         return null
@@ -267,6 +275,10 @@ class DataFrame implements AbstractDataFrame {
         colNames
     }
 
+    Set colnames() {
+        colNames
+    }
+
     int nrow() {
         data.size()
     }
@@ -353,15 +365,15 @@ class DataFrame implements AbstractDataFrame {
         return null
     }
 
-    @Override
-    DataFrame summarize_by(String... by) {
-        return null
-    }
-
-    @Override
-    DataFrame summarize_by(Set by) {
-        return null
-    }
+//    @Override
+//    DataFrame summarize_by(String... by) {
+//        return null
+//    }
+//
+//    @Override
+//    DataFrame summarize_by(Set by) {
+//        return null
+//    }
 
     @Override
     DataFrame unnest(String... at) {
@@ -410,9 +422,9 @@ class DataFrame implements AbstractDataFrame {
     String toString() {
 
         if (data.size() < 6)
-            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.join('\n') + ']'
+            "${this.getClass().simpleName} (${nrow()} x ${ncol()}): [" + data.join(', ') + ']'
         else
-            "[${this.getClass().simpleName} (${nrow()} x ${ncol()}):\n" + data.subList(0, 5).join('\n') + '\n[... ]]'
+            "${this.getClass().simpleName} (${nrow()} x ${ncol()}): [" + data.subList(0, 5).join(', ') + ', [... ]]'
     }
 
     TransposedDataFrame transpose() {

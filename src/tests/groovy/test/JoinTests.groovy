@@ -7,11 +7,11 @@ import static tidyflow.Methods.*
 
 class JoinTests {
 
-    private static left = as_df(
+    private static left = data_frame(
         x: [1,2,3],
         y: ['a','b','c'])
 
-    private static right = as_df(
+    private static right = data_frame(
         x: [1,3,5],
         z: ['one','three','five'])
 

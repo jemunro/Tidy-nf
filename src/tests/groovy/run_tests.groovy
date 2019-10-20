@@ -1,3 +1,5 @@
+import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowQueue
 
 import static tidyflow.Methods.*
 import static test.SelectTests.selectTests

@@ -8,7 +8,7 @@ import static tidyflow.Methods.*
 
 class PullTests {
 
-    private static df = as_df(
+    private static df = data_frame(
         x: [1,2,3,4,5],
         y: [5,4,3,2,1],
         z: ['a','b','c','d','e'])

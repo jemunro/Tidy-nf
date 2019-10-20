@@ -1,0 +1,49 @@
+Oct-20 17:41:10.417 [main] DEBUG nextflow.cli.Launcher - $> nextflow /home/jem/git/tidyflow/src/tests/nextflow/test.nf
+Oct-20 17:41:10.507 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 19.07.0
+Oct-20 17:41:10.514 [main] INFO  nextflow.cli.CmdRun - Launching `/home/jem/git/tidyflow/src/tests/nextflow/test.nf` [cranky_mcnulty] - revision: a9530bf9ca
+Oct-20 17:41:10.583 [main] DEBUG nextflow.Session - Session uuid: 63a7edb4-1177-40e0-b4c6-05ea002435aa
+Oct-20 17:41:10.583 [main] DEBUG nextflow.Session - Run name: cranky_mcnulty
+Oct-20 17:41:10.585 [main] DEBUG nextflow.Session - Executor pool size: 4
+Oct-20 17:41:10.593 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 19.07.0 build 5106
+  Created: 27-07-2019 13:22 UTC (23:22 AEDT)
+  System: Linux 5.3.1-050301-generic
+  Runtime: Groovy 2.5.6 on OpenJDK 64-Bit Server VM 1.8.0_222-8u222-b10-1ubuntu1~18.04.1-b10
+  Encoding: UTF-8 (UTF-8)
+  Process: 6487@jem-VirtualBox [127.0.1.1]
+  CPUs: 4 - Mem: 7.8 GB (2.3 GB) - Swap: 1.9 GB (1.9 GB)
+Oct-20 17:41:10.640 [main] DEBUG nextflow.Session - Work-dir: /home/jem/git/tidyflow/work [ext2/ext3]
+Oct-20 17:41:10.640 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/jem/git/tidyflow/src/tests/nextflow/bin
+Oct-20 17:41:10.717 [main] DEBUG nextflow.Session - Session start invoked
+Oct-20 17:41:10.723 [main] DEBUG nextflow.Session - Using default localLib path: /home/jem/git/tidyflow/src/tests/nextflow/lib
+Oct-20 17:41:10.726 [main] DEBUG nextflow.Session - Adding to the classpath library: /home/jem/git/tidyflow/src/tests/nextflow/lib
+Oct-20 17:41:11.322 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Oct-20 17:41:11.507 [main] DEBUG nextflow.Session - Session aborted -- Cause: Cannot cast object 'DataflowQueue(queue=[])' with class 'groovyx.gpars.dataflow.DataflowQueue' to class 'tidyflow.dataframe.DataflowDataFrame'
+Oct-20 17:41:11.602 [main] ERROR nextflow.cli.Launcher - @unknown
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object 'DataflowQueue(queue=[])' with class 'groovyx.gpars.dataflow.DataflowQueue' to class 'tidyflow.dataframe.DataflowDataFrame'
+	at org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.continueCastOnSAM(DefaultTypeTransformation.java:414)
+	at org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.continueCastOnNumber(DefaultTypeTransformation.java:328)
+	at org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToType(DefaultTypeTransformation.java:242)
+	at org.codehaus.groovy.runtime.DefaultGroovyMethods.asType(DefaultGroovyMethods.java:17052)
+	at org.codehaus.groovy.runtime.dgm$54.doMethodInvoke(Unknown Source)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1217)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1041)
+	at groovy.runtime.metaclass.NextflowDelegatingMetaClass.invokeMethod(NextflowDelegatingMetaClass.java:60)
+	at org.codehaus.groovy.runtime.InvokerHelper.invokePojoMethod(InvokerHelper.java:999)
+	at org.codehaus.groovy.runtime.InvokerHelper.invokeMethod(InvokerHelper.java:990)
+	at org.codehaus.groovy.runtime.ScriptBytecodeAdapter.invokeMethodN(ScriptBytecodeAdapter.java:180)
+	at org.codehaus.groovy.runtime.ScriptBytecodeAdapter.asType(ScriptBytecodeAdapter.java:603)
+	at tidyflow.dataframe.DataflowDataFrame.mutate(DataflowDataFrame.groovy:126)
+	at tidyflow.dataframe.DataflowDataFrame.mutate(DataflowDataFrame.groovy)
+	at tidyflow.dataframe.AbstractDataFrame$mutate.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:115)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:127)
+	at Script_4cd87598.runScript(Script_4cd87598:17)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:151)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:189)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:287)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:132)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:246)
+	at nextflow.cli.Launcher.run(Launcher.groovy:451)
+	at nextflow.cli.Launcher.main(Launcher.groovy:633)

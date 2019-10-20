@@ -2,9 +2,9 @@ package tidyflow
 
 import groovyx.gpars.dataflow.DataflowChannel
 import tidyflow.dataframe.DataflowDataFrame
+import tidyflow.dataframe.TransposedDataFrame
 import tidyflow.exception.IllegalTypeException
 import tidyflow.dataframe.DataFrame
-import tidyflow.dataframe.TransposedDataFrame
 
 import java.nio.file.Path
 
@@ -83,15 +83,19 @@ class Methods {
     }
 
     static DataFrame as_df(ArrayList data) {
-        data as DataFrame
+        DataFrame.new_df(data)
     }
 
     static DataFrame as_df(LinkedHashMap data) {
-        (data as TransposedDataFrame).transpose()
+        DataFrame.new_df(data)
     }
 
-    static as_dfc(DataflowChannel channel){
-        channel as DataflowDataFrame
+    static DataFrame data_frame(LinkedHashMap data) {
+        TransposedDataFrame.new_trans_df(data).transpose()
+    }
+
+    static DataflowDataFrame as_df_df(DataflowChannel channel){
+       DataflowDataFrame.new_df_df(channel)
     }
 
 //    static DataflowDataFrame data_frame(DataflowChannel channel) {

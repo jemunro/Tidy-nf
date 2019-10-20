@@ -1,12 +1,13 @@
 package tidyflow.dataframe
 
 import groovyx.gpars.dataflow.DataflowChannel
+import tidyflow.dataframe.operators.MutateOp
+import static tidyflow.dataframe.DataFrame.new_df
 
 class DataflowDataFrame implements AbstractDataFrame {
 
     private static Integer instanceCount = 0
     private DataflowChannel source
-    private LinkedHashSet colNames
     private Integer instanceID
 
     DataflowDataFrame(DataflowChannel source){
@@ -15,8 +16,19 @@ class DataflowDataFrame implements AbstractDataFrame {
         this.instanceID = nextInstance()
     }
 
+    static DataflowDataFrame new_df_df(DataflowChannel source, convert = true){
+        if (convert)
+            new DataflowDataFrame(source.map { new_df(it)} )
+        else
+            new DataflowDataFrame(source)
+    }
+
     static synchronized Integer nextInstance(){
         ++instanceCount
+    }
+
+    DataflowChannel emit() {
+        this.source
     }
 
     @Override
@@ -111,12 +123,12 @@ class DataflowDataFrame implements AbstractDataFrame {
 
     @Override
     DataflowDataFrame mutate(Closure closure) {
-        return null
+        mutate_with([:], closure)
     }
 
     @Override
     DataflowDataFrame mutate_with(Map with, Closure closure) {
-        return null
+        new_df_df(new MutateOp(source, closure, with).apply(), false)
     }
 
     @Override
@@ -159,15 +171,15 @@ class DataflowDataFrame implements AbstractDataFrame {
         return null
     }
 
-    @Override
-    DataflowDataFrame summarize_by(String... by) {
-        return null
-    }
-
-    @Override
-    DataflowDataFrame summarize_by(Set by) {
-        return null
-    }
+//    @Override
+//    DataflowDataFrame summarize_by(String... by) {
+//        return null
+//    }
+//
+//    @Override
+//    DataflowDataFrame summarize_by(Set by) {
+//        return null
+//    }
 
     @Override
     DataflowDataFrame unnest(String... at) {
