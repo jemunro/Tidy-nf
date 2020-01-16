@@ -51,7 +51,7 @@ class UnnestOp {
     void runChecks(LinkedHashMap map) {
         checkIsType(map.keys, List, method_name)
         checkIsType(map.data, LinkedHashMap, method_name)
-        checkKeysMatch(map.keys, keySetList(map.data), method_name)
+        //checkKeysMatch(map.keys, keySetList(map.data), method_name)
         checkHasKeys(map.data, at, method_name)
     }
 }
