@@ -19,7 +19,7 @@ class MutateOp {
     MutateOp(DataflowChannel source, Closure closure, Map with){
 
         this.source = source
-        this.with = with as Binding
+        this.with = new Binding(with.clone() as Map)
         this.dehydrated = closure.dehydrate()
 
     }
@@ -44,7 +44,7 @@ class MutateOp {
                 throw new KeySetMismatchException(errMsg(methodName, "Required matching keysets" +
                         "\nfirst keyset: $keySet\nmismatch keyset: ${data.keySet()}"))
 
-            Binding binding = new Binding(data)
+            Binding binding = new Binding(data.clone() as LinkedHashMap)
 
             dehydrated.rehydrate(with, binding, null).call()
 
