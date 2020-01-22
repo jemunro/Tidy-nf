@@ -18,7 +18,7 @@ class MutateOp {
 
         this.method_name = method_name
         this.source = source
-        this.with = with as Binding
+        this.with = new Binding(with.clone() as Map)
         this.dehydrated = closure.dehydrate()
 
     }
@@ -28,7 +28,7 @@ class MutateOp {
 
             runChecks(it)
 
-            def data = new Binding(it.data as LinkedHashMap)
+            def data = new Binding(it.data.clone() as LinkedHashMap)
             def rehydrated = dehydrated.rehydrate(with, data, null)
             try {
                 rehydrated.call()
