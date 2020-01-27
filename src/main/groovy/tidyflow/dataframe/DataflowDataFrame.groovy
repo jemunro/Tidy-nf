@@ -28,7 +28,7 @@ class DataflowDataFrame implements AbstractDataFrame {
     }
 
     DataflowChannel emit() {
-        this.source
+        this.source.map { it?.as_list() }
     }
 
     @Override
@@ -52,17 +52,22 @@ class DataflowDataFrame implements AbstractDataFrame {
     }
 
     @Override
-    DataflowDataFrame count_by(String... by) {
+    AbstractDataFrame arrange_all(Map par) {
         return null
     }
 
     @Override
-    DataflowDataFrame count_by(Set by) {
+    DataflowDataFrame count(String... by) {
         return null
     }
 
     @Override
-    DataflowDataFrame count_by_all() {
+    DataflowDataFrame count(Set by) {
+        return null
+    }
+
+    @Override
+    DataflowDataFrame count_all() {
         return null
     }
 
@@ -103,21 +108,6 @@ class DataflowDataFrame implements AbstractDataFrame {
 
     @Override
     DataflowDataFrame full_join(AbstractDataFrame right, Set by) {
-        return null
-    }
-
-    @Override
-    DataflowDataFrame group_by(String... by) {
-        return null
-    }
-
-    @Override
-    DataflowDataFrame group_by(Set by) {
-        return null
-    }
-
-    @Override
-    DataflowDataFrame group_by_all() {
         return null
     }
 

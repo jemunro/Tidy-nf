@@ -10,21 +10,17 @@ interface AbstractDataFrame {
 
     AbstractDataFrame arrange(Map par, Set by)
 
-    AbstractDataFrame count_by(String... by)
+    AbstractDataFrame arrange_all(Map par)
 
-    AbstractDataFrame count_by(Set by)
+    AbstractDataFrame count(String... by)
 
-    AbstractDataFrame count_by_all()
+    AbstractDataFrame count(Set by)
+
+    AbstractDataFrame count_all()
 
     AbstractDataFrame full_join(AbstractDataFrame right, String... by)
 
     AbstractDataFrame full_join(AbstractDataFrame right, Set by)
-
-    AbstractDataFrame group_by(String... by)
-
-    AbstractDataFrame group_by(Set by)
-
-    AbstractDataFrame group_by_all()
 
     AbstractDataFrame inner_join(AbstractDataFrame right, String... by)
 
@@ -41,8 +37,6 @@ interface AbstractDataFrame {
     AbstractDataFrame nest_by(String... by)
 
     AbstractDataFrame nest_by(Set by)
-
-    AbstractDataFrame nest_by_all()
 
     Object pull(String var)
 
@@ -67,7 +61,5 @@ interface AbstractDataFrame {
     AbstractDataFrame unnest(String... at)
 
     AbstractDataFrame unnest(Set at)
-
-    AbstractDataFrame unnest()
 
 }

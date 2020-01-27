@@ -2,24 +2,123 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58dcc665-cfa9-4cef-ba89-88aa08817c8a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/nf_tests.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aux/aux.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/Methods.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/Methods.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.1" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.2" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.3" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.4" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.5" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.6" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.6" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.7" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.7" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.8" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.8" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow.log.9" beforeDir="false" afterPath="$PROJECT_DIR$/.nextflow.log.9" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/12707f49-c31c-4e48-9672-5fbcc774233c/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/12707f49-c31c-4e48-9672-5fbcc774233c/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/12707f49-c31c-4e48-9672-5fbcc774233c/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/12707f49-c31c-4e48-9672-5fbcc774233c/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/12707f49-c31c-4e48-9672-5fbcc774233c/index.thirsty_jennings" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/1d1eb33c-a533-4f3b-a4cd-9517230abcff/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/1d1eb33c-a533-4f3b-a4cd-9517230abcff/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/1d1eb33c-a533-4f3b-a4cd-9517230abcff/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/1d1eb33c-a533-4f3b-a4cd-9517230abcff/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/1d1eb33c-a533-4f3b-a4cd-9517230abcff/index.desperate_gilbert" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/2abac056-f419-4038-b6cf-46f0b9b19401/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/2abac056-f419-4038-b6cf-46f0b9b19401/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/2abac056-f419-4038-b6cf-46f0b9b19401/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/2abac056-f419-4038-b6cf-46f0b9b19401/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/2abac056-f419-4038-b6cf-46f0b9b19401/index.magical_morse" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/32d28a93-3e00-4d44-9708-58eb84b91b38/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/32d28a93-3e00-4d44-9708-58eb84b91b38/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/32d28a93-3e00-4d44-9708-58eb84b91b38/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/32d28a93-3e00-4d44-9708-58eb84b91b38/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/32d28a93-3e00-4d44-9708-58eb84b91b38/index.astonishing_lavoisier" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/3598cb3a-fabf-4337-93fd-efb04436ec92/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/3598cb3a-fabf-4337-93fd-efb04436ec92/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/3598cb3a-fabf-4337-93fd-efb04436ec92/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/3598cb3a-fabf-4337-93fd-efb04436ec92/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/3598cb3a-fabf-4337-93fd-efb04436ec92/index.modest_leakey" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/44060904-f574-45fa-9e2a-830790ef3774/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/44060904-f574-45fa-9e2a-830790ef3774/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/44060904-f574-45fa-9e2a-830790ef3774/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/44060904-f574-45fa-9e2a-830790ef3774/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/44060904-f574-45fa-9e2a-830790ef3774/index.nice_lamarr" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/53c0bc58-15b3-45f4-91ec-6f5870098ea1/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/53c0bc58-15b3-45f4-91ec-6f5870098ea1/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/53c0bc58-15b3-45f4-91ec-6f5870098ea1/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/53c0bc58-15b3-45f4-91ec-6f5870098ea1/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/53c0bc58-15b3-45f4-91ec-6f5870098ea1/index.amazing_visvesvaraya" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/5464d242-3186-440f-9253-79614a0af8a3/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/5464d242-3186-440f-9253-79614a0af8a3/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/5464d242-3186-440f-9253-79614a0af8a3/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/5464d242-3186-440f-9253-79614a0af8a3/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/5464d242-3186-440f-9253-79614a0af8a3/index.silly_brown" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/63a7edb4-1177-40e0-b4c6-05ea002435aa/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/63a7edb4-1177-40e0-b4c6-05ea002435aa/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/63a7edb4-1177-40e0-b4c6-05ea002435aa/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/63a7edb4-1177-40e0-b4c6-05ea002435aa/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/63a7edb4-1177-40e0-b4c6-05ea002435aa/index.cranky_mcnulty" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/68ac3c85-b406-417c-b723-cc6f49e50d46/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/68ac3c85-b406-417c-b723-cc6f49e50d46/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/68ac3c85-b406-417c-b723-cc6f49e50d46/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/68ac3c85-b406-417c-b723-cc6f49e50d46/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/68ac3c85-b406-417c-b723-cc6f49e50d46/index.golden_franklin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6b2cdb34-5fa8-4648-99fa-519beb299836/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6b2cdb34-5fa8-4648-99fa-519beb299836/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6b2cdb34-5fa8-4648-99fa-519beb299836/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6b2cdb34-5fa8-4648-99fa-519beb299836/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6b2cdb34-5fa8-4648-99fa-519beb299836/index.modest_hoover" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6e52b380-9be5-4947-8f45-aeb7f4bde7f3/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6e52b380-9be5-4947-8f45-aeb7f4bde7f3/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6e52b380-9be5-4947-8f45-aeb7f4bde7f3/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6e52b380-9be5-4947-8f45-aeb7f4bde7f3/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/6e52b380-9be5-4947-8f45-aeb7f4bde7f3/index.wise_cori" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/75820d84-0be3-4749-ab5f-6e41be898464/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/75820d84-0be3-4749-ab5f-6e41be898464/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/75820d84-0be3-4749-ab5f-6e41be898464/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/75820d84-0be3-4749-ab5f-6e41be898464/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/75820d84-0be3-4749-ab5f-6e41be898464/index.trusting_blackwell" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8c61bc07-14e0-4921-8ec2-df400cd606fa/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8c61bc07-14e0-4921-8ec2-df400cd606fa/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8c61bc07-14e0-4921-8ec2-df400cd606fa/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8c61bc07-14e0-4921-8ec2-df400cd606fa/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8c61bc07-14e0-4921-8ec2-df400cd606fa/index.furious_spence" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8f8d2fd1-bb03-42d8-af4f-b6b5e998b112/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8f8d2fd1-bb03-42d8-af4f-b6b5e998b112/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8f8d2fd1-bb03-42d8-af4f-b6b5e998b112/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8f8d2fd1-bb03-42d8-af4f-b6b5e998b112/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/8f8d2fd1-bb03-42d8-af4f-b6b5e998b112/index.wise_brenner" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/9efc01eb-62ea-4920-a409-d40ae8197f4e/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/9efc01eb-62ea-4920-a409-d40ae8197f4e/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/9efc01eb-62ea-4920-a409-d40ae8197f4e/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/9efc01eb-62ea-4920-a409-d40ae8197f4e/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/9efc01eb-62ea-4920-a409-d40ae8197f4e/index.suspicious_albattani" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/b4ee3af4-cc81-45f9-930d-c6755407b0ae/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/b4ee3af4-cc81-45f9-930d-c6755407b0ae/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/b4ee3af4-cc81-45f9-930d-c6755407b0ae/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/b4ee3af4-cc81-45f9-930d-c6755407b0ae/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/b4ee3af4-cc81-45f9-930d-c6755407b0ae/index.trusting_lalande" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/d1da3598-f436-4e41-ab2f-47ef5b1b19e5/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/d1da3598-f436-4e41-ab2f-47ef5b1b19e5/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/d1da3598-f436-4e41-ab2f-47ef5b1b19e5/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/d1da3598-f436-4e41-ab2f-47ef5b1b19e5/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/d1da3598-f436-4e41-ab2f-47ef5b1b19e5/index.curious_darwin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/e54b77b8-3fcd-40de-b0c8-f5b06c171ad2/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/e54b77b8-3fcd-40de-b0c8-f5b06c171ad2/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/e54b77b8-3fcd-40de-b0c8-f5b06c171ad2/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/e54b77b8-3fcd-40de-b0c8-f5b06c171ad2/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/e54b77b8-3fcd-40de-b0c8-f5b06c171ad2/index.grave_cantor" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/ee6791d3-58bb-4f9c-85c7-534a82720728/db/000003.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/ee6791d3-58bb-4f9c-85c7-534a82720728/db/CURRENT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/ee6791d3-58bb-4f9c-85c7-534a82720728/db/LOCK" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/ee6791d3-58bb-4f9c-85c7-534a82720728/db/MANIFEST-000002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/cache/ee6791d3-58bb-4f9c-85c7-534a82720728/index.mighty_ramanujan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nextflow/history" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataflowDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataflowDataFrame.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/TransposedDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/TransposedDataFrame.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/MutateOp.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/MutateOp.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/Operator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/operators/Operator.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/run_tests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/run_tests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/JoinTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/JoinTests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/MutateTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/MutateTests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/PullTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/PullTests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/RenameTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/RenameTests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/SelectTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/SelectTests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/groovy/test/SliceTests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/test/SliceTests.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/tests.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/tests.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/nextflow/test.nf" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/nextflow/test.nf" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

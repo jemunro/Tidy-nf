@@ -13,6 +13,5 @@ ch =
 //ch.subscribe { println it }
 
 dfdf = as_df_df(Channel.from(df.as_list()))
-println dfdf
 dfdf.mutate { x = x + 1}.emit().toList().subscribe { println it }
 

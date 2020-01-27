@@ -81,17 +81,22 @@ class DataFrame implements AbstractDataFrame {
     }
 
     @Override
-    DataFrame count_by(String... by) {
+    AbstractDataFrame arrange_all(Map par) {
         return null
     }
 
     @Override
-    DataFrame count_by(Set by) {
+    DataFrame count(String... by) {
         return null
     }
 
     @Override
-    DataFrame count_by_all() {
+    DataFrame count(Set by) {
+        return null
+    }
+
+    @Override
+    DataFrame count_all() {
         return null
     }
 
@@ -157,21 +162,6 @@ class DataFrame implements AbstractDataFrame {
     @Override
     AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
         dataflowJoin(right, by, Join.FULL)
-    }
-
-    @Override
-    AbstractDataFrame group_by(String... by) {
-        return null
-    }
-
-    @Override
-    AbstractDataFrame group_by(Set by) {
-        return null
-    }
-
-    @Override
-    AbstractDataFrame group_by_all() {
-        return null
     }
 
     private DataflowDataFrame dataflowJoin(AbstractDataFrame right, Set by, Join join){
@@ -382,11 +372,6 @@ class DataFrame implements AbstractDataFrame {
 
     @Override
     DataFrame unnest(Set at) {
-        return null
-    }
-
-    @Override
-    DataFrame unnest() {
         return null
     }
 
