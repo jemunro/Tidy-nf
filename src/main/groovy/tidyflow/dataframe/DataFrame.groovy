@@ -42,22 +42,14 @@ class DataFrame implements AbstractDataFrame {
         [data] as DataFrame
     }
 
+
     @Override
-    AbstractDataFrame anti_join(AbstractDataFrame right, String... by) {
-        return null
-    }
-    @Override
-    AbstractDataFrame anti_join(AbstractDataFrame right, Set by) {
+    DataFrame group_by(Map par, String... by) {
         return null
     }
 
     @Override
-    AbstractDataFrame group_by(Map par, String... by) {
-        return null
-    }
-
-    @Override
-    AbstractDataFrame group_by(Map par, Set by) {
+    DataFrame group_by(Map par, Set by) {
         return null
     }
 
@@ -103,50 +95,6 @@ class DataFrame implements AbstractDataFrame {
 
     ArrayList getAt(String var){
         data.collect { it[var] }
-    }
-
-    @Override
-    AbstractDataFrame inner_join(AbstractDataFrame right, String... by) {
-        inner_join(right, by as Set)
-    }
-
-    @Override
-    AbstractDataFrame inner_join(AbstractDataFrame right, Set by) {
-        dataflowJoin(right, by, Join.INNER)
-    }
-
-    @Override
-    AbstractDataFrame left_join(AbstractDataFrame right, String... by) {
-        left_join(right, by as Set)
-    }
-
-    @Override
-    AbstractDataFrame left_join(AbstractDataFrame right, Set by) {
-        dataflowJoin(right, by, Join.LEFT)
-    }
-
-    @Override
-    AbstractDataFrame right_join(AbstractDataFrame right, String... by) {
-        right_join(right, by as Set)
-    }
-
-    @Override
-    AbstractDataFrame right_join(AbstractDataFrame right, Set by) {
-        dataflowJoin(right, by, Join.RIGHT)
-    }
-
-    @Override
-    AbstractDataFrame full_join(AbstractDataFrame right, String... by) {
-        full_join(right, by as Set)
-    }
-
-    @Override
-    AbstractDataFrame full_join(AbstractDataFrame right, Set by) {
-        dataflowJoin(right, by, Join.FULL)
-    }
-
-    private AbstractDataFrame dataflowJoin(AbstractDataFrame right, Set by, Join join){
-        null
     }
 
     DataFrame inner_join(DataFrame right, String... by) {
@@ -198,6 +146,7 @@ class DataFrame implements AbstractDataFrame {
     }
 
     private DataFrame join(DataFrame right, Set by, Join join) {
+        // TODO - support for zero length DataFrames as join output ?
 
         if (!colNames.containsAll(by)) {
             throw new KeySetMismatchException(
@@ -269,8 +218,11 @@ class DataFrame implements AbstractDataFrame {
             case Join.RIGHT:
                 inner_data + right_only_data as DataFrame
                 break
-            default: //aka FULL
+            case Join.FULL:
                 inner_data + left_only_data + right_only_data as DataFrame
+                break
+            default:
+                null
         }
     }
 
@@ -356,16 +308,6 @@ class DataFrame implements AbstractDataFrame {
         }
 
         data.collect { (it as LinkedHashMap).subMap(vars) } as DataFrame
-    }
-
-    @Override
-    AbstractDataFrame semi_join(AbstractDataFrame right, String... by) {
-        return null
-    }
-
-    @Override
-    AbstractDataFrame semi_join(AbstractDataFrame right, Set by) {
-        return null
     }
 
     @Override
