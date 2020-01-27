@@ -12,9 +12,9 @@ import static tidyflow.helpers.Predicates.isListOfMapOfSameType
 
 class DataFrame implements AbstractDataFrame {
 
-
     private ArrayList data
     private LinkedHashSet colNames
+    private boolean isPartial = false
 
     DataFrame(List data) {
 
@@ -52,17 +52,12 @@ class DataFrame implements AbstractDataFrame {
     }
 
     @Override
-    AbstractDataFrame nest_by(String... by) {
+    AbstractDataFrame group_by(Map par, String... by) {
         return null
     }
 
     @Override
-    AbstractDataFrame nest_by(Set by) {
-        return null
-    }
-
-    @Override
-    AbstractDataFrame nest_by_all() {
+    AbstractDataFrame group_by(Map par, Set by) {
         return null
     }
 
@@ -85,20 +80,6 @@ class DataFrame implements AbstractDataFrame {
         return null
     }
 
-    @Override
-    DataFrame count(String... by) {
-        return null
-    }
-
-    @Override
-    DataFrame count(Set by) {
-        return null
-    }
-
-    @Override
-    DataFrame count_all() {
-        return null
-    }
 
     ArrayList as_list() {
         data
@@ -164,7 +145,7 @@ class DataFrame implements AbstractDataFrame {
         dataflowJoin(right, by, Join.FULL)
     }
 
-    private DataflowDataFrame dataflowJoin(AbstractDataFrame right, Set by, Join join){
+    private AbstractDataFrame dataflowJoin(AbstractDataFrame right, Set by, Join join){
         null
     }
 
@@ -200,6 +181,22 @@ class DataFrame implements AbstractDataFrame {
         join(right, by, Join.FULL)
     }
 
+    DataFrame semi_join(DataFrame right, String... by) {
+        semi_join(right, by as Set)
+    }
+
+    DataFrame semi_join(DataFrame right, Set by) {
+        join(right, by, Join.SEMI)
+    }
+
+    DataFrame anti_join(DataFrame right, String... by) {
+        anti_join(right, by as Set)
+    }
+
+    DataFrame anti_join(DataFrame right, Set by) {
+        join(right, by, Join.ANTI)
+    }
+
     private DataFrame join(DataFrame right, Set by, Join join) {
 
         if (!colNames.containsAll(by)) {
@@ -214,50 +211,66 @@ class DataFrame implements AbstractDataFrame {
                     "by: $by, keyset right: ${right.names()}"))
         }
 
-        if (join == Join.ANTI) {
-            null
+        ArrayList left_only_data = []
+        ArrayList right_only_data = []
+        ArrayList inner_data = []
+
+        ArrayList right_sub = right.select(by).as_list()
+
+        ArrayList intersect_lr = select(by)
+            .as_list()
+            .withIndex()
+            .collect { l, i -> right_sub.withIndex().findAll { r, j -> l == r }.collect { [i, it[1]] } }
+            .collectMany { it }
+
+        ArrayList left_only_i = intersect_lr
+            .collect { it [0] }
+            .with { (0..<data.size()) - it }
+
+        ArrayList right_only_i = intersect_lr
+                .collect { it [1] }
+                .with { (0..<right.nrow()) - it }
+
+
+        if (join != Join.SEMI && join != Join.ANTI) {
+            inner_data = intersect_lr.collect { i, j -> (data[i] + right[j]) as LinkedHashMap }
         } else {
-            if (right instanceof TransposedDataFrame) {
-                right = right.transpose()
+            if (join == Join.SEMI) {
+                inner_data = intersect_lr.collect { (data[it[0] as int]) as LinkedHashMap }
             }
-
-            ArrayList right_sub = right.select(by).as_list()
-
-            ArrayList matches = select(by)
-                .as_list()
-                .withIndex()
-                .collect { l, i -> right_sub.withIndex().findAll { r, j -> l == r }.collect { [i, it[1]] } }
-                .collectMany { it }
-
-            ArrayList inner_j = matches.collect { i, j -> (data[i] + right[j]) as LinkedHashMap }
-            ArrayList left_j
-            ArrayList right_j
-
-            if (join == Join.LEFT || join == Join.FULL) {
-                Set leftUnique = ((0..<nrow()) - matches.collect { it[0] } )
-                LinkedHashMap right_null = (right.names() - by).collectEntries { k -> [(k): null]} as LinkedHashMap
-                left_j = leftUnique.collect { (data[it as int] + right_null) as LinkedHashMap }
+            else if (join == Join.ANTI) {
+                left_only_data = left_only_i.collect { (data[it as int]) as LinkedHashMap }
             }
+        }
 
-            if (join == Join.RIGHT || join == Join.FULL) {
-                Set rightUnique = ((0..<right.nrow()) - matches.collect { it[1] } )
-                LinkedHashMap left_null = (names() - by).collectEntries { k -> [(k): null]} as LinkedHashMap
-                right_j = rightUnique.collect { (left_null + right[it as int]) as LinkedHashMap }
-            }
+        if (join == Join.LEFT || join == Join.FULL) {
+            LinkedHashMap right_null = (right.names() - by).collectEntries { k -> [(k): null]} as LinkedHashMap
+            left_only_data = left_only_i.collect { (data[it as int] + right_null) as LinkedHashMap }
+        }
 
-            switch (join){
-                case Join.INNER:
-                    inner_j as DataFrame
-                    break
-                case Join.LEFT:
-                    inner_j + left_j as DataFrame
-                    break
-                case Join.RIGHT:
-                    inner_j + right_j as DataFrame
-                    break
-                default:
-                    inner_j + left_j + right_j as DataFrame
-            }
+        if (join == Join.RIGHT || join == Join.FULL) {
+            LinkedHashMap left_null = (names() - by).collectEntries { k -> [(k): null]} as LinkedHashMap
+            right_only_data = right_only_i.collect { (left_null + right[it as int]) as LinkedHashMap }
+        }
+
+        switch (join){
+            case Join.ANTI:
+                left_only_data as DataFrame
+                break
+            case Join.SEMI:
+                inner_data as DataFrame
+                break
+            case Join.INNER:
+                inner_data as DataFrame
+                break
+            case Join.LEFT:
+                inner_data + left_only_data as DataFrame
+                break
+            case Join.RIGHT:
+                inner_data + right_only_data as DataFrame
+                break
+            default: //aka FULL
+                inner_data + left_only_data + right_only_data as DataFrame
         }
     }
 
@@ -355,16 +368,6 @@ class DataFrame implements AbstractDataFrame {
         return null
     }
 
-//    @Override
-//    DataFrame summarize_by(String... by) {
-//        return null
-//    }
-//
-//    @Override
-//    DataFrame summarize_by(Set by) {
-//        return null
-//    }
-
     @Override
     DataFrame unnest(String... at) {
         return null
@@ -372,6 +375,11 @@ class DataFrame implements AbstractDataFrame {
 
     @Override
     DataFrame unnest(Set at) {
+        return null
+    }
+
+    @Override
+    AbstractDataFrame unnest_all() {
         return null
     }
 

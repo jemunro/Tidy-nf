@@ -30,6 +30,12 @@ class JoinTests {
         assert (left.right_join(right, 'x')['x'] as Set) == ([1,3,5] as Set)
         assert (left.full_join(right, 'x')['x'] as Set) == ([1,2,3,5] as Set)
 
+        assert (left.semi_join(right, 'x')['x'] as Set) == ([1,3] as Set)
+        assert (left.semi_join(right, 'x').colnames()) == (['x', 'y'] as Set)
+
+        assert (left.anti_join(right, 'x')['x'] as Set) == ([2] as Set)
+        assert (left.anti_join(right, 'x').colnames()) == (['x', 'y'] as Set)
+
         println "$name test $num - pass"
     }
 
