@@ -1,5 +1,7 @@
 package tidyflow.helpers
 
+import tidyflow.dataframe.operators.CollectColsOp
+
 class Predicates {
 
     static boolean isListOfMap(Object object) {
@@ -33,6 +35,10 @@ class Predicates {
     static boolean allAreSameSize(Collection coll) {
         (!isEmpty(coll)) && allAreType(coll, Collection) &&
                 coll.drop(1).every { areSameSize(it as Collection, coll[0] as Collection) }
+    }
+
+    static boolean allAllAreSameSize(Collection coll) {
+        coll.every { allAreSameSize(it as Collection) }
     }
 
     static boolean allKeySetsMatch(Collection coll) {

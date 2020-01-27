@@ -12,9 +12,9 @@ interface AbstractDataFrame {
 
     AbstractDataFrame mutate_with(Map with, Closure closure)
 
-    AbstractDataFrame group_by(Map par, String... by)
+    AbstractDataFrame nest_by(Map par, String... by)
 
-    AbstractDataFrame group_by(Map par, Set by)
+    AbstractDataFrame nest_by(Map par, Set by)
 
     Object pull(String var)
 

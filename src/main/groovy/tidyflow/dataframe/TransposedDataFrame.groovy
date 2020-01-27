@@ -46,8 +46,8 @@ class TransposedDataFrame {
 
     TransposedDataFrame arrange(Map par, Set by) {
 
-        final LinkedHashSet byAt = by + colNames
-        final boolean reverse = par?.desc ?: false
+        ArrayList byAt = (by as ArrayList) + ((colNames - by as ArrayList))
+        boolean reverse = par?.desc ?: false
 
         LinkedHashMap data = byAt.collect { data[it] }.transpose()
             .collect { [it.take(by.size()), it.takeRight(it.size() - by.size())] }

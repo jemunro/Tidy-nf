@@ -2,9 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58dcc665-cfa9-4cef-ba89-88aa08817c8a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/tests/groovy/test/ArrangeTests.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tests/groovy/test/NestTests.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tests/groovy/test/UnnestTests.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/AbstractDataFrame.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/DataFrame.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/TransposedDataFrame.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/dataframe/TransposedDataFrame.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/tidyflow/helpers/Predicates.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/tidyflow/helpers/Predicates.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/groovy/run_tests.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/groovy/run_tests.groovy" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +38,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/tests/groovy/test" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -43,8 +49,8 @@
       <recent name="tidyflow.dataframe" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/tests/groovy/test" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -85,10 +91,10 @@
       <screen x="70" y="27" width="2209" height="927" />
     </state>
     <state x="985" y="181" width="374" height="588" key="#com.intellij.ide.util.MemberChooser/70.27.2209.927@70.27.2209.927" timestamp="1580103520357" />
-    <state x="893" y="21" width="558" height="933" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1580093218108">
+    <state x="893" y="21" width="558" height="933" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1580113616349">
       <screen x="70" y="27" width="2209" height="927" />
     </state>
-    <state x="893" y="21" width="558" height="933" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/70.27.2209.927@70.27.2209.927" timestamp="1580093218108" />
+    <state x="893" y="21" width="558" height="933" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/70.27.2209.927@70.27.2209.927" timestamp="1580113616349" />
     <state x="910" y="229" width="524" height="515" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1580094836718">
       <screen x="70" y="27" width="2209" height="927" />
     </state>
@@ -113,5 +119,9 @@
       <screen x="70" y="27" width="2209" height="927" />
     </state>
     <state x="922" y="93" width="500" height="800" key="refactoring.ChangeSignatureDialog/70.27.2209.927@70.27.2209.927" timestamp="1580093259502" />
+    <state x="1208" y="220" key="run.anything.popup" timestamp="1580117747764">
+      <screen x="70" y="27" width="2209" height="927" />
+    </state>
+    <state x="1208" y="220" key="run.anything.popup/70.27.2209.927@70.27.2209.927" timestamp="1580117747764" />
   </component>
 </project>

@@ -1,10 +1,12 @@
 package tidyflow.dataframe
 
+import tidyflow.exception.CollectionSizeMismatchException
 import tidyflow.exception.IllegalTypeException
 import tidyflow.exception.KeySetMismatchException
 import tidyflow.exception.TypeMismatchException
 
 import static tidyflow.exception.Message.errMsg
+import static tidyflow.helpers.Predicates.allAllAreSameSize
 import static tidyflow.helpers.Predicates.allAreType
 import static tidyflow.helpers.Predicates.allKeySetsMatch
 import static tidyflow.helpers.Predicates.isListOfMap
@@ -44,34 +46,59 @@ class DataFrame implements AbstractDataFrame {
 
 
     @Override
-    DataFrame group_by(Map par, String... by) {
-        return null
+    DataFrame nest_by(Map par = [:], String... by) {
+        nest_by(par, by as Set)
     }
 
     @Override
-    DataFrame group_by(Map par, Set by) {
-        return null
-    }
+    DataFrame nest_by(Map par = [:], Set by) {
 
-    DataFrame arrange(Map par = [:]) {
-        transpose().arrange(par, colNames).transpose()
+        if (!colNames.containsAll(by)) {
+            throw new KeySetMismatchException(
+                    errMsg("nest_by", "by not all present in colnames.\n" +
+                            "by: $by, colnames: ${colNames}"))
+        }
+
+        Set nest_cols = colnames() - by
+        LinkedHashMap groups = [:]
+        select(by).as_list().withIndex().forEach { row, idx ->
+            groups[row] = (groups[row] ?: []) + idx
+        }
+        ArrayList result = groups.collect { k, v ->
+            (k as LinkedHashMap) + nest_cols.collectEntries { name ->
+                [(name): v.collect { i -> data[i][name] }]
+            }
+        }
+        result as DataFrame
     }
 
     @Override
     DataFrame arrange(Map par = [:], String... by) {
-        transpose().arrange(par, by).transpose()
+        arrange(par, by as Set)
     }
 
     @Override
-    DataFrame arrange(Map par, Set by) {
-        transpose().arrange(par, by).transpose()
+    AbstractDataFrame arrange_all(Map par = [:]) {
+        arrange(par, colNames)
     }
 
     @Override
-    AbstractDataFrame arrange_all(Map par) {
-        return null
+    DataFrame arrange(Map par = [:], Set by) {
+
+        if (!colNames.containsAll(by)) {
+            throw new KeySetMismatchException(
+                    errMsg("arrange", "by not all present in colnames.\n" +
+                            "by: $by, colnames: ${colNames}"))
+        }
+
+        transpose().arrange(par, by).transpose()
     }
 
+
+
+    ArrayList split_rows() {
+        data.collect { [it] as DataFrame }
+    }
 
     ArrayList as_list() {
         data
@@ -243,17 +270,19 @@ class DataFrame implements AbstractDataFrame {
     }
 
     DataFrame mutate(Closure closure) {
+
         data.collect {
-            Binding binding = new Binding(it as LinkedHashMap)
+            Binding binding = new Binding(it.clone() as LinkedHashMap)
             closure.rehydrate(closure.delegate, binding, closure.thisObject).call()
             binding.getVariables() as LinkedHashMap
         } as DataFrame
     }
 
     DataFrame mutate_with(Map with = [:], Closure closure) {
+
+        Binding withBinding = new Binding(with.clone() as LinkedHashMap)
         data.collect {
-            Binding binding = new Binding(it as LinkedHashMap)
-            Binding withBinding = new Binding(with)
+            Binding binding = new Binding(it.clone() as LinkedHashMap)
             closure.rehydrate(withBinding, binding, closure.thisObject).call()
             binding.getVariables() as LinkedHashMap
         } as DataFrame
@@ -312,12 +341,33 @@ class DataFrame implements AbstractDataFrame {
 
     @Override
     DataFrame unnest(String... at) {
-        return null
+        unnest(at as Set)
     }
 
     @Override
     DataFrame unnest(Set at) {
-        return null
+
+        if (!colNames.containsAll(at)) {
+            throw new KeySetMismatchException(
+                    errMsg("unnest", "at colnames not all present in DataFrame.\n" +
+                            "names: ${at}, colnames: ${colNames}"))
+        }
+
+        if (! allAreType( at.collect { k -> data[0][k] }, List))
+            throw new IllegalTypeException(errMsg("unnest", "all selected columns must be List\n" +
+                    "${at.collectEntries { k -> [(k) : data[0][k].getClass() ] }}"))
+
+        if (! allAllAreSameSize( data.collect { at.collect { k -> it[k] } } ))
+            throw new CollectionSizeMismatchException(errMsg("unnest", "all selected columns must be the " +
+                    "same size\n"))
+
+        Set not_at = colnames() - at
+        data.collectMany {row ->
+            int size = row[at[0]].size()
+            (0..<size).collect { i ->
+                row.subMap(not_at) + at.collectEntries { k -> [(k) : row[k][i]] }
+            }
+        } as DataFrame
     }
 
     @Override
