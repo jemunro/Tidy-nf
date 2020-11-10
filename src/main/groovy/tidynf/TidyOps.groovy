@@ -34,7 +34,6 @@ class TidyOps {
     }
 
 
-
     static DataflowQueue group_by(DataflowQueue queue, String... by) {
         group_by([:], queue, by as List)
     }
