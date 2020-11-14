@@ -81,7 +81,9 @@ class TidyMethods {
 
     static List read_delim(String filename, String delim = '\t', List col_names) {
         read_delim_lines(filename, delim)
-            .collect { [col_names, it].transpose().collectEntries { k, v -> [(k): v] } }
+            .collect {
+                assert col_names.size() == it.size()
+                [col_names, it].transpose().collectEntries { k, v -> [(k): v] } }
     }
 
     static List read_delim(String filename, String delim = '\t', Boolean col_names) {
@@ -102,7 +104,7 @@ class TidyMethods {
             (new File(filename))
             .getText('utf-8')
             .with { it.split('\n') as List }
-            .collect { it.split(delim) as List }
+            .collect { it.split(delim).collect { it.trim() } as List }
         def max_len = lines.collect { it.size() }.max()
         lines.collect {
             it.size() == max_len ? it :
