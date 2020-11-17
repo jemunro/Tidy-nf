@@ -62,6 +62,10 @@ class TidyMethods {
         file_size(path, 'B')
     }
 
+    static Float bytes(Path... paths) {
+        file_size(paths as List, 'B')
+    }
+
     static Float bytes(List paths) {
         file_size(paths, 'B')
     }
@@ -70,12 +74,20 @@ class TidyMethods {
         file_size(path, 'MB')
     }
 
+    static Float mb(Path... paths) {
+        file_size(paths as List, 'MB')
+    }
+
     static Float mb(List paths) {
         file_size(paths, 'MB')
     }
 
     static Float gb(Path path) {
         file_size(path, 'GB')
+    }
+
+    static Float gb(Path... paths) {
+        file_size(paths as List, 'GB')
     }
 
     static Float gb(List paths) {
