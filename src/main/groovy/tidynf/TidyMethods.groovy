@@ -45,7 +45,7 @@ class TidyMethods {
         new File(path.toString().replaceAll(pattern, replacement)).toPath().toAbsolutePath()
     }
 
-    static Float file_size(NullObject nullObject, String units = 'GB'){
+    static Float file_size(NullObject nullObject, String units){
         0 as float
     }
 
@@ -55,12 +55,31 @@ class TidyMethods {
 
     static Float file_size(Path path, String units = 'GB'){
         def unit_defs = [B:1, KB:1e3, MB:1e6, GB:1e9]
-        def length = new File(path.toString()).length()
-        if (unit_defs.containsKey(units)){
-            return length / unit_defs[units]
-        } else {
-            return length as Float
-        }
+        (path.size() / unit_defs[units]) as Float
+    }
+
+    static Float bytes(Path path) {
+        file_size(path, 'B')
+    }
+
+    static Float bytes(List paths) {
+        file_size(paths, 'B')
+    }
+
+    static Float mb(Path path) {
+        file_size(path, 'MB')
+    }
+
+    static Float mb(List paths) {
+        file_size(paths, 'MB')
+    }
+
+    static Float gb(Path path) {
+        file_size(path, 'GB')
+    }
+
+    static Float gb(List paths) {
+        file_size(paths, 'GB')
     }
 
     static List read_csv(String file, List col_names) {
