@@ -4,7 +4,7 @@ import channelextra.ChannelExtra
 import channelextra.ChannelExtraOperators
 import org.codehaus.groovy.runtime.NullObject
 import java.nio.file.Path
-
+import nextflow.util.BlankSeparatedList
 
 
 class TidyMethods {
@@ -66,6 +66,10 @@ class TidyMethods {
         file_size(paths as List, 'B')
     }
 
+    static Float bytes(BlankSeparatedList paths) {
+        file_size(paths as List, 'B')
+    }
+
     static Float bytes(List paths) {
         file_size(paths, 'B')
     }
@@ -78,6 +82,10 @@ class TidyMethods {
         file_size(paths as List, 'MB')
     }
 
+    static Float mb(BlankSeparatedList paths) {
+        file_size(paths as List, 'MB')
+    }
+
     static Float mb(List paths) {
         file_size(paths, 'MB')
     }
@@ -87,6 +95,10 @@ class TidyMethods {
     }
 
     static Float gb(Path... paths) {
+        file_size(paths as List, 'GB')
+    }
+
+    static Float gb(BlankSeparatedList paths) {
         file_size(paths as List, 'GB')
     }
 
