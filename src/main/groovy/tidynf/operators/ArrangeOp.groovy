@@ -2,9 +2,9 @@
 package tidynf.operators
 
 import groovyx.gpars.dataflow.DataflowChannel
+import java.nio.file.Path
 
 import static tidynf.TidyChecks.checkAllAreType
-import static tidynf.TidyChecks.checkEqualSizes
 import static tidynf.TidyChecks.checkHasKeys
 import static tidynf.TidyChecks.checkIsType
 import static tidynf.TidyChecks.checkKeysMatch
@@ -21,7 +21,6 @@ class ArrangeOp {
     private DataflowChannel source
     private boolean reverse
     private List by
-    private List at
 
     ArrangeOp(String method_name, Map params, DataflowChannel source, List by) {
 
@@ -29,12 +28,11 @@ class ArrangeOp {
         this.method_name = method_name
         this.by = by
 
-        def types = [at: List, at_: String, reverse: Boolean]
+        def types = [reverse: Boolean]
         def required = []
         checkRequiredParams(method_name, required, params)
         checkParamTypes(method_name, types, params)
         this.reverse = params?.reverse ?: false
-        this.at = params?.at ?: []
 
     }
 
@@ -45,33 +43,23 @@ class ArrangeOp {
             runChecks(it)
 
             def data = it.data as LinkedHashMap
+            def n = (data[by[0]] as List).size()
 
-            def set = at ?
-                (by + at).unique() :
-                (data
-                    .findAll { k, v -> data[k] instanceof List && ! by.contains(k) }
-                    .findAll { it.value.size() == data[by[0]].size() }
-                    .with { keySetList(it) }
-                    .with { by + it }
-                )
-
-            checkEqualSizes(set.collect { data[it] }, method_name)
-
-            def sorted = set
-                .collect { data[it] }
+            List order = (by.collect { data [it] } + [0..(n-1) as List ])
+                .collectNested { it instanceof Path ? (it as Path).fileName.toString() : it }
                 .transpose()
-                .collect { [it.take(by.size()), it.takeRight(it.size() - by.size())] }
-                .sort { l1, l2 ->
-                    [l1[0], l2[0]].transpose()
+                .toSorted { l1, l2 ->
+                    [l1, l2].transpose()
                         .find { e1, e2 -> e1 != e2 }
-                        .with { it ? it[0] <=> it[1] : 0 } }
-                .with { reverse ? it.reverse() : it }
-                .collect { it[0] + it[1] }
+                        .with { e1, e2 -> e1 <=> e2 } }
                 .transpose()
-                .withIndex()
-                .collectEntries { item, i -> [(set[i]) : item] }
+                .takeRight(1)[0]
 
-            data.collectEntries { k, v -> [(k): sorted.containsKey(k) ? sorted[k] : v ] }
+            if (reverse) {
+                order = order.reverse()
+            }
+
+            data.collectEntries { k, v -> [(k): by.contains(k) ? v[order] : v ] }
         }
     }
 
