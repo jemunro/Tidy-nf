@@ -2,7 +2,8 @@ package channelextra
 
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
+import groovyx.gpars.dataflow.DataflowBroadcast
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -47,6 +48,10 @@ class ChannelExtra {
         def dataflowVariableMetaClass =  new ChannelExtraDelegatingMetaClass(DataflowVariable.metaClass, operators)
         dataflowVariableMetaClass.initialize()
         DataflowVariable.metaClass = dataflowVariableMetaClass
+
+        def dataflowBroadcastMetaClass =  new ChannelExtraDelegatingMetaClass(DataflowBroadcast.metaClass, operators)
+        dataflowBroadcastMetaClass.initialize()
+        DataflowBroadcast.metaClass = dataflowBroadcastMetaClass
     }
 
     static disable(){

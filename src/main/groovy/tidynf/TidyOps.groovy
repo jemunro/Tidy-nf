@@ -1,6 +1,7 @@
 package tidynf
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
 import groovyx.gpars.dataflow.DataflowVariable
 import groovyx.gpars.dataflow.DataflowQueue
 
@@ -21,15 +22,15 @@ import tidynf.operators.UnnestOp
 
 class TidyOps {
 
-    static DataflowChannel arrange(DataflowChannel channel, String... by) {
+    static DataflowWriteChannel arrange(DataflowWriteChannel channel, String... by) {
         arrange([:], channel, by as List)
     }
 
-    static DataflowChannel arrange(Map params, DataflowChannel channel, String... by) {
+    static DataflowWriteChannel arrange(Map params, DataflowWriteChannel channel, String... by) {
         arrange(params, channel, by as List)
     }
 
-    static DataflowChannel arrange(Map params, DataflowChannel channel, List by) {
+    static DataflowWriteChannel arrange(Map params, DataflowWriteChannel channel, List by) {
         new ArrangeOp('arrange', params, channel, by).apply()
     }
 
@@ -47,43 +48,43 @@ class TidyOps {
     }
 
 
-    static DataflowChannel mutate(DataflowChannel channel, Closure closure){
+    static DataflowWriteChannel mutate(DataflowWriteChannel channel, Closure closure){
         mutate([:], channel, closure)
     }
 
 
-    static DataflowChannel mutate(Map with, DataflowChannel channel, Closure closure){
+    static DataflowWriteChannel mutate(Map with, DataflowWriteChannel channel, Closure closure){
         new MutateOp('mutate', channel, closure, with).apply()
     }
 
 
-    static DataflowChannel pull(DataflowChannel channel, String name){
+    static DataflowWriteChannel pull(DataflowWriteChannel channel, String name){
         new PullOp('pull', channel, name).apply()
     }
 
 
 
-    static DataflowChannel rename(DataflowChannel channel, String new_name, String old_name){
+    static DataflowWriteChannel rename(DataflowWriteChannel channel, String new_name, String old_name){
         new RenameOp('rename', channel, new_name, old_name).apply()
     }
 
 
 
-    static DataflowChannel select(DataflowChannel channel, String... names){
+    static DataflowWriteChannel select(DataflowWriteChannel channel, String... names){
         select(channel, names as List)
     }
 
-    static DataflowChannel select(DataflowChannel channel, List names){
+    static DataflowWriteChannel select(DataflowWriteChannel channel, List names){
         new SelectOp('select', channel, names).apply()
     }
 
 
 
-    static DataflowChannel set_names(DataflowChannel channel, String... names){
+    static DataflowWriteChannel set_names(DataflowWriteChannel channel, String... names){
         set_names(channel, names as List)
     }
 
-    static DataflowChannel set_names(DataflowChannel channel, List names){
+    static DataflowWriteChannel set_names(DataflowWriteChannel channel, List names){
         new SetNamesOp('set_names', channel, names).apply()
     }
 
@@ -111,17 +112,17 @@ class TidyOps {
 
 
 
-    static DataflowChannel unname(DataflowChannel channel){
+    static DataflowWriteChannel unname(DataflowWriteChannel channel){
         new UnnameOp('unname', channel).apply()
     }
 
 
 
-    static DataflowChannel unnest(DataflowChannel channel, String... at) {
+    static DataflowWriteChannel unnest(DataflowWriteChannel channel, String... at) {
         unnest(channel, at as List)
     }
 
-    static DataflowChannel unnest(DataflowChannel channel, List at) {
+    static DataflowWriteChannel unnest(DataflowWriteChannel channel, List at) {
         new UnnestOp('unnest', channel, at).apply()
     }
 

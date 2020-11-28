@@ -1,7 +1,7 @@
 package tidynf
 
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
 import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.DataflowVariable
 
@@ -34,7 +34,7 @@ class TidyDataFlow {
         mergeWithFirst(queue).map { f, d -> [ keys: getKeys(f), data: d ] }
     }
 
-    static DataflowChannel[] withKeysLeftRight(DataflowChannel left, DataflowChannel right) {
+    static DataflowWriteChannel[] withKeysLeftRight(DataflowWriteChannel left, DataflowWriteChannel right) {
 
         def left_keys
         def left_queue
@@ -57,7 +57,7 @@ class TidyDataFlow {
         [ left_merged, right_merged ]
     }
 
-    static DataflowChannel[] withUniqueKeyData(DataflowChannel source, List by) {
+    static DataflowWriteChannel[] withUniqueKeyData(DataflowWriteChannel source, List by) {
 
         def a
         def b
@@ -66,7 +66,7 @@ class TidyDataFlow {
         [ a.map { getKeyData(it, by) }.unique() , b ]
     }
 
-    static DataflowChannel[] leftRightExclusive(DataflowChannel left, DataflowChannel right) {
+    static DataflowWriteChannel[] leftRightExclusive(DataflowWriteChannel left, DataflowWriteChannel right) {
 
         def left_exclusive
         def right_exclusive

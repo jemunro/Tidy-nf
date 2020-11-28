@@ -1,6 +1,6 @@
 package tidynf.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
 
 import static tidynf.TidyChecks.*
 import static tidynf.TidyDataFlow.withKeys
@@ -10,11 +10,11 @@ import static tidynf.exception.TidyError.error
 class MutateOp {
 
     private String method_name
-    private DataflowChannel source
+    private DataflowWriteChannel source
     private Binding with
     private Closure dehydrated
 
-    MutateOp(String method_name, DataflowChannel source, Closure closure, Map with){
+    MutateOp(String method_name, DataflowWriteChannel source, Closure closure, Map with){
 
         this.method_name = method_name
         this.source = source
@@ -23,7 +23,7 @@ class MutateOp {
 
     }
 
-    DataflowChannel apply() {
+    DataflowWriteChannel apply() {
         withKeys(source).map {
 
             runChecks(it)

@@ -1,6 +1,6 @@
 package tidynf.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
 
 import static tidynf.TidyChecks.checkHasKey
 import static tidynf.TidyChecks.checkIsType
@@ -10,11 +10,11 @@ import static tidynf.TidyHelpers.keySetList
 
 class RenameOp {
     private String method_name
-    private DataflowChannel source
+    private DataflowWriteChannel source
     private String new_key
     private String old_key
 
-    RenameOp(String method_name, DataflowChannel source, String new_key, String old_key) {
+    RenameOp(String method_name, DataflowWriteChannel source, String new_key, String old_key) {
 
         this.method_name = method_name
         this.source = source
@@ -22,7 +22,7 @@ class RenameOp {
         this.old_key = old_key
     }
 
-    DataflowChannel apply() {
+    DataflowWriteChannel apply() {
 
         withKeys(source).map {
 

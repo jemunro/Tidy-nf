@@ -1,6 +1,6 @@
 package tidynf.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
 
 import static tidynf.TidyChecks.checkEqualSizes
 import static tidynf.TidyChecks.checkHasKeys
@@ -12,18 +12,18 @@ import static tidynf.TidyHelpers.keySetList
 class UnnestOp {
 
     private String method_name
-    private DataflowChannel source
+    private DataflowWriteChannel source
     private List at
 
 
-    UnnestOp(String method_name, DataflowChannel source, List at){
+    UnnestOp(String method_name, DataflowWriteChannel source, List at){
 
         this.method_name = method_name
         this.source = source
         this.at = at
     }
 
-    DataflowChannel apply() {
+    DataflowWriteChannel apply() {
 
         withKeys(source).map {
 

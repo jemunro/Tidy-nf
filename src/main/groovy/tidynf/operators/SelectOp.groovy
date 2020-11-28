@@ -1,6 +1,6 @@
 package tidynf.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
 
 import static tidynf.TidyChecks.checkHasKeys
 import static tidynf.TidyChecks.checkIsType
@@ -11,17 +11,17 @@ import static tidynf.TidyHelpers.keySetList
 class SelectOp {
 
     private String method_name
-    private DataflowChannel source
+    private DataflowWriteChannel source
     private List keys
 
-    SelectOp(String method_name, DataflowChannel source, List keys){
+    SelectOp(String method_name, DataflowWriteChannel source, List keys){
 
         this.method_name = method_name
         this.source = source
         this.keys = keys
     }
 
-    DataflowChannel apply() {
+    DataflowWriteChannel apply() {
 
         withKeys(source).map {
 

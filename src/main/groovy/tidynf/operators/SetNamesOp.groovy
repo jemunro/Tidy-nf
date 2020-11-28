@@ -1,6 +1,7 @@
 package tidynf.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
 
 import static tidynf.TidyChecks.checkUnique
 import static tidynf.TidyChecks.requireAsList
@@ -8,11 +9,11 @@ import static tidynf.TidyChecks.requireAsList
 class SetNamesOp {
 
     private String method_name
-    private DataflowChannel source
+    private DataflowWriteChannel source
     private List keys
 
 
-    SetNamesOp(String method_name, DataflowChannel source, List keys){
+    SetNamesOp(String method_name, DataflowWriteChannel source, List keys){
 
         this.method_name = method_name
         this.source = source
@@ -20,7 +21,7 @@ class SetNamesOp {
 
     }
 
-    DataflowChannel apply(){
+    DataflowWriteChannel apply(){
 
         checkUnique(keys, method_name)
 

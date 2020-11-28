@@ -1,7 +1,7 @@
 
 package tidynf.operators
 
-import groovyx.gpars.dataflow.DataflowChannel
+import groovyx.gpars.dataflow.DataflowWriteChannel
 import java.nio.file.Path
 
 import static tidynf.TidyChecks.checkAllAreType
@@ -18,11 +18,11 @@ import static tidynf.TidyHelpers.keySetList
 class ArrangeOp {
 
     private String method_name
-    private DataflowChannel source
+    private DataflowWriteChannel source
     private boolean reverse
     private List by
 
-    ArrangeOp(String method_name, Map params, DataflowChannel source, List by) {
+    ArrangeOp(String method_name, Map params, DataflowWriteChannel source, List by) {
 
         this.source = source
         this.method_name = method_name
@@ -36,7 +36,7 @@ class ArrangeOp {
 
     }
 
-    DataflowChannel apply() {
+    DataflowWriteChannel apply() {
 
         withKeys(source).map {
 
